@@ -2,10 +2,10 @@
 
 **Your first home, step by step.** A mobile web app that guides UK first-time buyers through every stage of buying a home, and introduces checked local professionals at each step. Built as a demo for The Linda Plant enterprise competition.
 
-- **Live demo:** `https://<github-user>.github.io/avenor/#/demo`
-- **Normal start:** `https://<github-user>.github.io/avenor/`
+- **Live demo:** https://bninj.github.io/avenor/#/demo
+- **Normal start:** https://bninj.github.io/avenor/
 
-The `#/demo` link is the one for the QR code. It fills in the sign-up by itself and lands on the home screen in about 10 seconds, with stage 1 done and stage 2 half done. A judge can finish stage 2 and watch the 3D house build.
+The `#/demo` link is the one for the QR code (`brand/qr-demo.png` and `.svg`, ready to print). It fills in the sign-up by itself and lands on the home screen in about 10 seconds, with stage 1 done and stage 2 half done. A judge can finish stage 2 and watch the 3D house build.
 
 ## What's in it
 
