@@ -6,7 +6,6 @@ import { useApp } from '../store'
 import { Icon } from '../components/Icon'
 import { Screen, SectionTitle, toast } from '../components/ui'
 import { openTerm } from '../components/Terms'
-import { StageArt } from '../components/StageArt'
 
 const SHORT: Record<string, string> = { budget: 'Budget', mortgage: 'Mortgage', search: 'Searching', offer: 'Offer', solicitor: 'Legal', survey: 'Survey', completion: 'Keys' }
 
@@ -33,30 +32,27 @@ export default function Learn() {
 
   return (
     <Screen>
-      <div className="px-5 pt-4 pb-2">
+      <div className="px-5 pt-6 pb-2">
         <h1 className="t-display">Learn</h1>
         <p className="t-body text-muted mt-2">Short lessons. Every word, explained.</p>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-7">
         <SectionTitle>Five-minute lessons</SectionTitle>
         <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 snap-x pb-1">
-          {lessons.map((l) => {
+          {lessons.map((l, i) => {
             const locked = !l.free && plan === 'free'
             return (
               <button
                 key={l.id}
                 onClick={() => (locked ? nav('/premium') : toast('Lessons play in the full app'))}
-                className="snap-start shrink-0 w-[168px] text-left"
+                className={`snap-start shrink-0 w-[200px] h-[236px] rounded-[22px] p-5 flex flex-col text-left ${i === 0 ? 'spruce grain' : 'bg-stone-100'}`}
               >
-                <div className="relative rounded-[20px] bg-stone-100 h-[150px] grid place-items-end justify-center overflow-hidden">
-                  <StageArt id={l.stage} className="w-[96px]" bg="#FFFFFF" />
-                  <span className={`absolute left-2.5 top-2.5 rounded-full t-micro px-2.5 py-1 ${locked ? 'bg-teal-800 text-white' : 'bg-white text-teal-900'}`}>
-                    {locked ? <span className="inline-flex items-center gap-1"><Icon name="lock" size={12} stroke={2.2} /> Premium</span> : 'Free'}
-                  </span>
-                </div>
-                <p className="font-semibold mt-2.5 leading-snug">{l.title}</p>
-                <p className="t-small text-muted">{l.mins} min</p>
+                <span className={`text-[3.25rem] leading-none font-semibold tracking-[-0.04em] num ${i === 0 ? 'text-gold-300' : 'text-stone-400/70'}`}>{String(i + 1).padStart(2, '0')}</span>
+                <span className="t-h2 mt-auto">{l.title}</span>
+                <span className={`t-small mt-2 flex items-center gap-1.5 ${i === 0 ? 'text-teal-100/75' : 'text-muted'}`}>
+                  {locked && <Icon name="lock" size={14} />}{l.mins} min{locked ? ', Premium' : ''}
+                </span>
               </button>
             )
           })}
@@ -84,7 +80,7 @@ export default function Learn() {
             <li key={t.id} className="border-b border-stone-200 last:border-0">
               <button onClick={() => openTerm(t.id)} className="w-full text-left py-4 flex gap-3 items-start">
                 <span className="flex-1">
-                  <span className="block font-serif text-lg font-medium mb-0.5">{t.word}</span>
+                  <span className="block t-h3 mb-0.5">{t.word}</span>
                   <span className="t-small text-muted line-clamp-2">{t.plain}</span>
                 </span>
                 <Icon name="right" size={18} className="text-stone-400 mt-1.5" />

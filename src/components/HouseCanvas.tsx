@@ -1,12 +1,33 @@
-import { Canvas, useFrame } from '@react-three/fiber'
-import { useMemo, useRef } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { createContext, useContext, useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import type { HousePart } from '../data/stages'
 
 // Palette (toy-like, matte)
+// A Birmingham red-brick Victorian: brick walls, slate roof, white sashes, spruce door
 const C = {
-  plot: '#EDE8DD', grass: '#B9CFAE', plinth: '#D6CDBB', wall: '#F6EFE2', trim: '#FFFFFF',
-  roof: '#146C66', door: '#0F4C4A', gold: '#C9A24B', glass: '#F3D995', brick: '#C9886A', leaf: '#6E9A72', leaf2: '#8DB38A', trunk: '#8A6B4E', path: '#E2D8C6',
+  plot: '#E3E8E5', plotDark: '#1E5A52', grass: '#9FC093', grassDark: '#5F9A6E', plinth: '#D2C9B8', wall: '#B4634A', band: '#F3EFE6', trim: '#F6F3EC',
+  roof: '#39484A', door: '#1C5A53', gold: '#C79B4E', glass: '#F5D894', brick: '#9E5440', pot: '#C77A57', leaf: '#5E8F67', leaf2: '#7FAE84', trunk: '#7A5C44', path: '#DCD3C2',
+}
+
+// Unbuilt parts can be drawn as a faint "ghost" of the finished home
+const GhostOn = createContext<{ enabled: boolean; dark: boolean }>({ enabled: false, dark: false })
+const IsGhost = createContext(false)
+
+type MatProps = { color: string; roughness?: number; metalness?: number; emissive?: string; emissiveIntensity?: number }
+function Mat(props: MatProps) {
+  const ghost = useContext(IsGhost)
+  const { dark } = useContext(GhostOn)
+  if (ghost) return <meshBasicMaterial color={dark ? '#CFE7E0' : '#123F3B'} transparent opacity={dark ? 0.11 : 0.07} depthWrite={false} />
+  return <meshStandardMaterial {...props} />
+}
+
+function GhostGroup({ children }: { children: React.ReactNode }) {
+  const ref = useRef<THREE.Group>(null)
+  useEffect(() => {
+    ref.current?.traverse((o) => { o.castShadow = false; o.receiveShadow = false; if ((o as THREE.Light).isLight) o.visible = false })
+  })
+  return <IsGhost.Provider value={true}><group ref={ref}>{children}</group></IsGhost.Provider>
 }
 
 const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -28,14 +49,20 @@ function Part({ show, children, delay = 0 }: { show: boolean; children: React.Re
     g.position.y = (1 - Math.min(1, k * 1.25)) * 1.6
     g.scale.setScalar(0.001 + e * 0.999)
   })
-  return <group ref={ref} visible={false}>{children}</group>
+  const { enabled } = useContext(GhostOn)
+  return (
+    <>
+      <group ref={ref} visible={false}>{children}</group>
+      {enabled && !show && <GhostGroup>{children}</GhostGroup>}
+    </>
+  )
 }
 
 function Box({ args, position, color, rotation }: { args: [number, number, number]; position: [number, number, number]; color: string; rotation?: [number, number, number] }) {
   return (
     <mesh position={position} rotation={rotation} castShadow receiveShadow>
       <boxGeometry args={args} />
-      <meshStandardMaterial color={color} roughness={0.85} />
+      <Mat color={color} roughness={0.85} />
     </mesh>
   )
 }
@@ -50,7 +77,7 @@ function Roof() {
   }, [])
   return (
     <mesh geometry={geo} position={[0, 2.05, 0]} castShadow receiveShadow>
-      <meshStandardMaterial color={C.roof} roughness={0.7} />
+      <Mat color={C.roof} roughness={0.7} />
     </mesh>
   )
 }
@@ -61,10 +88,12 @@ function Window({ position, rotationY = 0 }: { position: [number, number, number
       <Box args={[0.52, 0.62, 0.06]} position={[0, 0, 0]} color={C.trim} />
       <mesh position={[0, 0, 0.035]}>
         <planeGeometry args={[0.4, 0.5]} />
-        <meshStandardMaterial color={C.glass} emissive={C.glass} emissiveIntensity={0.35} roughness={0.4} />
+        <Mat color={C.glass} emissive={C.glass} emissiveIntensity={0.35} roughness={0.4} />
       </mesh>
       <Box args={[0.03, 0.5, 0.02]} position={[0, 0, 0.045]} color={C.trim} />
       <Box args={[0.4, 0.03, 0.02]} position={[0, 0, 0.045]} color={C.trim} />
+      <Box args={[0.62, 0.06, 0.14]} position={[0, -0.34, 0.05]} color={C.band} />
+      <Box args={[0.6, 0.07, 0.08]} position={[0, 0.35, 0.03]} color={C.band} />
     </group>
   )
 }
@@ -72,14 +101,14 @@ function Window({ position, rotationY = 0 }: { position: [number, number, number
 function Tree({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) {
   return (
     <group position={position} scale={scale}>
-      <mesh position={[0, 0.3, 0]} castShadow><cylinderGeometry args={[0.06, 0.08, 0.6, 8]} /><meshStandardMaterial color={C.trunk} /></mesh>
-      <mesh position={[0, 0.85, 0]} castShadow><sphereGeometry args={[0.42, 16, 12]} /><meshStandardMaterial color={C.leaf} roughness={0.9} /></mesh>
-      <mesh position={[0.18, 1.12, 0.05]} castShadow><sphereGeometry args={[0.26, 14, 10]} /><meshStandardMaterial color={C.leaf2} roughness={0.9} /></mesh>
+      <mesh position={[0, 0.3, 0]} castShadow><cylinderGeometry args={[0.06, 0.08, 0.6, 8]} /><Mat color={C.trunk} /></mesh>
+      <mesh position={[0, 0.85, 0]} castShadow><sphereGeometry args={[0.42, 16, 12]} /><Mat color={C.leaf} roughness={0.9} /></mesh>
+      <mesh position={[0.18, 1.12, 0.05]} castShadow><sphereGeometry args={[0.26, 14, 10]} /><Mat color={C.leaf2} roughness={0.9} /></mesh>
     </group>
   )
 }
 
-function House({ parts, spin }: { parts: HousePart[]; spin: React.MutableRefObject<{ target: number; dragging: boolean }> }) {
+function House({ parts, spin, dark }: { parts: HousePart[]; spin: React.MutableRefObject<{ target: number; dragging: boolean }>; dark: boolean }) {
   const root = useRef<THREE.Group>(null)
   const has = (p: HousePart) => parts.includes(p)
   useFrame((_, dt) => {
@@ -93,7 +122,7 @@ function House({ parts, spin }: { parts: HousePart[]; spin: React.MutableRefObje
       {/* The plot is always there, waiting */}
       <mesh position={[0, -0.05, 0]} receiveShadow>
         <cylinderGeometry args={[2.9, 2.95, 0.1, 64]} />
-        <meshStandardMaterial color={has('garden') ? C.grass : C.plot} roughness={1} />
+        <Mat color={has('garden') ? (dark ? C.grassDark : C.grass) : dark ? C.plotDark : C.plot} roughness={1} />
       </mesh>
 
       <Part show={has('foundation')}>
@@ -102,6 +131,7 @@ function House({ parts, spin }: { parts: HousePart[]; spin: React.MutableRefObje
       <Part show={has('walls')}>
         <Box args={[2.7, 1.8, 2.1]} position={[0, 1.13, 0]} color={C.wall} />
         <Box args={[2.76, 0.08, 2.16]} position={[0, 2.04, 0]} color={C.trim} />
+        <Box args={[2.74, 0.07, 2.14]} position={[0, 1.08, 0]} color={C.band} />
       </Part>
       <Part show={has('windows')}>
         <Window position={[-0.75, 1.45, 1.06]} />
@@ -113,7 +143,7 @@ function House({ parts, spin }: { parts: HousePart[]; spin: React.MutableRefObje
         <group position={[0, 0.72, 1.07]}>
           <Box args={[0.62, 0.92, 0.06]} position={[0, 0, 0]} color={C.trim} />
           <Box args={[0.5, 0.84, 0.05]} position={[0, -0.02, 0.02]} color={C.door} />
-          <mesh position={[0.15, -0.05, 0.06]}><sphereGeometry args={[0.035, 12, 8]} /><meshStandardMaterial color={C.gold} metalness={0.6} roughness={0.3} /></mesh>
+          <mesh position={[0.15, -0.05, 0.06]}><sphereGeometry args={[0.035, 12, 8]} /><Mat color={C.gold} metalness={0.6} roughness={0.3} /></mesh>
           <Box args={[0.9, 0.08, 0.3]} position={[0, -0.47, 0.12]} color={C.plinth} />
         </group>
       </Part>
@@ -121,8 +151,11 @@ function House({ parts, spin }: { parts: HousePart[]; spin: React.MutableRefObje
         <Roof />
       </Part>
       <Part show={has('chimney')}>
-        <Box args={[0.36, 0.8, 0.36]} position={[0.85, 2.85, -0.4]} color={C.brick} />
-        <Box args={[0.44, 0.08, 0.44]} position={[0.85, 3.27, -0.4]} color={C.trim} />
+        <Box args={[0.42, 0.85, 0.36]} position={[0.85, 2.88, -0.4]} color={C.brick} />
+        <Box args={[0.5, 0.08, 0.44]} position={[0.85, 3.32, -0.4]} color={C.band} />
+        {[-0.1, 0.1].map((x) => (
+          <mesh key={x} position={[0.85 + x, 3.46, -0.4]} castShadow><cylinderGeometry args={[0.06, 0.07, 0.22, 12]} /><Mat color={C.pot} /></mesh>
+        ))}
       </Part>
       <Part show={has('garden')}>
         <Tree position={[-2.0, 0, 0.9]} scale={1.1} />
@@ -131,13 +164,13 @@ function House({ parts, spin }: { parts: HousePart[]; spin: React.MutableRefObje
         {[0, 1, 2, 3].map((i) => (
           <mesh key={i} position={[0, 0.02, 1.55 + i * 0.32]} receiveShadow>
             <cylinderGeometry args={[0.16, 0.16, 0.04, 20]} />
-            <meshStandardMaterial color={C.path} />
+            <Mat color={C.path} />
           </mesh>
         ))}
         {[-1, 1].map((s) => (
           <mesh key={s} position={[s * 1.0, 0.16, 1.75]} castShadow>
             <boxGeometry args={[1.0, 0.3, 0.3]} />
-            <meshStandardMaterial color={C.leaf2} roughness={1} />
+            <Mat color={C.leaf2} roughness={1} />
           </mesh>
         ))}
         <pointLight position={[0, 1.2, 1.6]} intensity={1.2} distance={3} color={C.glass} />
@@ -146,7 +179,20 @@ function House({ parts, spin }: { parts: HousePart[]; spin: React.MutableRefObje
   )
 }
 
-export default function HouseCanvas({ parts, className = '', interactive = true }: { parts: HousePart[]; className?: string; interactive?: boolean }) {
+/** Keeps the whole plot in frame, whatever the canvas shape (tall frames need a farther camera). */
+function Rig({ zoom }: { zoom: number }) {
+  const { camera, size } = useThree()
+  useEffect(() => {
+    const aspect = size.width / Math.max(1, size.height)
+    const k = Math.max(1, 1.3 / aspect) / zoom
+    camera.position.set(7.0 * k, 5.4 * k, 8.0 * k)
+    camera.lookAt(0, 1.25, 0)
+    camera.updateProjectionMatrix()
+  }, [camera, size.width, size.height, zoom])
+  return null
+}
+
+export default function HouseCanvas({ parts, className = '', interactive = true, dark = false, zoom = 1, ghost = false }: { parts: HousePart[]; className?: string; interactive?: boolean; dark?: boolean; zoom?: number; ghost?: boolean }) {
   const spin = useRef({ target: -0.5, dragging: false })
   const last = useRef(0)
   return (
@@ -159,10 +205,11 @@ export default function HouseCanvas({ parts, className = '', interactive = true 
       aria-label={`3D model of your home: ${parts.length} of 7 parts built`}
       role="img"
     >
-      <Canvas flat shadows="percentage" dpr={[1, 2]} camera={{ position: [7.0, 5.4, 8.0], fov: 30 }} onCreated={({ camera }) => camera.lookAt(0, 1.2, 0)} gl={{ antialias: true, alpha: true }}>
-        <hemisphereLight args={['#FFFDF6', '#D9E2DC', 1.9]} />
+      <Canvas flat shadows="percentage" dpr={[1, 2]} camera={{ position: [7.0, 5.4, 8.0], fov: 30 }} gl={{ antialias: true, alpha: true }}>
+        <hemisphereLight args={['#FFFDF6', dark ? '#9FC0B6' : '#D9E2DC', 1.8]} />
         <directionalLight position={[4, 7, 5]} intensity={1.5} castShadow shadow-mapSize={[1024, 1024]} shadow-camera-left={-4} shadow-camera-right={4} shadow-camera-top={4} shadow-camera-bottom={-4} shadow-bias={-0.0005} />
-        <House parts={parts} spin={spin} />
+        <Rig zoom={zoom} />
+        <GhostOn.Provider value={{ enabled: ghost, dark }}><House parts={parts} spin={spin} dark={dark} /></GhostOn.Provider>
       </Canvas>
     </div>
   )

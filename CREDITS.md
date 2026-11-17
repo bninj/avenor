@@ -17,8 +17,7 @@ All photos were colour-graded and resized for the app. Licences require attribut
 | public/img/bournville.webp | Friends Meeting House, Linden Road, Bournville | Hassocks5489 | CC0 |
 
 ## Fonts
-- Newsreader (Production Type), SIL Open Font License, via Fontsource
-- Albert Sans (Andreas Rasmussen), SIL Open Font License, via Fontsource
+- Switzer by Indian Type Foundry, free under the ITF Free Font License. Loaded from the Fontshare CDN (api.fontshare.com), not stored in this repo.
 
 ## Map
 - Map data © OpenStreetMap contributors (ODbL). Tiles from tile.openstreetmap.org.

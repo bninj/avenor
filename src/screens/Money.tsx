@@ -27,39 +27,39 @@ export default function Money() {
 
   return (
     <Screen>
-      <div className="px-5 pt-4">
+      <div className="px-5 pt-6">
         <h1 className="t-display">Money</h1>
         <p className="t-body text-muted mt-2">Real numbers, before anyone sells you anything.</p>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto no-scrollbar px-5 py-5" role="tablist">
+      <div className="flex gap-2 overflow-x-auto no-scrollbar px-5 pt-5 pb-6" role="tablist">
         {TABS.map((t) => (
-          <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setParams({ tab: t.id }, { replace: true })} className={`shrink-0 min-h-11 rounded-full px-4 t-small font-semibold transition-colors ${tab === t.id ? 'bg-teal-800 text-white' : 'ring-1 ring-inset ring-stone-200'}`}>
+          <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setParams({ tab: t.id }, { replace: true })} className={`shrink-0 min-h-11 rounded-full px-4 t-small font-semibold transition-colors ${tab === t.id ? 'bg-teal-800 text-teal-50' : 'bg-stone-100 text-teal-900/75'}`}>
             {t.label}
           </button>
         ))}
       </div>
 
       {/* Shared price input */}
-      <div className="mx-5 rounded-[22px] bg-stone-50 p-5">
+      <div className="px-5">
         <div className="flex items-baseline justify-between">
           <span className="t-small text-muted">Home price</span>
-          <span className="font-serif text-2xl font-medium num">{gbp(price)}</span>
+          <span className="t-h1 num">{gbp(price)}</span>
         </div>
-        <input aria-label="Home price" type="range" min={80_000} max={600_000} step={5_000} value={price} onChange={(e) => setPrice(+e.target.value)} className="w-full accent-teal-800 h-10 mt-1" />
+        <input aria-label="Home price" type="range" min={80_000} max={600_000} step={5_000} value={price} onChange={(e) => setPrice(+e.target.value)} className="range mt-1" style={{ ['--fill' as string]: `${((price - 80_000) / 520_000) * 100}%` }} />
         {tab !== 'stamp' && (
-          <div className="mt-2">
-            <p className="t-small text-muted mb-2">Deposit</p>
-            <div className="grid grid-cols-4 gap-2">
+          <div className="mt-2 flex items-center justify-between gap-3">
+            <span className="t-small text-muted">Deposit</span>
+            <div className="flex gap-1.5 rounded-full bg-stone-100 p-1">
               {[5, 10, 15, 20].map((d) => (
-                <button key={d} onClick={() => setDepPct(d)} className={`min-h-11 rounded-xl t-small font-semibold num ${depPct === d ? 'bg-teal-800 text-white' : 'bg-white ring-1 ring-inset ring-stone-200'}`}>{d}%</button>
+                <button key={d} onClick={() => setDepPct(d)} className={`min-h-10 px-4 rounded-full t-small font-semibold num transition ${depPct === d ? 'bg-white shadow-pill text-teal-900' : 'text-muted'}`}>{d}%</button>
               ))}
             </div>
           </div>
         )}
         {tab === 'stamp' && (
-          <label className="mt-3 flex items-center justify-between gap-3 min-h-11">
-            <span className="t-small">I’m a first-time buyer</span>
+          <label className="mt-2 flex items-center justify-between gap-3 min-h-11">
+            <span className="t-small text-muted">I’m a first-time buyer</span>
             <button role="switch" aria-checked={firstTime} onClick={() => setFirstTime(!firstTime)} className={`relative h-8 w-[52px] rounded-full transition-colors ${firstTime ? 'bg-teal-800' : 'bg-stone-200'}`}>
               <motion.span layout className={`absolute top-1 size-6 rounded-full bg-white shadow ${firstTime ? 'right-1' : 'left-1'}`} />
             </button>
@@ -67,7 +67,7 @@ export default function Money() {
         )}
       </div>
 
-      <div className="px-5 mt-6">
+      <div className="px-5 mt-7">
         {tab === 'upfront' && <Upfront price={price} depPct={depPct} firstTime={firstTime} />}
         {tab === 'stamp' && <Stamp price={price} firstTime={firstTime} />}
         {tab === 'monthly' && <Monthly price={price} depPct={depPct} />}
@@ -84,10 +84,10 @@ export default function Money() {
 
 function Hero({ label, value, sub }: { label: string; value: string; sub?: React.ReactNode }) {
   return (
-    <div className="mb-6">
-      <p className="t-small text-muted">{label}</p>
-      <motion.p key={value} initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} className="t-display num text-[2.75rem] mt-1">{value}</motion.p>
-      {sub && <p className="t-small text-muted mt-1">{sub}</p>}
+    <div className="spruce grain rounded-[24px] px-5 pt-5 pb-6 mb-6">
+      <p className="t-small text-teal-100/75">{label}</p>
+      <motion.p key={value} initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }} className="num text-[3.75rem] leading-none font-semibold tracking-[-0.04em] mt-3">{value}</motion.p>
+      {sub && <p className="t-small text-teal-100/75 mt-3">{sub}</p>}
     </div>
   )
 }
@@ -232,7 +232,7 @@ function Slider({ label, value, min, max, step, v, set }: { label: string; value
   return (
     <div className="mb-3">
       <div className="flex justify-between t-small"><span className="text-muted">{label}</span><span className="font-semibold num">{value}</span></div>
-      <input aria-label={label} type="range" min={min} max={max} step={step} value={v} onChange={(e) => set(+e.target.value)} className="w-full accent-teal-800 h-10" />
+      <input aria-label={label} type="range" min={min} max={max} step={step} value={v} onChange={(e) => set(+e.target.value)} className="range" style={{ ['--fill' as string]: `${((v - min) / (max - min)) * 100}%` }} />
     </div>
   )
 }

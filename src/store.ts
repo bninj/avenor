@@ -120,7 +120,7 @@ export function randomProfile(partial: Partial<Profile> = {}): Profile {
 }
 
 export const demoProfile: Profile = {
-  name: 'Amara',
+  name: 'Gurpreet',
   goal: 'buy',
   firstTime: true,
   budget: 225_000,

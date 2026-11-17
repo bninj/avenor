@@ -49,7 +49,7 @@ export default function Me() {
             ))}
           </ul>
         ) : (
-          <button onClick={() => nav('/pros')} className="w-full text-left rounded-2xl bg-stone-50 p-4 t-small text-muted">Tap the heart on any professional to keep them here.</button>
+          <button onClick={() => nav('/pros')} className="w-full text-left rounded-2xl bg-stone-50 p-4 t-small text-muted">Tap the heart on a pro to save them.</button>
         )}
       </section>
 

@@ -47,7 +47,7 @@ Every push to `main` builds the app and publishes it to GitHub Pages using `.git
 | Professionals on the map | `src/data/pros.ts` |
 | Stamp Duty rates and typical fees | `src/data/rates.ts` (re-check GOV.UK before each pitch) |
 | Ask Avenor answers | `src/data/answers.ts` |
-| Colours and type | `src/index.css` (design tokens at the top) |
+| Colours, type, grain texture | `src/index.css` (design tokens at the top) |
 | Logo | `src/components/Logo.tsx`, `public/favicon.svg` |
 
 ## Decisions made along the way
@@ -57,6 +57,7 @@ Every push to `main` builds the app and publishes it to GitHub Pages using `.git
 - **Ask Avenor is scripted** so it is free and can't fail during the pitch.
 - **Professionals are invented** and labelled as demo profiles, so no real firm appears endorsed.
 - **Guidance, not advice.** Every money screen links to MoneyHelper and GOV.UK.
-- **Logo** is Gurpreet's pin-and-house design, refined. Ten other directions are in `brand/`.
+- **Logo** merges Gurpreet's pin-and-house idea into one shape with a brass door. Earlier directions are in `brand/`.
+- **Identity**: one typeface (Switzer) at extreme sizes, spruce colour blocks with film grain, brass only for earned moments, and a Birmingham red-brick house as the signature object. Unbuilt parts show as a faint ghost of the finished home.
 
 See `CREDITS.md` for photos, fonts and data sources.

@@ -22,8 +22,8 @@ function pinIcon(p: Pro, active: boolean) {
   return L.divIcon({
     className: '',
     iconSize: [0, 0],
-    html: `<div style="transform:translate(-50%,-100%);display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:6px 10px 6px 7px;border-radius:999px;font:600 13px 'Albert Sans Variable',sans-serif;box-shadow:0 2px 10px rgba(11,43,42,.22);${active ? 'background:#0F4C4A;color:#fff;transform:translate(-50%,-100%) scale(1.08)' : 'background:#fff;color:#0B2B2A'}">
-      <span style="display:grid;place-items:center;width:20px;height:20px;border-radius:999px;font-size:12px;${active ? 'background:#C9A24B;color:#0B2B2A' : 'background:#F7EED6;color:#A9832F'}">${glyph[p.type]}</span>${p.rating.toFixed(1)}</div>`,
+    html: `<div style="transform:translate(-50%,-100%);display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:6px 10px 6px 7px;border-radius:999px;font:600 13px 'Albert Sans Variable',sans-serif;box-shadow:0 2px 10px rgba(11,43,42,.22);${active ? 'background:#123F3B;color:#fff;transform:translate(-50%,-100%) scale(1.08)' : 'background:#fff;color:#0C2A27'}">
+      <span style="display:grid;place-items:center;width:20px;height:20px;border-radius:999px;font-size:12px;${active ? 'background:#C79B4E;color:#0C2A27' : 'background:#F5EBD8;color:#A47B33'}">${glyph[p.type]}</span>${p.rating.toFixed(1)}</div>`,
   })
 }
 
@@ -155,7 +155,7 @@ function ProSheet({ p, saved, onSave, onPremium }: { p: Pro; saved: boolean; onS
       </ul>
 
       <figure className="mt-6 rounded-2xl bg-stone-50 p-5">
-        <blockquote className="font-serif text-lg leading-snug">“{p.review.text}”</blockquote>
+        <blockquote className="t-h3 font-medium leading-snug">“{p.review.text}”</blockquote>
         <figcaption className="t-small text-muted mt-2">{p.review.by}</figcaption>
       </figure>
 

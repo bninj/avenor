@@ -5,12 +5,13 @@ import { create } from 'zustand'
 import { Icon, type IconName } from './Icon'
 
 // ── Buttons ───────────────────────────────────
-type Variant = 'primary' | 'gold' | 'ghost' | 'quiet'
+type Variant = 'primary' | 'gold' | 'ghost' | 'quiet' | 'light'
 const variants: Record<Variant, string> = {
-  primary: 'bg-teal-800 text-white active:bg-teal-900',
-  gold: 'bg-gold-500 text-teal-900 active:bg-gold-600',
+  primary: 'bg-teal-800 text-teal-50 lift active:bg-teal-900',
+  gold: 'brass lift-brass active:brightness-95',
   ghost: 'bg-white text-teal-900 ring-1 ring-inset ring-stone-200 active:bg-stone-50',
-  quiet: 'bg-teal-50 text-teal-800 active:bg-teal-100',
+  quiet: 'bg-stone-100 text-teal-800 active:bg-stone-200',
+  light: 'bg-teal-50 text-teal-900 shadow-[inset_0_1px_0_rgba(255,255,255,.8),0_10px_24px_-10px_rgba(0,0,0,.5)] active:bg-white',
 }
 
 export function Button({
@@ -22,7 +23,7 @@ export function Button({
       whileTap={{ scale: disabled ? 1 : 0.975 }}
       disabled={disabled}
       onClick={onClick}
-      className={`min-h-[52px] w-full rounded-2xl px-5 font-semibold tracking-[-0.005em] transition-colors disabled:opacity-40 inline-flex items-center justify-center gap-2 ${variants[variant]} ${className}`}
+      className={`min-h-[56px] w-full rounded-full px-6 text-[1.0625rem] font-semibold tracking-[-0.01em] transition-[background,filter] disabled:opacity-40 inline-flex items-center justify-center gap-2 ${variants[variant]} ${className}`}
     >
       {icon && <Icon name={icon} size={20} />}
       {children}
@@ -32,7 +33,7 @@ export function Button({
 
 export function IconButton({ name, onClick, label, className = '' }: { name: IconName; onClick?: () => void; label: string; className?: string }) {
   return (
-    <button aria-label={label} onClick={onClick} className={`size-11 grid place-items-center rounded-full bg-white shadow-pill text-teal-900 active:scale-95 transition-transform ${className}`}>
+    <button aria-label={label} onClick={onClick} className={`size-11 grid place-items-center rounded-full bg-white/95 backdrop-blur shadow-pill text-teal-900 active:scale-95 transition-transform ${className}`}>
       <Icon name={name} size={20} />
     </button>
   )
@@ -71,16 +72,16 @@ export function SectionTitle({ children, action, onAction }: { children: React.R
 }
 
 // ── Bottom sheet ─────────────────────────────
-export function Sheet({ open, onClose, children, label, tall }: { open: boolean; onClose: () => void; children: React.ReactNode; label: string; tall?: boolean }) {
+export function Sheet({ open, onClose, children, label, tall, dark }: { open: boolean; onClose: () => void; children: React.ReactNode; label: string; tall?: boolean; dark?: boolean }) {
   // Portal to the app frame so sheets sit over the visible screen, whatever the scroll position
   const root = typeof document !== 'undefined' ? document.getElementById('app-root') : null
   const node = (
     <AnimatePresence>
       {open && (
         <div className="absolute inset-0 z-[1000]" role="dialog" aria-modal="true" aria-label={label}>
-          <motion.div className="absolute inset-0 bg-teal-900/35" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
+          <motion.div className="absolute inset-0 bg-teal-950/45 backdrop-blur-[2px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
           <motion.div
-            className={`absolute inset-x-0 bottom-0 rounded-t-[28px] bg-white shadow-sheet overflow-y-auto no-scrollbar ${tall ? 'max-h-[92%]' : 'max-h-[85%]'}`}
+            className={`absolute inset-x-0 bottom-0 rounded-t-[30px] bg-white shadow-sheet overflow-y-auto no-scrollbar ${tall ? 'max-h-[92%]' : 'max-h-[85%]'}`}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
@@ -90,10 +91,10 @@ export function Sheet({ open, onClose, children, label, tall }: { open: boolean;
             dragElastic={{ top: 0, bottom: 0.6 }}
             onDragEnd={(_, i) => { if (i.offset.y > 110 || i.velocity.y > 600) onClose() }}
           >
-            <div className="sticky top-0 bg-white pt-2.5 pb-1 z-10 flex justify-center">
-              <div className="h-1.5 w-10 rounded-full bg-stone-200" />
+            <div className={`sticky top-0 pt-2.5 pb-1 z-10 flex justify-center ${dark ? 'bg-transparent' : 'bg-white'}`}>
+              <div className={`h-1.5 w-10 rounded-full ${dark ? 'bg-white/30' : 'bg-stone-200'}`} />
             </div>
-            <button aria-label="Close" onClick={onClose} className="absolute right-3 top-3 z-20 size-10 grid place-items-center rounded-full text-muted active:bg-stone-100">
+            <button aria-label="Close" onClick={onClose} className={`absolute right-3 top-3 z-20 size-10 grid place-items-center rounded-full ${dark ? 'text-teal-50/80 active:bg-white/10' : 'text-muted active:bg-stone-100'}`}>
               <Icon name="close" size={20} />
             </button>
             {children}
@@ -162,7 +163,7 @@ export function Disclaimer({ className = '' }: { className?: string }) {
 export function Avatar({ name, tone = '#E9D9B4', size = 48 }: { name: string; tone?: string; size?: number }) {
   const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('')
   return (
-    <div className="grid place-items-center rounded-full font-serif text-teal-900 shrink-0" style={{ width: size, height: size, background: tone, fontSize: size * 0.38, fontWeight: 520 }}>
+    <div className="grid place-items-center rounded-full text-teal-900 shrink-0" style={{ width: size, height: size, background: tone, fontSize: size * 0.36, fontWeight: 600, letterSpacing: "-0.02em" }}>
       {initials}
     </div>
   )

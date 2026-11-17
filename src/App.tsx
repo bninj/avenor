@@ -7,6 +7,7 @@ import { Icon } from './components/Icon'
 import { TabBar } from './components/TabBar'
 import { Toaster } from './components/ui'
 import { TermSheet } from './components/Terms'
+import { Celebration } from './components/Celebration'
 import Welcome from './screens/Welcome'
 import Onboarding from './screens/Onboarding'
 import Home from './screens/Home'
@@ -60,6 +61,7 @@ function AppRoutes() {
       </Suspense>
       <TabBar />
       <TermSheet />
+      <Celebration />
       <Toaster />
     </Guard>
   )
@@ -78,9 +80,13 @@ function useDesktop() {
   return d
 }
 
+const DARK_TOP = (p: string) => ['/welcome', '/home', '/premium', '/house'].includes(p) || /^\/journey\/./.test(p)
+
 function StatusBar() {
+  const { pathname } = useLocation()
+  const dark = DARK_TOP(pathname)
   return (
-    <div className="h-[50px] shrink-0 flex items-end justify-between px-8 pb-2 text-[15px] font-semibold text-teal-900 bg-white relative z-30">
+    <div className={`h-[50px] shrink-0 flex items-end justify-between px-8 pb-2 text-[15px] font-semibold relative z-30 transition-colors ${dark ? 'bg-[#164A45] text-teal-50' : 'bg-white text-teal-900'}`}>
       <span className="num">9:41</span>
       <span className="flex items-center gap-1.5">
         <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1" /><rect x="5" y="5" width="3" height="6" rx="1" /><rect x="10" y="2.5" width="3" height="8.5" rx="1" /><rect x="15" y="0" width="3" height="11" rx="1" /></svg>
@@ -101,8 +107,8 @@ function JudgePanel() {
     <aside className="w-[360px] shrink-0 flex flex-col gap-8">
       <Logo size={34} />
       <div>
-        <h1 className="t-display text-[2.75rem] mb-4">Your first home, made clear.</h1>
-        <p className="t-body text-muted max-w-[34ch]">Step-by-step guidance for first-time buyers, plus checked local pros.</p>
+        <h1 className="text-[3.5rem] leading-[0.95] font-semibold tracking-[-0.04em] mb-4">From deposit<br />to doorstep.</h1>
+        <p className="t-body text-muted">The first-time buyer’s guide, with checked local pros.</p>
       </div>
       <div className="flex items-center gap-5 rounded-[24px] bg-white p-5 shadow-float">
         <div className="size-[116px] shrink-0 p-2 rounded-xl bg-white ring-1 ring-stone-200" dangerouslySetInnerHTML={{ __html: qr }} />
@@ -136,9 +142,9 @@ function Frame({ children }: { children: React.ReactNode }) {
     )
   }
   return (
-    <div className="min-h-full w-full bg-stone-100 flex items-center justify-center gap-24 px-12 py-10">
+    <div className="min-h-full w-full bg-stone-100 grain grain-light flex items-center justify-center gap-24 px-12 py-10">
       <JudgePanel />
-      <div className="relative shrink-0 rounded-[60px] bg-teal-900 p-[11px] shadow-[0_50px_100px_-30px_rgba(11,43,42,.45),0_0_0_1px_rgba(11,43,42,.9)]">
+      <div className="relative shrink-0 rounded-[60px] bg-[#1b1f1e] p-[11px] shadow-[0_50px_100px_-30px_rgba(12,42,39,.5),0_0_0_1px_rgba(0,0,0,.9),inset_0_0_0_2px_#3a403e]">
         <div className="relative w-[390px] h-[844px] rounded-[49px] overflow-hidden bg-white flex flex-col">
           <div className="absolute top-[11px] left-1/2 -translate-x-1/2 w-[122px] h-[35px] rounded-full bg-black z-40" />
           <StatusBar />

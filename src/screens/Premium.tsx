@@ -21,14 +21,12 @@ export default function Premium() {
 
   return (
     <Screen tabbed={false}>
-      <div className="relative bg-teal-800 text-white px-6 pt-5 pb-10 overflow-hidden">
+      <div className="relative spruce grain px-6 pt-4 pb-12 overflow-hidden">
         <button aria-label="Close" onClick={() => nav(-1)} className="size-11 -ml-2 grid place-items-center rounded-full active:bg-white/10"><Icon name="close" /></button>
-        {/* faint arch, the brand's shape */}
-        <svg className="absolute -right-10 -top-6 w-56 opacity-[0.08]" viewBox="0 0 64 64"><path d="M8 64V30a24 24 0 0 1 48 0v34h-9V30a15 15 0 0 0-30 0v34z" fill="#fff" /></svg>
-        <div className="mt-6 flex items-center gap-3"><Mark size={40} tone="light" /><span className="font-serif text-xl">Avenor Premium</span></div>
-        <h1 className="t-display mt-5">Buy with someone in your corner.</h1>
-        <div className="mt-6 border-l-2 border-gold-500 pl-4">
-          <p className="t-small text-white/85">Contracts, surveys and offers, explained the same day.</p>
+        <div className="mt-6 flex items-center gap-3"><Mark size={40} tone="light" /><span className="t-h3">Avenor Premium</span></div>
+        <h1 className="text-[2.75rem] leading-[0.98] font-semibold tracking-[-0.04em] mt-6">Buy with someone in your corner.</h1>
+        <div className="mt-4">
+          <p className="t-body text-teal-100/80">Contracts, surveys and offers, explained the same day.</p>
         </div>
       </div>
 
@@ -37,10 +35,10 @@ export default function Premium() {
           const sel = pick === p.id
           return (
             <motion.button key={p.id} role="radio" aria-checked={sel} whileTap={{ scale: 0.99 }} onClick={() => setPick(p.id)} className={`relative w-full text-left rounded-[22px] bg-white p-5 transition-shadow ${sel ? 'ring-2 ring-teal-800 shadow-float' : 'ring-1 ring-stone-200'}`}>
-              {p.tag && <span className="absolute -top-2.5 right-5 rounded-full bg-gold-500 text-teal-900 t-micro px-3 py-1">{p.tag}</span>}
+              {p.tag && <span className="absolute -top-2.5 right-5 rounded-full brass t-micro font-semibold px-3 py-1">{p.tag}</span>}
               <div className="flex items-baseline justify-between gap-3">
                 <span className="t-h3">{p.name}</span>
-                <span><span className="font-serif text-2xl font-medium num">{p.price}</span>{p.per && <span className="t-small text-muted"> {p.per}</span>}</span>
+                <span><span className="text-[1.75rem] font-semibold tracking-[-0.03em] num">{p.price}</span>{p.per && <span className="t-small text-muted"> {p.per}</span>}</span>
               </div>
               <p className="t-small text-muted mt-1">{p.blurb}</p>
               {sel && (

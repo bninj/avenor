@@ -1,38 +1,44 @@
-@import "@fontsource-variable/newsreader/standard.css";
-@import "@fontsource-variable/albert-sans/index.css";
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
 /* ───────────── Avenor design tokens ─────────────
-   White is the base (Airbnb-like). Teal is the voice. Gold is reserved for
-   reward and the single most important action. Stone is a quiet warm surface. */
+   Spruce (a deep, slightly inky teal) is the voice and the colour-block ground.
+   Brass is earned: keys, completed stages, the one key action. Mist is a cool
+   sage-white, never cream. Type is one family, Switzer, used at extreme sizes. */
 @theme {
-  --color-teal-900: #0B2B2A; /* ink */
-  --color-teal-800: #0F4C4A; /* brand */
-  --color-teal-700: #146C66;
-  --color-teal-500: #3E8C85;
-  --color-teal-100: #E3EFEC;
-  --color-teal-50: #F1F7F5;
-  --color-gold-600: #A9832F;
-  --color-gold-500: #C9A24B;
-  --color-gold-300: #E6C976;
-  --color-gold-100: #F7EED6;
-  --color-stone-50: #FAF8F4;
-  --color-stone-100: #F4F1EA;
-  --color-stone-200: #E9E5DC;
-  --color-stone-400: #A8A397;
-  --color-muted: #5E6B69;
+  --color-teal-950: #0A2321;
+  --color-teal-900: #0C2A27; /* ink */
+  --color-teal-800: #123F3B; /* brand spruce */
+  --color-teal-700: #1C5A53;
+  --color-teal-600: #2A6E66;
+  --color-teal-500: #4E8A80;
+  --color-teal-200: #C9DDD6;
+  --color-teal-100: #DFEBE6;
+  --color-teal-50: #EEF4F1;
+  --color-gold-600: #A47B33; /* brass, text on light */
+  --color-gold-500: #C79B4E; /* brass */
+  --color-gold-300: #E2C48A;
+  --color-gold-100: #F5EBD8;
+  --color-stone-50: #F6F8F6;
+  --color-stone-100: #F0F3F1; /* mist */
+  --color-stone-200: #E3E8E5; /* line */
+  --color-stone-400: #9AA5A1;
+  --color-muted: #64716D;
+  --color-brick: #B4634A;
   --color-danger: #B4442F;
 
-  --font-serif: "Newsreader Variable", Georgia, serif;
-  --font-sans: "Albert Sans Variable", system-ui, sans-serif;
+  --font-sans: "Switzer", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Switzer", ui-sans-serif, system-ui, sans-serif;
 
-  --radius-card: 22px;
-  --radius-tile: 16px;
+  /* Radius hierarchy: sheets > cards > controls > chips */
+  --radius-sheet: 30px;
+  --radius-card: 20px;
+  --radius-control: 14px;
 
-  --shadow-float: 0 1px 2px rgba(11, 43, 42, 0.06), 0 8px 24px -6px rgba(11, 43, 42, 0.14);
-  --shadow-sheet: 0 -12px 40px -12px rgba(11, 43, 42, 0.25);
-  --shadow-pill: 0 1px 1px rgba(11, 43, 42, 0.04), 0 4px 14px -2px rgba(11, 43, 42, 0.12);
+  /* Shadows tinted with spruce, always offset */
+  --shadow-float: 0 1px 1px rgba(12, 42, 39, 0.05), 0 10px 28px -10px rgba(12, 42, 39, 0.28);
+  --shadow-sheet: 0 -14px 40px -16px rgba(12, 42, 39, 0.35);
+  --shadow-pill: 0 1px 1px rgba(12, 42, 39, 0.05), 0 6px 16px -6px rgba(12, 42, 39, 0.22);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -42,52 +48,81 @@
   background: #fff;
   font-family: var(--font-sans);
   font-size: 16px;
+  font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   text-rendering: optimizeLegibility;
+  caret-color: var(--color-gold-500);
+  accent-color: var(--color-teal-800);
 }
+::selection { background: var(--color-gold-300); color: var(--color-teal-900); }
 
 @layer base {
   html, body, #root { height: 100%; }
   body { margin: 0; overscroll-behavior: none; }
   button { cursor: pointer; }
   button:disabled { cursor: default; }
-  /* Elegant line breaks: balanced headlines, no lonely last words */
-  h1, h2, h3, .t-display, .t-h1, .t-h2 { text-wrap: balance; }
-  p, li, blockquote, figcaption { text-wrap: pretty; }
+  h1, h2, h3 { text-wrap: balance; }
+  p, li, blockquote, figcaption, span { text-wrap: pretty; }
 }
 
-/* Type scale: a 1.25 ratio, serif for display, sans for reading */
-.t-display { font-family: var(--font-serif); font-size: 2.25rem; line-height: 1.06; font-weight: 450; letter-spacing: -0.015em; font-variation-settings: "opsz" 72; }
-.t-h1 { font-family: var(--font-serif); font-size: 1.75rem; line-height: 1.12; font-weight: 480; letter-spacing: -0.01em; font-variation-settings: "opsz" 60; }
-.t-h2 { font-family: var(--font-serif); font-size: 1.375rem; line-height: 1.2; font-weight: 500; font-variation-settings: "opsz" 36; }
-.t-h3 { font-size: 1.0625rem; line-height: 1.3; font-weight: 620; letter-spacing: -0.005em; }
-.t-body { font-size: 1rem; line-height: 1.55; }
+@layer components {
+/* ── Type scale: one family, extreme contrast ── */
+.t-hero { font-size: 5.5rem; line-height: 0.86; font-weight: 600; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.t-display { font-size: 2.5rem; line-height: 1; font-weight: 600; letter-spacing: -0.035em; }
+.t-h1 { font-size: 1.875rem; line-height: 1.06; font-weight: 600; letter-spacing: -0.03em; }
+.t-h2 { font-size: 1.3125rem; line-height: 1.18; font-weight: 600; letter-spacing: -0.02em; }
+.t-h3 { font-size: 1.0625rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; }
+.t-body { font-size: 1rem; line-height: 1.5; }
 .t-small { font-size: 0.875rem; line-height: 1.45; }
-.t-micro { font-size: 0.75rem; line-height: 1.35; font-weight: 550; }
+.t-micro { font-size: 0.75rem; line-height: 1.35; font-weight: 500; }
 .num { font-variant-numeric: tabular-nums; }
 
-:focus-visible { outline: 2.5px solid var(--color-gold-500); outline-offset: 2px; border-radius: 10px; }
+:focus-visible { outline: 2.5px solid var(--color-gold-500); outline-offset: 2px; border-radius: 12px; }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
 
 /* Glossary term inside running text */
-.term { text-decoration: underline; text-decoration-style: dotted; text-decoration-color: var(--color-gold-500); text-decoration-thickness: 2px; text-underline-offset: 4px; font-weight: 560; }
+.term { text-decoration: underline; text-decoration-style: dotted; text-decoration-color: var(--color-gold-500); text-decoration-thickness: 2px; text-underline-offset: 4px; font-weight: 550; }
 
-/* Arch mask: the signature shape, used for photos and stage art */
-.arch { border-radius: 999px 999px var(--arch-foot, 18px) var(--arch-foot, 18px); }
+/* ── Material: film grain on colour blocks ── */
+.grain { position: relative; isolation: isolate; }
+.grain::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light; opacity: 0.5;
+}
+.grain-light::after { opacity: 0.22; mix-blend-mode: multiply; }
+.grain > * { position: relative; z-index: 2; }
 
-/* Leaflet polish */
-.leaflet-container { font-family: var(--font-sans); background: #EEF1EE; }
-/* Calm the OpenStreetMap palette so it sits with the brand */
-.leaflet-tile-pane { filter: saturate(.3) sepia(.12) brightness(1.03) contrast(.92); }
+/* Spruce block: soft light falling from the top right */
+.spruce { background: radial-gradient(130% 90% at 80% 0%, #1F5E56 0%, #123F3B 55%, #0F3633 100%); color: #EEF4F1; }
+.brass { background: radial-gradient(120% 100% at 80% 0%, #D6AE66 0%, #C79B4E 60%, #B88B40 100%); color: #0C2A27; }
+
+/* Top-edge highlight that makes solid buttons feel pressed from metal, not flat */
+.lift { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 8px 18px -8px rgba(12, 42, 39, 0.55); }
+.lift-brass { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 8px 18px -8px rgba(164, 123, 51, 0.6); }
+
+/* Custom range: thick track, brass thumb */
+input[type="range"].range { -webkit-appearance: none; appearance: none; height: 44px; background: transparent; width: 100%; }
+input[type="range"].range::-webkit-slider-runnable-track { height: 8px; border-radius: 99px; background: linear-gradient(to right, var(--color-teal-800) var(--fill, 50%), var(--color-stone-200) var(--fill, 50%)); }
+input[type="range"].range::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 30px; margin-top: -11px; border-radius: 50%; background: #fff; border: 7px solid var(--color-gold-500); box-shadow: 0 4px 12px -2px rgba(12, 42, 39, 0.35); }
+input[type="range"].range::-moz-range-track { height: 8px; border-radius: 99px; background: var(--color-stone-200); }
+input[type="range"].range::-moz-range-progress { height: 8px; border-radius: 99px; background: var(--color-teal-800); }
+input[type="range"].range::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 6px solid var(--color-gold-500); }
+
+}
+
+/* Leaflet: calm OSM to sit with the brand */
+.leaflet-container { font-family: var(--font-sans); background: #E8EEEB; }
+.leaflet-tile-pane { filter: grayscale(.65) sepia(.18) hue-rotate(115deg) saturate(.8) brightness(1.04) contrast(.9); }
 .leaflet-control-attribution { font-size: 9px !important; background: rgba(255,255,255,.75) !important; }
 .leaflet-control-zoom { display: none; }
+
+.screen-enter { animation: screen-in .4s var(--ease-out-soft) both; }
+@keyframes screen-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
-
-.screen-enter { animation: screen-in .38s var(--ease-out-soft) both; }
-@keyframes screen-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
