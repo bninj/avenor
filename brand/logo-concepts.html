@@ -1,0 +1,69 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Albert+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--teal:#0F4C4A;--gold:#C9A24B;--ink:#0B2B2A;--line:#E9E5DC}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;font-family:'Albert Sans',sans-serif;color:var(--ink);padding:48px}
+  h1{font-family:Newsreader;font-weight:500;font-size:44px;margin:0 0 8px;letter-spacing:-.01em}
+  p.lead{margin:0 0 36px;color:#5b6b6a;max-width:70ch;line-height:1.5}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+  .c{border:1px solid var(--line);border-radius:28px;overflow:hidden;display:grid;grid-template-columns:220px 1fr}
+  .hero{background:#F6F3EC;display:grid;place-items:center;padding:28px}
+  .hero svg{width:132px;height:132px}
+  .body{padding:24px 26px;display:flex;flex-direction:column;gap:16px}
+  .top{display:flex;justify-content:space-between;align-items:baseline}
+  .t{font-weight:600;font-size:18px}.n{font-family:Newsreader;font-size:20px;color:var(--gold)}
+  .d{font-size:14px;color:#56625f;line-height:1.5;margin:0}
+  .apps{display:flex;gap:14px;align-items:flex-end}
+  .tile{width:64px;height:64px;border-radius:16px;background:var(--teal);display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+  .tile svg{width:42px;height:42px}
+  .tile.dark{background:#0B2B2A}
+  .tiny{display:flex;gap:10px;align-items:flex-end;padding-bottom:2px}
+  .tiny svg{width:16px;height:16px}.tiny .m svg{width:24px;height:24px}
+  .lock{display:flex;align-items:center;gap:10px;color:var(--teal)}
+  .lock svg{width:34px;height:34px}
+  .w-serif{font-family:Newsreader;font-weight:500;font-size:30px;letter-spacing:.01em}
+  .w-caps{font-family:Newsreader;font-weight:500;font-size:24px;letter-spacing:.22em}
+  .w-sans{font-family:'Albert Sans';font-weight:600;font-size:27px;letter-spacing:-.01em}
+</style></head><body>
+<h1>Avenor: ten logo directions</h1>
+<p class="lead">Built around one idea: a front door you walk through, step by step. Each direction shows the main mark, the app icon on teal and on dark, the mark at favicon size, and a wordmark lockup.</p>
+<div class="grid" id="g"></div>
+<script>
+let uid=0;
+const C=[
+ {t:"Portal", w:"w-serif", d:"A heavy arch with a gold door set inside it. One shape, readable from across a room or at 16px. The door is the reward at the end of the journey.",
+  s:(f,a,bg)=>`<path d="M8 60V30a24 24 0 0 1 48 0v30h-9V30a15 15 0 0 0-30 0v30z" fill="${f}"/><path d="M23 60V31a9 9 0 0 1 18 0v29z" fill="${a}"/>`},
+ {t:"Keystone", w:"w-caps", d:"The keystone is the wedge at the top of an arch that holds the whole thing up. Avenor is that piece for a first-time buyer. A quiet, clever story for judges.",
+  s:(f,a,bg)=>`<path d="M8 60V32a24 24 0 0 1 48 0v28h-9V32a15 15 0 0 0-30 0v28z" fill="${f}"/><path d="M25.5 5.5h13l-2.2 13.8h-8.6z" fill="${a}" stroke="${bg}" stroke-width="2.4" stroke-linejoin="round"/>`},
+ {t:"Arch A", w:"w-caps", lockA:true, d:"An A drawn like a serif letter, with thick and thin legs, but the peak is an arch and the bar is a gold threshold. It doubles as the first letter of the wordmark.",
+  s:(f,a,bg)=>`<path d="M10 60V32a22 22 0 0 1 44 0v28h-10V32a12 12 0 0 0-24 0v28z" fill="${f}"/><path d="M14 60V32a18 18 0 0 1 18-18" fill="none" stroke="${bg}" stroke-width="0"/><rect x="18" y="40" width="28" height="5.5" rx="1" fill="${a}"/><path d="M6 60h12M40 60h18" stroke="${f}" stroke-width="3" stroke-linecap="round"/>`},
+ {t:"Ajar", w:"w-serif", d:"A closed arch with the door just open, and warm gold light spilling out. Emotional rather than clever: the feeling of coming home.",
+  s:(f,a,bg)=>`<path d="M10 60V30a22 22 0 0 1 44 0v30z" fill="${f}"/><path d="M38 60V22.5a16 16 0 0 1 9 14.4V60z" fill="${a}"/><path d="M38 60V23l-4 2v35z" fill="${a}" opacity=".45"/>`},
+ {t:"Colonnade", w:"w-caps", d:"Arches receding down an avenue (Avenor, avenue). Fine lines, very architectural, the most 'Parisian' of the set. Better as a wordmark partner than as a tiny icon.",
+  s:(f,a,bg)=>`<path d="M6 60V30a14 14 0 0 1 28 0v30" fill="none" stroke="${f}" stroke-width="4.2"/><path d="M34 60V36a9.5 9.5 0 0 1 19 0v24" fill="none" stroke="${f}" stroke-width="3.4"/><path d="M53 60V41a5 5 0 0 1 10 0v19" fill="none" stroke="${a}" stroke-width="2.8"/><path d="M2 60h62" stroke="${f}" stroke-width="3"/>`},
+ {t:"Threshold", w:"w-sans", d:"An open archway with two gold steps leading up to it. Literally 'taking the first step'. Friendly and clear: the most Airbnb of the set.",
+  s:(f,a,bg)=>`<path d="M14 50V28a18 18 0 0 1 36 0v22" fill="none" stroke="${f}" stroke-width="7" stroke-linecap="butt"/><rect x="10" y="50" width="44" height="5" rx="1.5" fill="${a}"/><rect x="4" y="57" width="56" height="5" rx="1.5" fill="${a}" opacity=".7"/>`},
+ {t:"Folded map", w:"w-sans", d:"An arch made of three folded panels, like a paper map. Home and journey in one. The fold shading gives it depth without gradients.",
+  s:(f,a,bg)=>{const id='fm'+(uid++);return `<defs><clipPath id="${id}"><path d="M8 60V30a24 24 0 0 1 48 0v30z"/></clipPath></defs><g clip-path="url(#${id})"><path d="M8 0h16v64H8z" fill="${f}"/><path d="M24 4l16 4v56l-16-4z" fill="${a}"/><path d="M40 0h16v64H40z" fill="${f}" opacity=".78"/></g>`}},
+ {t:"Lowercase a", w:"w-sans", d:"A single-storey 'a' where the bowl is an arched doorway and the stem is the wall. Soft and modern, like a consumer tech brand.",
+  s:(f,a,bg)=>`<path d="M44 60V30a19 19 0 0 0-38 0v30z" fill="${f}"/><path d="M15 60V31a10 10 0 0 1 20 0v29z" fill="${a}"/><rect x="47" y="11" width="10" height="49" rx="5" fill="${f}"/>`},
+ {t:"Seal", w:"w-caps", seal:true, d:"A round seal like a stamp on a deed or a heritage estate agent's crest, with the arch at its centre. Feels established and trustworthy. Less playful.",
+  s:(f,a,bg)=>{const id='sp'+(uid++);return `<circle cx="32" cy="32" r="29" fill="none" stroke="${f}" stroke-width="2.2"/><circle cx="32" cy="32" r="20" fill="none" stroke="${f}" stroke-width="1"/><defs><path id="${id}" d="M32 32m-24.5 0a24.5 24.5 0 1 1 49 0a24.5 24.5 0 1 1-49 0"/></defs><text font-family="Newsreader" font-size="5.2" fill="${f}"><textPath href="#${id}" startOffset="0" textLength="152" lengthAdjust="spacing">AVENOR  ✦  FIRST HOMES  ✦  BIRMINGHAM  ✦</textPath></text><path d="M23 46V31a9 9 0 0 1 18 0v15h-4.5V31a4.5 4.5 0 0 0-9 0v15z" fill="${f}"/><path d="M28 46V31.5a4 4 0 0 1 8 0V46z" fill="${a}"/>`}},
+ {t:"Moon door", w:"w-serif", d:"A full circle with an arch rising inside it, like a sunrise over a doorway. A new beginning. Bold and graphic, it would look great on merch and the shelf model.",
+  s:(f,a,bg)=>{const id='md'+(uid++);return `<defs><clipPath id="${id}"><circle cx="32" cy="32" r="28"/></clipPath></defs><circle cx="32" cy="32" r="28" fill="${f}"/><path clip-path="url(#${id})" d="M20 64V38a12 12 0 0 1 24 0v26z" fill="${a}"/>`}},
+];
+const g=document.getElementById('g');
+C.forEach((c,i)=>{
+  const svg=(f,a,bg)=>`<svg viewBox="0 0 64 64">${c.s(f,a,bg)}</svg>`;
+  const word=c.w==='w-caps'?'AVENOR':'Avenor';
+  g.insertAdjacentHTML('beforeend',`<div class="c">
+   <div class="hero">${svg('#0F4C4A','#C9A24B','#F6F3EC')}</div>
+   <div class="body"><div class="top"><span class="t">${c.t}</span><span class="n">${i+1}</span></div>
+    <div class="apps"><div class="tile">${svg('#F6F1E6','#E3C26E','#0F4C4A')}</div><div class="tile dark">${svg('#E3C26E','#F6F1E6','#0B2B2A')}</div>
+     <div class="tiny"><span class="m">${svg('#0F4C4A','#C9A24B','#fff')}</span>${svg('#0F4C4A','#C9A24B','#fff')}</div></div>
+    <div class="lock">${svg('#0F4C4A','#C9A24B','#fff')}<span class="${c.w}">${word}</span></div>
+    <p class="d">${c.d}</p></div></div>`)
+});
+</script></body></html>

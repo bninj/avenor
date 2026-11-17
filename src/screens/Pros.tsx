@@ -1,0 +1,183 @@
+import { useEffect, useMemo, useState } from 'react'
+import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet'
+import L from 'leaflet'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { pros, proTypeLabel, type Pro } from '../data/pros'
+import type { ProType } from '../data/stages'
+import { areas } from '../data/areas'
+import { useApp } from '../store'
+import { Icon } from '../components/Icon'
+import { Avatar, Button, Screen, Sheet, toast } from '../components/ui'
+
+const FILTERS: { id: ProType | 'all'; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'adviser', label: 'Mortgage' },
+  { id: 'solicitor', label: 'Solicitors' },
+  { id: 'surveyor', label: 'Surveyors' },
+  { id: 'agent', label: 'Agents' },
+]
+const glyph: Record<ProType, string> = { adviser: '£', solicitor: '§', surveyor: '⌂', agent: '◆' }
+
+function pinIcon(p: Pro, active: boolean) {
+  return L.divIcon({
+    className: '',
+    iconSize: [0, 0],
+    html: `<div style="transform:translate(-50%,-100%);display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:6px 10px 6px 7px;border-radius:999px;font:600 13px 'Albert Sans Variable',sans-serif;box-shadow:0 2px 10px rgba(11,43,42,.22);${active ? 'background:#0F4C4A;color:#fff;transform:translate(-50%,-100%) scale(1.08)' : 'background:#fff;color:#0B2B2A'}">
+      <span style="display:grid;place-items:center;width:20px;height:20px;border-radius:999px;font-size:12px;${active ? 'background:#C9A24B;color:#0B2B2A' : 'background:#F7EED6;color:#A9832F'}">${glyph[p.type]}</span>${p.rating.toFixed(1)}</div>`,
+  })
+}
+
+function FlyTo({ lat, lng, zoom }: { lat: number; lng: number; zoom: number }) {
+  const map = useMap()
+  useEffect(() => { map.flyTo([lat, lng], zoom, { duration: 0.8 }) }, [lat, lng, zoom, map])
+  return null
+}
+
+export default function Pros() {
+  const [params, setParams] = useSearchParams()
+  const nav = useNavigate()
+  const { profile, saved, toggleSaved } = useApp()
+  const type = (params.get('type') as ProType | null) ?? 'all'
+  const openId = params.get('id')
+  const [focus, setFocus] = useState<string | null>(openId)
+  const list = useMemo(() => (type === 'all' ? pros : pros.filter((p) => p.type === type)), [type])
+  const home = areas.find((a) => a.name === profile?.area) ?? { lat: 52.4580, lng: -1.9000 }
+  const open = pros.find((p) => p.id === openId) ?? null
+  const focusPro = pros.find((p) => p.id === focus)
+
+  const setType = (t: string) => { const n = new URLSearchParams(params); if (t === 'all') n.delete('type'); else n.set('type', t); n.delete('id'); setParams(n, { replace: true }) }
+  const openPro = (id: string | null) => { const n = new URLSearchParams(params); if (id) n.set('id', id); else n.delete('id'); setParams(n, { replace: true }); if (id) setFocus(id) }
+
+  return (
+    <Screen className="!pb-0">
+      <div className="relative h-[46%] min-h-[300px]">
+        <MapContainer center={[home.lat, home.lng]} zoom={12} zoomControl={false} attributionControl className="absolute inset-0 z-0" style={{ height: '100%' }}>
+          <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap contributors' />
+          {list.map((p) => (
+            <Marker key={p.id} position={[p.lat, p.lng]} icon={pinIcon(p, p.id === focus)} eventHandlers={{ click: () => openPro(p.id) }} zIndexOffset={p.id === focus ? 1000 : 0} />
+          ))}
+          {focusPro && <FlyTo lat={focusPro.lat} lng={focusPro.lng} zoom={13} />}
+        </MapContainer>
+
+        {/* Floating search + filters, Airbnb style */}
+        <div className="absolute inset-x-0 top-0 z-[500] p-4 space-y-3 pointer-events-none">
+          <div className="pointer-events-auto min-h-14 rounded-full bg-white shadow-float flex items-center gap-3 px-5">
+            <Icon name="search" size={20} />
+            <div className="flex-1 leading-tight">
+              <p className="font-semibold">Checked pros near {profile?.postcode ?? 'Birmingham'}</p>
+              <p className="t-micro font-normal text-muted">{profile?.area ?? 'Birmingham'} and nearby</p>
+            </div>
+          </div>
+          <div className="pointer-events-auto flex gap-2 overflow-x-auto no-scrollbar">
+            {FILTERS.map((f) => (
+              <button key={f.id} onClick={() => setType(f.id)} className={`shrink-0 min-h-10 rounded-full px-4 t-small font-semibold shadow-pill ${type === f.id ? 'bg-teal-800 text-white' : 'bg-white'}`}>{f.label}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* List */}
+      <div className="relative -mt-5 rounded-t-[26px] bg-white z-10 pt-3 pb-28">
+        <div className="mx-auto h-1.5 w-10 rounded-full bg-stone-200 mb-4" />
+        <p className="px-5 t-h3 mb-1">{list.length} {type === 'all' ? 'professionals' : proTypeLabel[type].many.toLowerCase()}</p>
+        <p className="px-5 t-small text-muted mb-4 flex items-center gap-1.5"><Icon name="shield" size={16} className="text-teal-700" /> Checked on official registers.</p>
+        <ul className="px-5 space-y-3">
+          {list.map((p) => (
+            <li key={p.id}>
+              <button onClick={() => openPro(p.id)} className={`w-full text-left rounded-[22px] p-4 ring-1 transition-shadow ${focus === p.id ? 'ring-teal-800 shadow-float' : 'ring-stone-200'}`}>
+                <div className="flex gap-3.5 items-center">
+                  <Avatar name={p.person} tone={p.tone} size={52} />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold leading-snug">{p.firm}</p>
+                    <p className="t-small text-muted flex items-center gap-1">{p.person}, {p.area}<span className="w-1.5" /><Icon name="star" size={13} fill="currentColor" stroke={0} className="text-gold-500" /><span className="text-teal-900 font-semibold num">{p.rating}</span></p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  <Badge icon="shield">{p.register} checked</Badge>
+                  {p.ftb && <Badge icon="key">First-time buyers</Badge>}
+                  <Badge icon="clock">{p.replies.replace('Usually replies', 'Replies')}</Badge>
+                </div>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <p className="px-5 mt-5 t-micro font-normal text-stone-400">Demo profiles. These firms are invented for the prototype.</p>
+      </div>
+
+      <Sheet open={!!open} onClose={() => openPro(null)} label={open?.firm ?? 'Professional'} tall>
+        {open && (
+          <ProSheet p={open} saved={!!saved[open.id]} onSave={() => { toggleSaved(open.id); toast(saved[open.id] ? 'Removed from saved' : 'Saved to your dashboard') }} onPremium={() => nav('/premium')} />
+        )}
+      </Sheet>
+    </Screen>
+  )
+}
+
+function Badge({ icon, children }: { icon: 'shield' | 'key' | 'clock'; children: React.ReactNode }) {
+  return <span className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-1 t-micro"><Icon name={icon} size={13} />{children}</span>
+}
+
+function ProSheet({ p, saved, onSave, onPremium }: { p: Pro; saved: boolean; onSave: () => void; onPremium: () => void }) {
+  const plan = useApp((s) => s.plan)
+  const locked = plan === 'free'
+  const [sent, setSent] = useState(false)
+  return (
+    <div className="px-6 pb-8 pt-2">
+      <div className="flex items-center gap-4">
+        <Avatar name={p.person} tone={p.tone} size={72} />
+        <div className="flex-1 min-w-0 pr-6">
+          <p className="t-micro text-muted">{proTypeLabel[p.type].one}</p>
+          <h2 className="t-h2 leading-tight">{p.firm}</h2>
+          <p className="t-small text-muted">{p.person}, {p.area} {p.district}</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 mt-6 rounded-2xl ring-1 ring-stone-200 divide-x divide-stone-200 text-center">
+        <div className="py-3"><p className="font-semibold num flex items-center justify-center gap-1"><Icon name="star" size={14} fill="currentColor" stroke={0} className="text-gold-500" />{p.rating}</p><p className="t-micro text-muted">{p.reviews} reviews</p></div>
+        <div className="py-3"><p className="font-semibold num">{new Date().getFullYear() - p.since} yrs</p><p className="t-micro text-muted">experience</p></div>
+        <div className="py-3"><p className="font-semibold">{p.languages.length}</p><p className="t-micro text-muted">languages</p></div>
+      </div>
+
+      <div className="mt-5 rounded-2xl bg-teal-50 p-4 flex gap-3">
+        <span className="text-teal-700"><Icon name="shield" size={22} /></span>
+        <div className="t-small">
+          <p className="font-semibold">Checked on the {p.register} register</p>
+          <p className="text-muted">{p.registerNo}. Insurance and reviews checked too.</p>
+        </div>
+      </div>
+
+      <p className="t-body mt-5">{p.about}</p>
+
+      <ul className="mt-5 space-y-3 t-small">
+        <li className="flex gap-3"><Icon name="money" size={20} className="text-muted" /><span><span className="text-muted">Fees: </span>{p.fee}</span></li>
+        <li className="flex gap-3"><Icon name="clock" size={20} className="text-muted" />{p.replies}</li>
+        <li className="flex gap-3"><Icon name="globe" size={20} className="text-muted" />{p.languages.join(', ')}</li>
+      </ul>
+
+      <figure className="mt-6 rounded-2xl bg-stone-50 p-5">
+        <blockquote className="font-serif text-lg leading-snug">“{p.review.text}”</blockquote>
+        <figcaption className="t-small text-muted mt-2">{p.review.by}</figcaption>
+      </figure>
+
+      {/* Contact: the business model, visible */}
+      <h3 className="t-h3 mt-7 mb-3">Contact</h3>
+      <div className="relative rounded-2xl ring-1 ring-stone-200 divide-y divide-stone-200">
+        <div className="flex items-center gap-3 p-4"><Icon name="phone" size={20} className="text-muted" /><span className={locked ? 'blur-[5px] select-none' : ''}>0121 496 0{p.reviews}</span></div>
+        <div className="flex items-center gap-3 p-4"><Icon name="message" size={20} className="text-muted" /><span className={locked ? 'blur-[5px] select-none' : ''}>{p.person.split(' ')[0].toLowerCase()}@{p.firm.split(' ')[0].toLowerCase()}.example</span></div>
+        {locked && (
+          <button onClick={onPremium} className="absolute inset-0 grid place-items-center bg-white/40">
+            <span className="inline-flex items-center gap-2 rounded-full bg-teal-900 text-white t-small font-semibold px-4 py-2.5 shadow-float"><Icon name="lock" size={16} /> Unlock with Premium</span>
+          </button>
+        )}
+      </div>
+
+      <div className="mt-5 space-y-2.5">
+        <Button onClick={() => { setSent(true); toast(`Intro sent to ${p.person.split(' ')[0]}`) }} disabled={sent}>
+          {sent ? 'Intro request sent' : 'Request a free intro'}
+        </Button>
+        <Button variant="ghost" icon="heart" onClick={onSave}>{saved ? 'Saved' : 'Save'}</Button>
+        <p className="t-micro font-normal text-muted text-center pt-1">Free for you. Pros pay per introduction.</p>
+      </div>
+    </div>
+  )
+}

@@ -1,0 +1,238 @@
+import { useMemo, useState } from 'react'
+import { motion } from 'motion/react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { gbp, monthlyPayment, rates, stampDuty } from '../data/rates'
+import { useApp } from '../store'
+import { Icon } from '../components/Icon'
+import { Disclaimer, Screen } from '../components/ui'
+import { openTerm } from '../components/Terms'
+
+type Tab = 'upfront' | 'stamp' | 'monthly' | 'deposit'
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'upfront', label: 'Upfront cash' },
+  { id: 'stamp', label: 'Stamp Duty' },
+  { id: 'monthly', label: 'Monthly cost' },
+  { id: 'deposit', label: 'Saving plan' },
+]
+// Validated chart colours (colour-blind safe pair, 3:1 on white)
+const CHART = { equity: '#11917F', cost: '#B3862A' }
+
+export default function Money() {
+  const [params, setParams] = useSearchParams()
+  const tab = (params.get('tab') as Tab) || 'upfront'
+  const profile = useApp((s) => s.profile)
+  const [price, setPrice] = useState(profile?.budget ?? 225_000)
+  const [depPct, setDepPct] = useState(10)
+  const [firstTime, setFirstTime] = useState(profile?.firstTime ?? true)
+
+  return (
+    <Screen>
+      <div className="px-5 pt-4">
+        <h1 className="t-display">Money</h1>
+        <p className="t-body text-muted mt-2">Real numbers, before anyone sells you anything.</p>
+      </div>
+
+      <div className="flex gap-2 overflow-x-auto no-scrollbar px-5 py-5" role="tablist">
+        {TABS.map((t) => (
+          <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setParams({ tab: t.id }, { replace: true })} className={`shrink-0 min-h-11 rounded-full px-4 t-small font-semibold transition-colors ${tab === t.id ? 'bg-teal-800 text-white' : 'ring-1 ring-inset ring-stone-200'}`}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Shared price input */}
+      <div className="mx-5 rounded-[22px] bg-stone-50 p-5">
+        <div className="flex items-baseline justify-between">
+          <span className="t-small text-muted">Home price</span>
+          <span className="font-serif text-2xl font-medium num">{gbp(price)}</span>
+        </div>
+        <input aria-label="Home price" type="range" min={80_000} max={600_000} step={5_000} value={price} onChange={(e) => setPrice(+e.target.value)} className="w-full accent-teal-800 h-10 mt-1" />
+        {tab !== 'stamp' && (
+          <div className="mt-2">
+            <p className="t-small text-muted mb-2">Deposit</p>
+            <div className="grid grid-cols-4 gap-2">
+              {[5, 10, 15, 20].map((d) => (
+                <button key={d} onClick={() => setDepPct(d)} className={`min-h-11 rounded-xl t-small font-semibold num ${depPct === d ? 'bg-teal-800 text-white' : 'bg-white ring-1 ring-inset ring-stone-200'}`}>{d}%</button>
+              ))}
+            </div>
+          </div>
+        )}
+        {tab === 'stamp' && (
+          <label className="mt-3 flex items-center justify-between gap-3 min-h-11">
+            <span className="t-small">I’m a first-time buyer</span>
+            <button role="switch" aria-checked={firstTime} onClick={() => setFirstTime(!firstTime)} className={`relative h-8 w-[52px] rounded-full transition-colors ${firstTime ? 'bg-teal-800' : 'bg-stone-200'}`}>
+              <motion.span layout className={`absolute top-1 size-6 rounded-full bg-white shadow ${firstTime ? 'right-1' : 'left-1'}`} />
+            </button>
+          </label>
+        )}
+      </div>
+
+      <div className="px-5 mt-6">
+        {tab === 'upfront' && <Upfront price={price} depPct={depPct} firstTime={firstTime} />}
+        {tab === 'stamp' && <Stamp price={price} firstTime={firstTime} />}
+        {tab === 'monthly' && <Monthly price={price} depPct={depPct} />}
+        {tab === 'deposit' && <Saving price={price} depPct={depPct} saved={profile?.savings ?? 0} />}
+      </div>
+
+      <p className="px-5 mt-6 t-micro font-normal text-muted">
+        Stamp Duty: {rates.region} rates from <a className="underline" href={rates.source} target="_blank" rel="noreferrer">GOV.UK</a>, checked {rates.checked}. Fees are typical, not quotes.
+      </p>
+      <Disclaimer className="px-5 mt-3" />
+    </Screen>
+  )
+}
+
+function Hero({ label, value, sub }: { label: string; value: string; sub?: React.ReactNode }) {
+  return (
+    <div className="mb-6">
+      <p className="t-small text-muted">{label}</p>
+      <motion.p key={value} initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} className="t-display num text-[2.75rem] mt-1">{value}</motion.p>
+      {sub && <p className="t-small text-muted mt-1">{sub}</p>}
+    </div>
+  )
+}
+
+function Rows({ rows }: { rows: { label: string; value: number; term?: string; dot?: string }[] }) {
+  return (
+    <ul className="divide-y divide-stone-200">
+      {rows.map((r) => (
+        <li key={r.label} className="flex items-center justify-between py-3.5 gap-3">
+          <span className="flex items-center gap-2.5">
+            {r.dot && <span className="size-2.5 rounded-full" style={{ background: r.dot }} />}
+            {r.term ? <button onClick={() => openTerm(r.term!)} className="term">{r.label}</button> : <span>{r.label}</span>}
+          </span>
+          <span className="num font-medium">{gbp(r.value)}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function Upfront({ price, depPct, firstTime }: { price: number; depPct: number; firstTime: boolean }) {
+  const f = rates.typicalFees
+  const deposit = (price * depPct) / 100
+  const sdlt = stampDuty(price, firstTime)
+  const fees = sdlt + f.solicitor + f.searches + f.survey + f.mortgageFee + f.removals
+  const total = deposit + fees
+  const [hover, setHover] = useState<null | 'equity' | 'cost'>(null)
+  return (
+    <>
+      <Hero label="Cash you need on the day" value={gbp(total)} sub={<>{gbp(fees)} on top of your deposit.</>} />
+      {/* Two-part bar: what stays yours vs what is spent */}
+      <div className="relative">
+        <div className="flex h-4 gap-[2px]" role="img" aria-label={`Deposit ${gbp(deposit)}, fees and tax ${gbp(fees)}`}>
+          <button onMouseEnter={() => setHover('equity')} onMouseLeave={() => setHover(null)} onClick={() => setHover(hover === 'equity' ? null : 'equity')} className="h-full rounded-l-[4px]" style={{ width: `${(deposit / total) * 100}%`, background: CHART.equity }} aria-label="Deposit" />
+          <button onMouseEnter={() => setHover('cost')} onMouseLeave={() => setHover(null)} onClick={() => setHover(hover === 'cost' ? null : 'cost')} className="h-full rounded-r-[4px]" style={{ width: `${(fees / total) * 100}%`, background: CHART.cost }} aria-label="Fees and tax" />
+        </div>
+        {hover && (
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 rounded-xl bg-teal-900 text-white t-small px-3 py-2 whitespace-nowrap shadow-float">
+            {hover === 'equity' ? `Deposit ${gbp(deposit)} (${Math.round((deposit / total) * 100)}%)` : `Fees and tax ${gbp(fees)} (${Math.round((fees / total) * 100)}%)`}
+          </div>
+        )}
+        <div className="flex justify-between mt-2.5 t-small">
+          <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-full" style={{ background: CHART.equity }} />Deposit, stays yours</span>
+          <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-full" style={{ background: CHART.cost }} />Fees and tax, spent</span>
+        </div>
+      </div>
+      <div className="mt-5">
+        <Rows rows={[
+          { label: `Deposit (${depPct}%)`, value: deposit, term: 'deposit', dot: CHART.equity },
+          { label: 'Stamp Duty', value: sdlt, term: 'sdlt', dot: CHART.cost },
+          { label: 'Solicitor', value: f.solicitor, term: 'conveyancing', dot: CHART.cost },
+          { label: 'Searches', value: f.searches, term: 'searches', dot: CHART.cost },
+          { label: 'Survey', value: f.survey, term: 'survey', dot: CHART.cost },
+          { label: 'Mortgage fee', value: f.mortgageFee, term: 'arrangement-fee', dot: CHART.cost },
+          { label: 'Removals', value: f.removals, dot: CHART.cost },
+        ]} />
+      </div>
+    </>
+  )
+}
+
+function Stamp({ price, firstTime }: { price: number; firstTime: boolean }) {
+  const tax = stampDuty(price, firstTime)
+  const standard = stampDuty(price, false)
+  const saving = standard - tax
+  return (
+    <>
+      <Hero label="Stamp Duty to pay" value={gbp(tax)} sub={tax === 0 ? 'Nothing to pay at this price.' : `${((tax / price) * 100).toFixed(1)}% of the price.`} />
+      {firstTime && saving > 0 && (
+        <div className="rounded-2xl bg-teal-50 p-4 flex gap-3 items-start mb-5">
+          <span className="text-teal-700 mt-0.5"><Icon name="check" size={18} stroke={2.4} /></span>
+          <p className="t-small">First-time buyer relief saves you <b className="font-semibold num">{gbp(saving)}</b>.</p>
+        </div>
+      )}
+      {firstTime && price > rates.sdltFirstTime.maxPrice && (
+        <div className="rounded-2xl bg-gold-100 p-4 t-small mb-5">Over {gbp(rates.sdltFirstTime.maxPrice)}, normal rates apply.</div>
+      )}
+      <h3 className="t-h3 mb-1">How it’s worked out</h3>
+      <p className="t-small text-muted mb-2">Each rate applies only to its slice.</p>
+      <ul className="divide-y divide-stone-200">
+        {(firstTime && price <= rates.sdltFirstTime.maxPrice ? rates.sdltFirstTime.bands : rates.sdltStandard).map((b, i, arr) => {
+          const from = i ? arr[i - 1].upTo : 0
+          if (from >= price) return null
+          const slice = Math.min(price, b.upTo) - from
+          return (
+            <li key={i} className="flex justify-between py-3 t-small">
+              <span>{gbp(from)} to {b.upTo === Infinity ? 'above' : gbp(Math.min(b.upTo, price))} at {b.rate * 100}%</span>
+              <span className="num font-medium">{gbp(slice * b.rate)}</span>
+            </li>
+          )
+        })}
+      </ul>
+    </>
+  )
+}
+
+function Monthly({ price, depPct }: { price: number; depPct: number }) {
+  const [rate, setRate] = useState(rates.defaultRate)
+  const [years, setYears] = useState(30)
+  const loan = price * (1 - depPct / 100)
+  const m = useMemo(() => monthlyPayment(loan, rate, years), [loan, rate, years])
+  return (
+    <>
+      <Hero label="Monthly repayment" value={gbp(m)} sub={<>On a <button className="term" onClick={() => openTerm('repayment')}>repayment mortgage</button> of {gbp(loan)}.</>} />
+      <Slider label="Interest rate" value={`${rate.toFixed(1)}%`} min={1} max={8} step={0.1} v={rate} set={setRate} />
+      <Slider label="Mortgage term" value={`${years} years`} min={10} max={40} step={1} v={years} set={setYears} />
+      <div className="mt-4 grid grid-cols-2 gap-2.5">
+        <div className="rounded-2xl bg-stone-50 p-4"><p className="t-micro text-muted mb-1">Total repaid</p><p className="font-semibold num">{gbp(m * years * 12)}</p></div>
+        <div className="rounded-2xl bg-stone-50 p-4"><p className="t-micro text-muted mb-1">Of which interest</p><p className="font-semibold num">{gbp(m * years * 12 - loan)}</p></div>
+      </div>
+      <p className="mt-4 t-small text-muted">A 1% rise adds <b className="font-semibold text-teal-900 num">{gbp(monthlyPayment(loan, rate + 1, years) - m)}</b> a month. Worth knowing before you <button className="term" onClick={() => openTerm('fixed')}>fix</button>.</p>
+    </>
+  )
+}
+
+function Saving({ price, depPct, saved }: { price: number; depPct: number; saved: number }) {
+  const nav = useNavigate()
+  const [monthly, setMonthly] = useState(500)
+  const target = (price * depPct) / 100 + 4_000
+  const left = Math.max(0, target - saved)
+  const months = monthly > 0 ? Math.ceil(left / monthly) : Infinity
+  const date = new Date(); date.setMonth(date.getMonth() + months)
+  return (
+    <>
+      <Hero label="You could be ready by" value={left === 0 ? 'Now' : date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })} sub={`Target ${gbp(target)}, deposit plus fees.`} />
+      <div className="h-2.5 rounded-full bg-stone-200 overflow-hidden mb-2">
+        <motion.div className="h-full rounded-full" style={{ background: CHART.equity }} initial={{ width: 0 }} animate={{ width: `${Math.min(100, (saved / target) * 100)}%` }} />
+      </div>
+      <p className="t-small text-muted mb-6 num">{gbp(saved)} saved of {gbp(target)}</p>
+      <Slider label="I can save each month" value={gbp(monthly)} min={50} max={2000} step={50} v={monthly} set={setMonthly} />
+      <button onClick={() => openTerm('lisa')} className="mt-4 w-full text-left rounded-2xl ring-1 ring-stone-200 p-4 flex items-center gap-3">
+        <span className="text-gold-600"><Icon name="spark" size={20} /></span>
+        <span className="flex-1 t-small">A <b className="font-semibold">Lifetime ISA</b> adds a government bonus.</span>
+        <Icon name="right" size={18} className="text-muted" />
+      </button>
+      <button onClick={() => nav('/premium')} className="mt-3 w-full t-small font-semibold text-teal-700 min-h-11">Monthly saving plan with Premium</button>
+    </>
+  )
+}
+
+function Slider({ label, value, min, max, step, v, set }: { label: string; value: string; min: number; max: number; step: number; v: number; set: (n: number) => void }) {
+  return (
+    <div className="mb-3">
+      <div className="flex justify-between t-small"><span className="text-muted">{label}</span><span className="font-semibold num">{value}</span></div>
+      <input aria-label={label} type="range" min={min} max={max} step={step} value={v} onChange={(e) => set(+e.target.value)} className="w-full accent-teal-800 h-10" />
+    </div>
+  )
+}
