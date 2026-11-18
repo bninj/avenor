@@ -73,7 +73,7 @@ export default function Money() {
         {tab === 'upfront' && <Upfront price={price} depPct={depPct} firstTime={firstTime} />}
         {tab === 'stamp' && <Stamp price={price} firstTime={firstTime} />}
         {tab === 'monthly' && <Monthly price={price} depPct={depPct} />}
-        {tab === 'deposit' && <Saving price={price} depPct={depPct} saved={profile?.savings ?? 0} />}
+        {tab === 'deposit' && <Saving price={price} depPct={depPct} saved={profile?.savings ?? 0} firstTime={firstTime} />}
       </div>
 
       <p className="px-5 mt-6 t-micro font-normal text-muted">
@@ -205,16 +205,17 @@ function Monthly({ price, depPct }: { price: number; depPct: number }) {
   )
 }
 
-function Saving({ price, depPct, saved }: { price: number; depPct: number; saved: number }) {
+function Saving({ price, depPct, saved, firstTime }: { price: number; depPct: number; saved: number; firstTime: boolean }) {
   const nav = useNavigate()
   const [monthly, setMonthly] = useState(500)
-  const target = (price * depPct) / 100 + 4_000
+  const f = rates.typicalFees
+  const target = (price * depPct) / 100 + stampDuty(price, firstTime) + f.solicitor + f.searches + f.survey + f.mortgageFee + f.removals
   const left = Math.max(0, target - saved)
   const months = monthly > 0 ? Math.ceil(left / monthly) : Infinity
-  const date = new Date(); date.setMonth(date.getMonth() + months)
+  const now = new Date(); const date = new Date(now.getFullYear(), now.getMonth() + months, 1)
   return (
     <>
-      <Hero label="You could be ready by" value={left === 0 ? 'Now' : date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })} sub={`Target ${gbp(target)}, deposit plus fees.`} />
+      <Hero label="You could be ready by" value={left === 0 ? 'Now' : date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })} sub={`Target ${gbp(target)}: deposit, Stamp Duty and fees.`} />
       <div className="h-2.5 rounded-full bg-stone-200 overflow-hidden mb-2">
         <motion.div className="h-full rounded-full" style={{ background: CHART.equity }} initial={{ width: 0 }} animate={{ width: `${Math.min(100, (saved / target) * 100)}%` }} />
       </div>

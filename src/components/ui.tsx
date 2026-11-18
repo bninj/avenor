@@ -168,7 +168,7 @@ export function Disclaimer({ className = '' }: { className?: string }) {
 }
 
 export function Avatar({ name, tone = '#E9D9B4', size = 48 }: { name: string; tone?: string; size?: number }) {
-  const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('')
+  const initials = name.trim().split(/\s+/).map((w) => Array.from(w)[0] ?? '').slice(0, 2).join('').toUpperCase() || 'A'
   return (
     <div className="grid place-items-center rounded-full text-teal-900 shrink-0" style={{ width: size, height: size, background: tone, fontSize: size * 0.36, fontWeight: 600, letterSpacing: "-0.02em" }}>
       {initials}

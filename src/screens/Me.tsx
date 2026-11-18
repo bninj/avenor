@@ -7,7 +7,7 @@ import { Avatar, Disclaimer, Screen, TopBar, toast } from '../components/ui'
 
 export default function Me() {
   const nav = useNavigate()
-  const { profile, plan, saved, done, reset } = useApp()
+  const { profile, plan, saved, done, reset, intros } = useApp()
   if (!profile) return null
   const standalone = window.matchMedia('(display-mode: standalone)').matches || (navigator as unknown as { standalone?: boolean }).standalone === true
   const install = async () => {
@@ -59,6 +59,21 @@ export default function Me() {
           <button onClick={() => nav('/pros')} className="w-full text-left rounded-2xl bg-stone-50 p-4 t-small text-muted">Tap the heart on a pro to save them.</button>
         )}
       </section>
+
+      {Object.keys(intros).length > 0 && (
+        <section className="px-6 mt-7">
+          <h2 className="t-h3 mb-2">Introductions requested</h2>
+          <ul className="rounded-[20px] ring-1 ring-stone-200 divide-y divide-stone-200">
+            {pros.filter((p) => intros[p.id]).map((p) => (
+              <li key={p.id} className="flex items-center gap-3 px-4 py-3">
+                <Avatar name={p.person} tone={p.tone} size={36} />
+                <span className="flex-1 min-w-0"><span className="block font-medium truncate">{p.person}</span><span className="t-small text-muted">{p.firm}</span></span>
+                <span className="t-small text-muted num">{new Date(intros[p.id]).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="px-6 mt-7 space-y-2">
         <MenuRow icon="spark" label="Avenor Premium" onClick={() => nav('/premium')} />

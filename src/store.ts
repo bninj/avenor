@@ -25,17 +25,19 @@ interface State {
   plan: Plan
   demo: boolean
   waitlist: boolean
+  intros: Record<string, string>
   setProfile: (p: Profile) => void
   toggleTask: (id: string) => void
   markCelebrated: (stageId: string) => void
   toggleSaved: (id: string) => void
   setPlan: (p: Plan) => void
   joinWaitlist: () => void
+  requestIntro: (id: string) => void
   startDemo: (p: Profile) => void
   reset: () => void
 }
 
-const initial = { profile: null, done: {}, celebrated: {}, saved: {}, plan: 'free' as Plan, demo: false, waitlist: false }
+const initial = { profile: null, done: {}, celebrated: {}, saved: {}, plan: 'free' as Plan, demo: false, waitlist: false, intros: {} as Record<string, string> }
 
 export const useApp = create<State>()(
   persist(
@@ -59,6 +61,7 @@ export const useApp = create<State>()(
         }),
       setPlan: (plan) => set({ plan }),
       joinWaitlist: () => set({ waitlist: true }),
+      requestIntro: (id) => set((s) => ({ intros: { ...s.intros, [id]: new Date().toISOString() } })),
       // Demo: stage 1 finished, stage 2 half done, so a judge can finish it and watch the walls go up
       startDemo: (profile) =>
         set({
@@ -131,4 +134,10 @@ export const demoProfile: Profile = {
   postcode: 'B13',
   when: 'In the next 6 months',
   randomised: false,
+}
+
+/** Free plan: one introduction per calendar month */
+export const freeIntroUsed = (intros: Record<string, string>) => {
+  const now = new Date()
+  return Object.values(intros).some((d) => { const t = new Date(d); return t.getFullYear() === now.getFullYear() && t.getMonth() === now.getMonth() })
 }

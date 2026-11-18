@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { pros, proTypeLabel, type Pro } from '../data/pros'
 import type { ProType } from '../data/stages'
 import { areas } from '../data/areas'
-import { useApp } from '../store'
+import { freeIntroUsed, useApp } from '../store'
 import { Icon } from '../components/Icon'
 import { Avatar, Button, Sheet, toast } from '../components/ui'
 import { ReturnPill } from '../components/TaskRow'
@@ -175,7 +175,9 @@ function Badge({ icon, children }: { icon: 'shield' | 'key' | 'clock'; children:
 function ProSheet({ p, saved, onSave, onPremium }: { p: Pro; saved: boolean; onSave: () => void; onPremium: () => void }) {
   const plan = useApp((s) => s.plan)
   const locked = plan === 'free'
-  const [sent, setSent] = useState(false)
+  const { intros, requestIntro } = useApp()
+  const sent = !!intros[p.id]
+  const limitHit = locked && !sent && freeIntroUsed(intros)
   return (
     <div className="px-6 pb-8 pt-2">
       <div className="flex items-center gap-4">
@@ -217,8 +219,8 @@ function ProSheet({ p, saved, onSave, onPremium }: { p: Pro; saved: boolean; onS
       {/* Contact: the business model, visible */}
       <h3 className="t-h3 mt-7 mb-3">Contact</h3>
       <div className="relative rounded-2xl ring-1 ring-stone-200 divide-y divide-stone-200">
-        <div className="flex items-center gap-3 p-4"><Icon name="phone" size={20} className="text-muted" /><span className={locked ? 'blur-[5px] select-none' : ''}>0121 496 0{p.reviews}</span></div>
-        <div className="flex items-center gap-3 p-4"><Icon name="message" size={20} className="text-muted" /><span className={locked ? 'blur-[5px] select-none' : ''}>{p.person.split(' ')[0].toLowerCase()}@{p.firm.split(' ')[0].toLowerCase()}.example</span></div>
+        <div className="flex items-center gap-3 p-4"><Icon name="phone" size={20} className="text-muted" /><span className={locked ? 'blur-[5px] select-none' : ''} aria-hidden={locked}>{locked ? '0121 000 0000' : `0121 496 0${p.reviews}`}</span></div>
+        <div className="flex items-center gap-3 p-4"><Icon name="message" size={20} className="text-muted" /><span className={locked ? 'blur-[5px] select-none' : ''} aria-hidden={locked}>{locked ? 'name@firm.example' : `${p.person.split(' ')[0].toLowerCase()}@${p.firm.split(' ')[0].toLowerCase()}.example`}</span></div>
         {locked && (
           <button onClick={onPremium} className="absolute inset-0 grid place-items-center bg-white/40">
             <span className="inline-flex items-center gap-2 rounded-full bg-teal-900 text-white t-small font-semibold px-4 py-2.5 shadow-float"><Icon name="lock" size={16} /> Unlock with Premium</span>
@@ -227,11 +229,11 @@ function ProSheet({ p, saved, onSave, onPremium }: { p: Pro; saved: boolean; onS
       </div>
 
       <div className="mt-5 space-y-2.5">
-        <Button onClick={() => { setSent(true); toast(`Intro sent to ${p.person.split(' ')[0]}`) }} disabled={sent}>
-          {sent ? 'Intro request sent' : 'Request a free intro'}
+        <Button onClick={() => { if (limitHit) { onPremium(); return } requestIntro(p.id); toast(`Intro sent to ${p.person.split(' ')[0]}`) }} disabled={sent}>
+          {sent ? 'Intro requested' : limitHit ? 'Free intro used. Get more with Premium' : locked ? 'Request your free intro' : 'Request an intro'}
         </Button>
         <Button variant="ghost" icon="heart" onClick={onSave}>{saved ? 'Saved' : 'Save'}</Button>
-        <p className="t-micro font-normal text-muted text-center pt-1">Free for you. Pros pay per introduction.</p>
+        <p className="t-micro font-normal text-muted text-center pt-1">{locked ? 'One free intro a month. ' : ''}Pros pay per introduction, never to rank higher.</p>
       </div>
     </div>
   )

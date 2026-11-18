@@ -21,21 +21,36 @@ const rise: Variants = { hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0
 
 export default function Onboarding({ demo = false }: { demo?: boolean }) {
   const nav = useNavigate()
-  const { setProfile, startDemo, reset } = useApp()
+  const { setProfile, startDemo } = useApp()
   const [step, setStep] = useState(0)
   const [answered, setAnswered] = useState(0) // pieces of the preview house
   const [p, setP] = useState<Partial<Profile>>({})
   const [plan, setPlan] = useState<Profile | null>(null)
   const [touch, setTouch] = useState<string | null>(null) // what the demo is "pressing"
   const stop = useRef(false)
+  const stepRef = useRef(0)
+  stepRef.current = step
+  const timer = useRef<number | undefined>(undefined)
 
   const set = (patch: Partial<Profile>) => setP((x) => ({ ...x, ...patch }))
+  // Always moves on from the step on screen now, never a stale one
   const advance = () => {
-    setAnswered((a) => Math.max(a, step + 1))
-    if (step < STEPS - 1) setStep(step + 1)
+    const cur = stepRef.current
+    setAnswered((a) => Math.max(a, cur + 1))
+    if (cur < STEPS - 1) setStep(cur + 1)
     else finish()
   }
-  function finish(current = p) {
+  const advanceSoon = () => { window.clearTimeout(timer.current); timer.current = window.setTimeout(advance, 260) }
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+  const back = () => {
+    window.clearTimeout(timer.current)
+    if (demo) { stop.current = true; nav('/welcome'); return } // leaving the demo stops it
+    if (stepRef.current) setStep(stepRef.current - 1)
+    else nav('/welcome')
+  }
+  function finish(raw = p) {
+    const current = { ...raw, name: raw.name?.trim() || undefined }
+    if (!current.name) delete current.name
     const answeredAll = ['name', 'firstTime', 'area', 'budget', 'when'].every((k) => k in current)
     const profile = { ...randomProfile(current), ...current, randomised: !answeredAll } as Profile
     setAnswered(STEPS)
@@ -52,7 +67,6 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
   useEffect(() => {
     if (!demo) return
     stop.current = false
-    reset()
     const run = async () => {
       await sleep(600)
       for (const ch of demoProfile.name) {
@@ -98,7 +112,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
     <main className="screen-enter absolute inset-0 flex flex-col bg-white overflow-y-auto no-scrollbar">
       {/* Header: progress + the preview house that grows with each answer */}
       <div className="px-4 pt-2 flex items-center gap-2 h-14 shrink-0">
-        <button aria-label="Back" onClick={() => (step ? setStep(step - 1) : nav('/welcome'))} className="size-11 grid place-items-center rounded-full active:bg-stone-100"><Icon name="left" /></button>
+        <button aria-label="Back" onClick={back} className="size-11 grid place-items-center rounded-full active:bg-stone-100"><Icon name="left" /></button>
         <div className="flex-1 flex gap-1" role="progressbar" aria-valuemin={1} aria-valuemax={STEPS} aria-valuenow={step + 1} aria-label={`Question ${step + 1} of ${STEPS}`}>
           {Array.from({ length: STEPS }).map((_, i) => (
             <div key={i} className="h-[5px] flex-1 rounded-full bg-stone-200 overflow-hidden">
@@ -135,7 +149,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
               />
               <motion.p variants={rise} className="t-small text-muted mt-3">No password. It stays on this phone.</motion.p>
               <motion.div variants={rise} className="mt-auto pb-6 pt-6 space-y-2.5">
-                <div className={`rounded-full transition ${hot('continue')}`}><Button onClick={advance} disabled={!p.name && !demo}>Continue</Button></div>
+                <div className={`rounded-full transition ${hot('continue')}`}><Button onClick={advance} disabled={!p.name?.trim() && !demo}>Continue</Button></div>
                 <Button variant="ghost" onClick={() => toast('Google sign-in is coming soon. Your name is enough for now')}>
                   <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z" /><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" /><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z" /><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z" /></svg>
                   Continue with Google
@@ -153,7 +167,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
                 {[{ v: true, t: 'Yes, my first', icon: 'key' as const, id: 'first-yes' }, { v: false, t: 'I’ve owned before', icon: 'refresh' as const, id: 'first-no' }].map((o) => {
                   const sel = p.firstTime === o.v
                   return (
-                    <motion.button key={o.id} variants={rise} whileTap={{ scale: 0.97 }} onClick={() => { tick(); set({ firstTime: o.v }); setTimeout(advance, 260) }}
+                    <motion.button key={o.id} variants={rise} whileTap={{ scale: 0.97 }} onClick={() => { tick(); set({ firstTime: o.v }); advanceSoon() }}
                       className={`h-[150px] rounded-[20px] p-4 flex flex-col justify-between text-left transition-[background,opacity,color] duration-200 ${sel ? 'bg-teal-800 text-teal-50 lift' : 'bg-stone-100'} ${p.firstTime !== undefined && !sel ? 'opacity-40' : ''} ${hot(o.id)}`}>
                       <span className={`size-11 rounded-full grid place-items-center ${sel ? 'bg-white/10' : 'bg-white'}`}><Icon name={o.icon} /></span>
                       <motion.span layoutId={sel ? 'ans-first' : undefined} className="t-h3 self-start">{o.t}</motion.span>
@@ -173,7 +187,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
                   const sel = p.area === a.name
                   return (
                     <motion.li key={a.id} variants={rise}>
-                      <button onClick={() => { tick(); set({ area: a.name, postcode: a.district }); setTimeout(advance, 260) }} className={`w-full flex items-center gap-4 rounded-[18px] p-2 pr-4 text-left transition-[background,opacity] duration-200 ${sel ? 'bg-teal-50' : 'active:bg-stone-50'} ${p.area && !sel ? 'opacity-40' : ''} ${hot('area-' + a.id)}`}>
+                      <button onClick={() => { tick(); set({ area: a.name, postcode: a.district }); advanceSoon() }} className={`w-full flex items-center gap-4 rounded-[18px] p-2 pr-4 text-left transition-[background,opacity] duration-200 ${sel ? 'bg-teal-50' : 'active:bg-stone-50'} ${p.area && !sel ? 'opacity-40' : ''} ${hot('area-' + a.id)}`}>
                         <img src={a.img} alt="" className="size-14 rounded-[14px] object-cover" />
                         <span className="flex-1">
                           <motion.span layoutId={sel ? 'ans-area' : undefined} className="block t-h3 w-fit">{a.name}</motion.span>

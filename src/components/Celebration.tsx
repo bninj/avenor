@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { stages } from '../data/stages'
-import { builtParts, stageProgress, useApp } from '../store'
+import { builtParts, currentStage, stageProgress, useApp } from '../store'
 import { Button, Sheet } from './ui'
 
 const HouseCanvas = lazy(() => import('./HouseCanvas'))
@@ -28,7 +28,8 @@ export function Celebration() {
   }, [complete]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const s = stages.find((x) => x.id === stageId)
-  const next = s ? stages[s.n] : undefined
+  const allDone = stages.every((x) => stageProgress(done, x.id).complete)
+  const next = s && !allDone ? currentStage(done) : undefined
   const parts = builtParts(done)
   const close = () => setStageId(null)
 
@@ -43,7 +44,7 @@ export function Celebration() {
           <div className="px-6 pt-6">
             <p className="t-small text-gold-600 font-semibold">Stage {s.n} complete</p>
             <h2 className="t-display mt-1">{s.partLabel}.</h2>
-            <p className="t-body text-muted mt-2">{s.n === 7 ? 'Congratulations. It’s yours.' : `${parts.length} of 7 built. Next: ${next?.title.toLowerCase()}.`}</p>
+            <p className="t-body text-muted mt-2">{!next ? 'All seven stages done. Congratulations, it’s yours.' : `${parts.length} of 7 built. Next: ${next.title.toLowerCase()}.`}</p>
             <div className="mt-6 space-y-1">
               {next ? (
                 <Button onClick={() => { close(); nav(`/journey/${next.id}`) }}>Start stage {next.n}</Button>
