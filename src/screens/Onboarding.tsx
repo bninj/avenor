@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, LayoutGroup, motion, type Variants } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
-import { Button, RollingNumber, tick, toast } from '../components/ui'
+import { Button, IconButton, RollingNumber, tick, toast } from '../components/ui'
 import { demoProfile, randomProfile, useApp, type Profile } from '../store'
 import { gbp, rates, stampDuty } from '../data/rates'
 import { areas } from '../data/areas'
@@ -112,7 +112,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
     <main className="screen-enter absolute inset-0 flex flex-col bg-white overflow-y-auto no-scrollbar">
       {/* Header: progress + the preview house that grows with each answer */}
       <div className="px-4 pt-2 flex items-center gap-2 h-14 shrink-0">
-        <button aria-label="Back" onClick={back} className="size-11 grid place-items-center rounded-full active:bg-stone-100"><Icon name="left" /></button>
+        <IconButton name="left" label="Back" onClick={back} />
         <div className="flex-1 flex gap-1" role="progressbar" aria-valuemin={1} aria-valuemax={STEPS} aria-valuenow={step + 1} aria-label={`Question ${step + 1} of ${STEPS}`}>
           {Array.from({ length: STEPS }).map((_, i) => (
             <div key={i} className="h-[5px] flex-1 rounded-full bg-stone-200 overflow-hidden">
@@ -164,7 +164,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
               <motion.h1 variants={rise} className="t-h1">Is this your first home?</motion.h1>
               <motion.p variants={rise} className="t-body text-muted mt-2">First-time buyers pay less Stamp Duty.</motion.p>
               <div className="grid grid-cols-2 gap-3 mt-7">
-                {[{ v: true, t: 'Yes, my first', icon: 'key' as const, id: 'first-yes' }, { v: false, t: 'I’ve owned before', icon: 'refresh' as const, id: 'first-no' }].map((o) => {
+                {[{ v: true, t: 'Yes, my first', icon: 'key' as const, id: 'first-yes' }, { v: false, t: 'I’ve owned before', icon: 'home' as const, id: 'first-no' }].map((o) => {
                   const sel = p.firstTime === o.v
                   return (
                     <motion.button key={o.id} variants={rise} whileTap={{ scale: 0.97 }} onClick={() => { tick(); set({ firstTime: o.v }); advanceSoon() }}
@@ -188,7 +188,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
                   return (
                     <motion.li key={a.id} variants={rise}>
                       <button onClick={() => { tick(); set({ area: a.name, postcode: a.district }); advanceSoon() }} className={`w-full flex items-center gap-4 rounded-[18px] p-2 pr-4 text-left transition-[background,opacity] duration-200 ${sel ? 'bg-teal-50' : 'active:bg-stone-50'} ${p.area && !sel ? 'opacity-40' : ''} ${hot('area-' + a.id)}`}>
-                        <img src={a.img} alt="" className="size-14 rounded-[14px] object-cover" />
+                        <img src={a.img} alt="" className="photo size-14 rounded-[14px] object-cover" />
                         <span className="flex-1">
                           <motion.span layoutId={sel ? 'ans-area' : undefined} className="block t-h3 w-fit">{a.name}</motion.span>
                           <span className="t-small text-muted">{a.district}, {a.goodFor.split(',')[0].toLowerCase()}</span>

@@ -16,7 +16,7 @@ export default function House() {
   return (
     <Screen tabbed={false} className="!pb-0">
       <section className="spruce grain relative h-[470px]">
-        <div className="absolute left-4 top-3 z-10"><IconButton name="left" label="Back" onClick={() => nav(-1)} className="!bg-white/10 !text-teal-50 !shadow-none backdrop-blur" /></div>
+        <div className="absolute left-4 top-3 z-10"><IconButton name="left" label="Back" tone="dark" onClick={() => nav(-1)} /></div>
         <Suspense fallback={null}><HouseCanvas parts={parts} dark ghost zoom={0.82} className="absolute inset-x-0 top-0 bottom-24" /></Suspense>
         <div className="absolute left-6 right-6 bottom-12 pointer-events-none">
           <p className="t-small text-teal-100/70 flex items-center gap-1.5"><Icon name="rotate" size={14} /> Drag to turn</p>

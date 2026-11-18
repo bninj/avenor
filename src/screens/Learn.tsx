@@ -115,7 +115,7 @@ function LessonPlayer({ lesson, onDone }: { lesson: Lesson; onDone: () => void }
       <div className="relative min-h-[260px] mt-8">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.div key={i} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} transition={{ type: 'spring', stiffness: 380, damping: 34 }}>
-            <p className="num text-[3rem] leading-none font-semibold tracking-[-0.04em] text-gold-600">{i + 1}</p>
+            <p className="num text-[3rem] leading-none font-semibold tracking-[-0.04em] text-teal-700">{i + 1}</p>
             <h2 className="t-h1 mt-4">{card.head}</h2>
             <p className="t-body text-teal-900/80 mt-3">{card.body}</p>
           </motion.div>

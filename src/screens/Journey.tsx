@@ -47,7 +47,7 @@ export default function Journey() {
           return (
             <li key={s.id}>
               <button onClick={() => nav(`/journey/${s.id}`)} className="w-full text-left flex items-center gap-4 px-5 py-4 rounded-[18px] active:bg-stone-50">
-                <span className={`text-[2rem] leading-none font-semibold tracking-[-0.04em] num w-11 ${p.complete ? 'text-gold-500' : 'text-stone-200'}`}>{s.n}</span>
+                <span className={`text-[2rem] leading-none font-semibold tracking-[-0.04em] num w-11 ${p.complete ? 'text-gold-500' : 'text-stone-400/55'}`}>{s.n}</span>
                 <span className="flex-1">
                   <span className={`block t-h3 ${p.complete ? '' : 'text-teal-900/75'}`}>{s.title}</span>
                   <span className="t-small text-muted">{p.complete ? s.partLabel : s.weeks}</span>

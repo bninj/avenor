@@ -16,7 +16,8 @@ export function TabBar() {
   if (!SHOW_ON.includes(pathname)) return null
   return (
     <nav className="absolute inset-x-3 z-40" style={{ bottom: 'max(env(safe-area-inset-bottom), 10px)' }} aria-label="Main">
-      <ul className="flex rounded-[26px] bg-white/80 backdrop-blur-xl backdrop-saturate-150 ring-1 ring-teal-900/[0.06] shadow-[0_12px_32px_-12px_rgba(12,42,39,.35),inset_0_1px_0_rgba(255,255,255,.9)] p-1.5">
+      <div aria-hidden="true" className="pointer-events-none absolute -inset-x-3 -bottom-4 h-[118px] bg-gradient-to-t from-white via-white/85 to-transparent" />
+      <ul className="relative flex rounded-[26px] bg-white/80 backdrop-blur-xl backdrop-saturate-150 ring-1 ring-teal-900/[0.06] shadow-[0_12px_32px_-12px_rgba(12,42,39,.35),inset_0_1px_0_rgba(255,255,255,.9)] p-1.5">
         {tabs.map((t) => (
           <li key={t.to} className="flex-1">
             <NavLink to={t.to} className={({ isActive }) => `relative flex flex-col items-center justify-center gap-0.5 h-[54px] rounded-[20px] t-micro transition-colors ${isActive ? 'text-teal-800' : 'text-stone-400 active:text-teal-700'}`}>

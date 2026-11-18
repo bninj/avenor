@@ -128,8 +128,8 @@ function GlassPin() {
           dispersion={6}
           clearcoat={1}
           clearcoatRoughness={0.05}
-          attenuationColor="#5E9C8E"
-          attenuationDistance={1.6}
+          attenuationColor="#9CCABE"
+          attenuationDistance={4}
           color="#E6F4EF"
           envMapIntensity={0.7}
           specularIntensity={1}

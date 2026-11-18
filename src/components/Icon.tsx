@@ -1,7 +1,7 @@
 // Avenor line icons, drawn on a 24px grid with 1.7 strokes and round ends.
 const paths: Record<string, React.ReactNode> = {
   home: <><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z" /></>,
-  journey: <><circle cx="6" cy="18" r="2" /><circle cx="18" cy="6" r="2" /><path d="M8 18h6.5a3.5 3.5 0 0 0 0-7h-5a3.5 3.5 0 0 1 0-7H16" /></>,
+  journey: <><path d="M3.5 20.5h5v-5h5v-5h5v-5" /><path d="M18.5 5.5V2.5l3.5 1.5-3.5 1.5" /></>,
   learn: <><path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V18c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z" /><path d="M12 6v12.5" /></>,
   money: <><path d="M15.5 7.5A3.6 3.6 0 0 0 9 9.6V17h7.5M7 13h6" /><path d="M7 17h2" /></>,
   pin: <><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></>,

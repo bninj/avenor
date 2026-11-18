@@ -32,9 +32,12 @@ export function Button({
   )
 }
 
-export function IconButton({ name, onClick, label, className = '' }: { name: IconName; onClick?: () => void; label: string; className?: string }) {
+export function IconButton({ name, onClick, label, className = '', tone = 'light' }: { name: IconName; onClick?: () => void; label: string; className?: string; tone?: 'light' | 'dark' }) {
+  const look = tone === 'dark'
+    ? 'bg-white/12 text-teal-50 ring-1 ring-white/15'
+    : 'bg-white/90 text-teal-900 ring-1 ring-teal-900/[0.07] shadow-pill'
   return (
-    <button aria-label={label} onClick={onClick} className={`size-11 grid place-items-center rounded-full bg-white/95 backdrop-blur shadow-pill text-teal-900 active:scale-95 transition-transform ${className}`}>
+    <button aria-label={label} onClick={onClick} className={`size-11 grid place-items-center rounded-full backdrop-blur-md active:scale-95 transition-transform ${look} ${className}`}>
       <Icon name={name} size={20} />
     </button>
   )
@@ -51,7 +54,7 @@ export function TopBar({ title, back = true, right, transparent }: { title?: str
   const nav = useNavigate()
   return (
     <header className={`sticky top-0 z-20 flex items-center gap-2 px-4 h-16 ${transparent ? '' : 'bg-white/90 backdrop-blur-md'}`}>
-      {back && <IconButton name="left" label="Back" onClick={() => (typeof back === 'string' ? nav(back) : nav(-1))} className={transparent ? '' : 'shadow-none ring-1 ring-stone-200'} />}
+      {back && <IconButton name="left" label="Back" onClick={() => (typeof back === 'string' ? nav(back) : nav(-1))} />}
       {title && <h1 className="t-h3 flex-1 text-center pr-11 truncate">{title}</h1>}
       {!title && <div className="flex-1" />}
       {right}
@@ -96,7 +99,7 @@ export function Sheet({ open, onClose, children, label, tall, dark }: { open: bo
             onDragEnd={(_, i) => { if (i.offset.y > 110 || i.velocity.y > 600) onClose() }}
           >
             {/* Only the handle drags the sheet, so the content scrolls normally */}
-            <div onPointerDown={(e) => controls.start(e)} className="absolute inset-x-0 top-0 h-7 z-20 flex justify-center pt-2.5 touch-none cursor-grab" aria-hidden="true">
+            <div onPointerDown={(e) => controls.start(e)} className={`absolute inset-x-0 top-0 h-9 z-20 flex justify-center pt-2.5 touch-none cursor-grab ${dark ? '' : 'bg-gradient-to-b from-white via-white/90 to-transparent'}`} aria-hidden="true">
               <div className={`h-1.5 w-10 rounded-full ${dark ? 'bg-white/30' : 'bg-stone-200'}`} />
             </div>
             <button aria-label="Close" onClick={onClose} className={`absolute right-3 top-3 z-30 size-10 grid place-items-center rounded-full ${dark ? 'text-teal-50/80 active:bg-white/10' : 'text-muted active:bg-stone-100'}`}>
@@ -167,10 +170,10 @@ export function Disclaimer({ className = '' }: { className?: string }) {
   )
 }
 
-export function Avatar({ name, tone = '#E9D9B4', size = 48 }: { name: string; tone?: string; size?: number }) {
+export function Avatar({ name, size = 48, light = false }: { name: string; tone?: string; size?: number; light?: boolean }) {
   const initials = name.trim().split(/\s+/).map((w) => Array.from(w)[0] ?? '').slice(0, 2).join('').toUpperCase() || 'A'
   return (
-    <div className="grid place-items-center rounded-full text-teal-900 shrink-0" style={{ width: size, height: size, background: tone, fontSize: size * 0.36, fontWeight: 600, letterSpacing: "-0.02em" }}>
+    <div className={`grid place-items-center rounded-full shrink-0 ${light ? 'bg-teal-50 text-teal-900' : 'text-teal-50 shadow-[inset_0_1px_0_rgba(255,255,255,.15)]'}`} style={{ width: size, height: size, background: light ? undefined : 'radial-gradient(120% 120% at 30% 15%, #2A6E66 0%, #123F3B 60%)', fontSize: size * 0.36, fontWeight: 600, letterSpacing: '-0.02em' }}>
       {initials}
     </div>
   )

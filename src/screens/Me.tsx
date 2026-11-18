@@ -28,7 +28,7 @@ export default function Me() {
     <Screen tabbed={false}>
       <TopBar back />
       <div className="px-6 flex items-center gap-4">
-        <Avatar name={profile.name} tone="#F3E3B8" size={68} />
+        <Avatar name={profile.name} size={68} />
         <div>
           <h1 className="t-h1">{profile.name}</h1>
           <p className="t-small text-muted">{plan === 'free' ? 'Free plan' : plan === 'premium' ? 'Premium' : 'Concierge'}, {overallPercent(done)}% through your journey</p>
@@ -75,7 +75,7 @@ export default function Me() {
         </section>
       )}
 
-      <section className="px-6 mt-7 space-y-2">
+      <section className="mx-6 mt-7 rounded-[20px] ring-1 ring-stone-200 divide-y divide-stone-200 overflow-hidden">
         <MenuRow icon="spark" label="Avenor Premium" onClick={() => nav('/premium')} />
         <MenuRow icon="tag" label="Selling a home" onClick={() => nav('/selling')} />
         {!standalone && <MenuRow icon="home" label="Add Avenor to your Home Screen" onClick={install} />}
@@ -92,7 +92,7 @@ export default function Me() {
 
 function MenuRow({ icon, label, onClick }: { icon: 'spark' | 'tag' | 'message' | 'refresh' | 'home' | 'learn'; label: string; onClick: () => void }) {
   return (
-    <button onClick={onClick} className="w-full flex items-center gap-3 rounded-2xl px-4 min-h-14 ring-1 ring-stone-200 active:bg-stone-50">
+    <button onClick={onClick} className="w-full flex items-center gap-3 px-4 min-h-14 active:bg-stone-50">
       <Icon name={icon} size={20} className="text-teal-700" />
       <span className="flex-1 text-left font-medium">{label}</span>
       <Icon name="right" size={18} className="text-stone-400" />

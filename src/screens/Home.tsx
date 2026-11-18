@@ -36,11 +36,11 @@ export default function Home() {
         <div className="px-5 pt-4 flex items-center justify-between">
           <span className="t-small text-teal-100/75">{greeting()}, {profile?.name}</span>
           <button onClick={() => nav('/me')} aria-label="Your profile" className="size-11 grid place-items-center rounded-full">
-            <Avatar name={profile?.name ?? 'A'} size={38} tone="#E2C48A" />
+            <Avatar name={profile?.name ?? 'A'} size={38} light />
           </button>
         </div>
         <div className="px-5 mt-4">
-          <p className="t-hero flex items-start"><RollingNumber value={pct} from={0} /><span className="text-[2.25rem] leading-none font-semibold tracking-[-0.02em] mt-2 ml-0.5 text-gold-300">%</span></p>
+          <p className="t-hero flex items-start"><RollingNumber value={pct} from={0} /><span className="text-[2.25rem] leading-none font-semibold tracking-[-0.02em] mt-2 ml-0.5 text-teal-100/70">%</span></p>
           <p className="t-h3 font-medium text-teal-100/80 mt-2">of your home built</p>
         </div>
         <button onClick={() => nav('/house')} aria-label="Open your 3D home" className="absolute right-0 bottom-[34px] w-[min(300px,78%)] h-[300px]">
@@ -92,7 +92,7 @@ export default function Home() {
             {areas.map((a) => (
               <div key={a.id} className="snap-start shrink-0 w-[220px]">
                 <div className="relative h-[260px] rounded-[20px] overflow-hidden bg-stone-100">
-                  <img src={a.img} alt={a.name} loading="lazy" className="h-full w-full object-cover" />
+                  <img src={a.img} alt={a.name} loading="lazy" className="photo h-full w-full object-cover" />
                   <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/60 to-transparent" />
                   {a.name === profile?.area && <span className="absolute left-3 top-3 rounded-full bg-white t-micro px-2.5 py-1">Your area</span>}
                   <div className="absolute left-4 bottom-3.5 right-4 text-white">
@@ -131,7 +131,7 @@ export default function Home() {
 
         {/* Word of the day */}
         <div className="px-5 mt-10">
-          <button onClick={() => openTerm(term.id)} className="w-full text-left rounded-[20px] bg-stone-100 grain grain-light p-5">
+          <button onClick={() => openTerm(term.id)} className="w-full text-left rounded-[20px] bg-teal-50 ring-1 ring-teal-800/10 grain grain-light p-5">
             <span className="t-small text-muted">Word of the day</span>
             <span className="block t-h1 mt-1.5">{term.word}</span>
             <span className="block t-body text-teal-900/75 mt-2">{term.plain}</span>

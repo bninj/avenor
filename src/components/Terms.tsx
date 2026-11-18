@@ -1,5 +1,6 @@
 import { create } from 'zustand'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 import { termById } from '../data/glossary'
 import { stageById } from '../data/stages'
 import { Sheet, Button } from './ui'
@@ -42,6 +43,8 @@ export function TermChip({ id }: { id: string }) {
 
 export function TermSheet() {
   const { id, close } = useTermStore()
+  const { pathname } = useLocation()
+  useEffect(() => { close() }, [pathname, close])
   const nav = useNavigate()
   const t = id ? termById[id] : null
   const stage = t?.stage ? stageById[t.stage] : null
@@ -49,7 +52,7 @@ export function TermSheet() {
     <Sheet open={!!t} onClose={close} label={t?.word ?? 'Term'}>
       {t && (
         <div className="px-6 pb-8 pt-3">
-          <p className="t-micro text-gold-600 mb-2">In plain English</p>
+          <p className="t-small text-muted mb-1">In plain English</p>
           <h2 className="t-h1 mb-3 pr-8">{t.word}</h2>
           <p className="t-body text-teal-900/85">{t.plain}</p>
           {t.example && <p className="mt-4 rounded-2xl bg-stone-50 p-4 t-small text-teal-900/80">{t.example}</p>}

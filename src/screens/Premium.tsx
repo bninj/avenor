@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useApp } from '../store'
 import { Icon } from '../components/Icon'
 import { Mark } from '../components/Logo'
-import { Button, Screen, toast } from '../components/ui'
+import { Button, IconButton, Screen, toast } from '../components/ui'
 
 type Plan = 'free' | 'premium' | 'concierge'
 const plans: { id: Plan; name: string; price: string; per: string; blurb: string; features: string[]; tag?: string }[] = [
@@ -22,7 +22,7 @@ export default function Premium() {
   return (
     <Screen tabbed={false}>
       <div className="relative spruce grain px-6 pt-4 pb-12 overflow-hidden">
-        <button aria-label="Close" onClick={() => nav(-1)} className="size-11 -ml-2 grid place-items-center rounded-full active:bg-white/10"><Icon name="close" /></button>
+        <IconButton name="close" label="Close" tone="dark" onClick={() => nav(-1)} />
         <div className="mt-6 flex items-center gap-3"><Mark size={40} tone="light" /><span className="t-h3">Avenor Premium</span></div>
         <h1 className="text-[2.75rem] leading-[0.98] font-semibold tracking-[-0.04em] mt-6">Buy with someone in your corner.</h1>
         <div className="mt-4">
@@ -30,7 +30,7 @@ export default function Premium() {
         </div>
       </div>
 
-      <div className="px-5 -mt-5 space-y-3" role="radiogroup" aria-label="Plans">
+      <div className="relative z-10 -mt-7 rounded-t-[30px] bg-white pt-6 px-5 space-y-3" role="radiogroup" aria-label="Plans">
         {plans.map((p) => {
           const sel = pick === p.id
           return (

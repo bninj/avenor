@@ -13,9 +13,9 @@ export default function Selling() {
       <TopBar back />
       <div className="px-6 flex-1 flex flex-col">
         <div className="mt-2 h-[300px] rounded-[24px] overflow-hidden">
-          <img src="img/moseley-college.webp" alt="Houses on College Road, Moseley" className="h-full w-full object-cover" />
+          <img src="img/moseley-college.webp" alt="Houses on College Road, Moseley" className="photo h-full w-full object-cover" />
         </div>
-        <p className="t-small font-semibold text-gold-600 mt-7 mb-1">Coming next</p>
+        <p className="t-small font-semibold text-teal-700 mt-7 mb-1">Coming next</p>
         <h1 className="t-h1 mb-3">Selling, made just as clear.</h1>
         <p className="t-body text-muted mb-6">Buyers first. Sellers next.</p>
         <ul className="space-y-3 mb-8">

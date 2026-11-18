@@ -21,7 +21,7 @@ export default function StageScreen() {
     <Screen tabbed={false} className="!pb-0">
       <header className="spruce grain px-5 pt-3 pb-9">
         <div className="flex items-center justify-between">
-          <IconButton name="left" label="Back to journey" onClick={() => nav('/journey')} className="!bg-white/10 !text-teal-50 !shadow-none backdrop-blur" />
+          <IconButton name="left" label="Back to journey" tone="dark" onClick={() => nav('/journey')} />
           <span className="t-small text-teal-100/70 num">{s.n} of 7</span>
         </div>
         <div className="mt-6 flex items-end gap-4">
@@ -30,8 +30,8 @@ export default function StageScreen() {
         </div>
         <p className="t-body text-teal-100/80 mt-5">{s.short}</p>
         <div className="mt-5 flex gap-6 t-small">
-          <span><span className="text-teal-100/60">Takes </span>{s.weeks}</span>
-          <span><span className="text-teal-100/60">Costs </span>{s.cost}</span>
+          <span className="whitespace-nowrap"><span className="text-teal-100/60">Takes </span>{s.weeks}</span>
+          <span className="whitespace-nowrap"><span className="text-teal-100/60">Costs </span>{s.cost}</span>
         </div>
       </header>
 

@@ -60,11 +60,10 @@ export default function Money() {
           </div>
         )}
         {tab === 'stamp' && (
-          <div className="mt-2 flex items-center justify-between gap-3 min-h-11">
-            <span className="t-small text-muted" id="ftb-label">I’m a first-time buyer</span>
-            <button role="switch" aria-labelledby="ftb-label" aria-checked={firstTime} onClick={() => setFirstTime(!firstTime)} className={`relative h-8 w-[52px] rounded-full transition-colors ${firstTime ? 'bg-teal-800' : 'bg-stone-200'}`}>
-              <motion.span layout className={`absolute top-1 size-6 rounded-full bg-white shadow ${firstTime ? 'right-1' : 'left-1'}`} />
-            </button>
+          <div className="mt-2 grid grid-cols-2 gap-1 rounded-full bg-stone-100 p-1" role="radiogroup" aria-label="Buyer type">
+            {[{ v: true, t: 'First home' }, { v: false, t: 'Owned before' }].map((o) => (
+              <button key={o.t} role="radio" aria-checked={firstTime === o.v} onClick={() => setFirstTime(o.v)} className={`min-h-11 rounded-full t-small font-semibold transition ${firstTime === o.v ? 'bg-white shadow-pill text-teal-900' : 'text-muted'}`}>{o.t}</button>
+            ))}
           </div>
         )}
       </div>

@@ -126,7 +126,7 @@ export default function Pros() {
           <span className="t-small text-muted flex items-center gap-1.5 mt-0.5"><Icon name="shield" size={15} className="text-teal-700" /> Checked on official registers</span>
         </button>
         <div className={`flex-1 min-h-0 overscroll-contain no-scrollbar ${expanded ? 'overflow-y-auto' : 'overflow-hidden'}`}>
-          <ul className="px-5 pt-2 space-y-3 pb-32">
+          <ul className="px-5 pt-2 space-y-3 pb-48">
             {list.map((p) => (
               <li key={p.id}>
                 <button onClick={() => openPro(p.id)} className={`w-full text-left rounded-[20px] p-4 ring-1 transition-shadow ${focus === p.id ? 'ring-teal-800 shadow-float' : 'ring-stone-200'}`}>
