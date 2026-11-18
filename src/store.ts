@@ -26,6 +26,7 @@ interface State {
   demo: boolean
   waitlist: boolean
   intros: Record<string, string>
+  docs: Record<string, { file: string; date: string }>
   setProfile: (p: Profile) => void
   toggleTask: (id: string) => void
   markCelebrated: (stageId: string) => void
@@ -33,11 +34,13 @@ interface State {
   setPlan: (p: Plan) => void
   joinWaitlist: () => void
   requestIntro: (id: string) => void
+  addDoc: (id: string, file: string) => void
+  removeDoc: (id: string) => void
   startDemo: (p: Profile) => void
   reset: () => void
 }
 
-const initial = { profile: null, done: {}, celebrated: {}, saved: {}, plan: 'free' as Plan, demo: false, waitlist: false, intros: {} as Record<string, string> }
+const initial = { profile: null, done: {}, celebrated: {}, saved: {}, plan: 'free' as Plan, demo: false, waitlist: false, intros: {} as Record<string, string>, docs: {} as Record<string, { file: string; date: string }> }
 
 export const useApp = create<State>()(
   persist(
@@ -61,6 +64,8 @@ export const useApp = create<State>()(
         }),
       setPlan: (plan) => set({ plan }),
       joinWaitlist: () => set({ waitlist: true }),
+      addDoc: (id, file) => set((s) => ({ docs: { ...s.docs, [id]: { file, date: new Date().toISOString() } } })),
+      removeDoc: (id) => set((s) => { const docs = { ...s.docs }; delete docs[id]; return { docs } }),
       requestIntro: (id) => set((s) => ({ intros: { ...s.intros, [id]: new Date().toISOString() } })),
       // Demo: stage 1 finished, stage 2 half done, so a judge can finish it and watch the walls go up
       startDemo: (profile) =>
@@ -71,6 +76,7 @@ export const useApp = create<State>()(
           done: { b1: true, b2: true, b3: true, b4: true, m1: true, m2: true },
           celebrated: { budget: true },
           saved: { lantern: true },
+          docs: { id: { file: 'passport.jpg', date: new Date().toISOString() }, payslips: { file: 'payslips-aug-oct.pdf', date: new Date().toISOString() } },
         }),
       reset: () => set({ ...initial }),
     }),

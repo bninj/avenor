@@ -16,11 +16,11 @@ export default function House() {
 
   return (
     <Screen tabbed={false} className="!pb-0">
-      <section className="spruce grain relative h-[470px]">
-        <div className="absolute left-4 top-3 z-10"><IconButton name="left" label="Back" tone="dark" onClick={goBack} /></div>
-        <Suspense fallback={null}><HouseCanvas parts={parts} dark ghost zoom={0.82} className="absolute inset-x-0 top-0 bottom-24" /></Suspense>
+      <section className="hero-light grain grain-light relative h-[470px]">
+        <div className="absolute left-4 top-3 z-10"><IconButton name="left" label="Back" tone="light" onClick={goBack} /></div>
+        <Suspense fallback={null}><HouseCanvas parts={parts} ghost zoom={0.82} className="absolute inset-x-0 top-0 bottom-24" /></Suspense>
         <div className="absolute left-6 right-6 bottom-12 pointer-events-none">
-          <p className="t-small text-teal-100/70 flex items-center gap-1.5"><Icon name="rotate" size={14} /> Drag to turn</p>
+          <p className="t-small text-muted flex items-center gap-1.5"><Icon name="rotate" size={14} /> Drag to turn</p>
           <h1 className="t-display mt-2">{finished ? 'Your home is built.' : `${parts.length} of 7 built`}</h1>
         </div>
       </section>
@@ -50,8 +50,8 @@ export default function House() {
       {/* The shelf model: the physical reward */}
       <div className="mx-6 mt-6 rounded-[24px] bg-stone-100 grain grain-light p-6">
         <p className="t-small text-gold-600 font-semibold mb-1">The finishing touch</p>
-        <h2 className="t-h2 mb-2">A model of your home, for your shelf</h2>
-        <p className="t-small text-muted mb-5">Get your keys and we 3D print this house, posted to your new address.</p>
+        <h2 className="t-h2 mb-2">A 3D model of your home</h2>
+        <p className="t-small text-muted mb-5">Premium: a small model of your home when you get the keys. Concierge: a personalised welcome box with a larger model, sent to your new address.</p>
         {finished ? (
           <Button variant="gold" onClick={() => toast('Ordered. We’ll post it to your new address')}>Order my shelf model</Button>
         ) : (

@@ -19,6 +19,7 @@ import Ask from './screens/Ask'
 import Selling from './screens/Selling'
 import Me from './screens/Me'
 import Help from './screens/Help'
+import { Compare, Documents, Report } from './screens/Extras'
 
 const Pros = lazy(() => import('./screens/Pros'))
 const House = lazy(() => import('./screens/House'))
@@ -45,10 +46,10 @@ class SafeArea extends Component<{ children: React.ReactNode }, { failed: boolea
   render() {
     if (!this.state.failed) return this.props.children
     return (
-      <div className="absolute inset-0 spruce grain flex flex-col items-center justify-center text-center px-8 gap-4">
-        <Mark size={44} tone="light" />
+      <div className="absolute inset-0 hero-light grain grain-light flex flex-col items-center justify-center text-center px-8 gap-4">
+        <Mark size={44} />
         <h1 className="t-h1">Something went wrong.</h1>
-        <p className="t-body text-teal-100/75">It’s not you. Your progress is safe.</p>
+        <p className="t-body text-muted">Your progress is saved. Please return to Home.</p>
         <button onClick={() => { this.setState({ failed: false }); location.hash = '#/home' }} className="mt-2 min-h-[52px] rounded-full bg-teal-50 text-teal-900 font-semibold px-7">Back to home</button>
       </div>
     )
@@ -81,6 +82,9 @@ function AppRoutes() {
           <Route path="/selling" element={<Selling />} />
           <Route path="/me" element={<Me />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/documents" element={<Documents />} />
+          <Route path="/compare" element={<Compare />} />
+          <Route path="/report" element={<Report />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </Suspense>
@@ -106,13 +110,13 @@ function useDesktop() {
   return d
 }
 
-const DARK_TOP = (p: string) => ['/welcome', '/home', '/premium', '/house'].includes(p) || /^\/journey\/./.test(p)
+const TINT_TOP = (p: string) => ['/welcome', '/home', '/premium', '/house'].includes(p) || /^\/journey\/./.test(p)
 
 function StatusBar() {
   const { pathname } = useLocation()
-  const dark = DARK_TOP(pathname)
+  const tint = TINT_TOP(pathname)
   return (
-    <div className={`h-[50px] shrink-0 flex items-end justify-between px-8 pb-2 text-[15px] font-semibold relative z-30 transition-colors ${dark ? 'bg-[#164A45] text-teal-50' : 'bg-white text-teal-900'}`}>
+    <div className={`h-[50px] shrink-0 flex items-end justify-between px-8 pb-2 text-[15px] font-semibold relative z-30 transition-colors ${tint ? 'bg-[#F0F7F3] text-teal-900' : 'bg-white text-teal-900'}`}>
       <span className="num">9:41</span>
       <span className="flex items-center gap-1.5">
         <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1" /><rect x="5" y="5" width="3" height="6" rx="1" /><rect x="10" y="2.5" width="3" height="8.5" rx="1" /><rect x="15" y="0" width="3" height="11" rx="1" /></svg>

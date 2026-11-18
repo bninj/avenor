@@ -86,10 +86,10 @@ export default function Money() {
 
 function Hero({ label, value, sub }: { label: string; value: string; sub?: React.ReactNode }) {
   return (
-    <div className="spruce grain rounded-[24px] px-5 pt-5 pb-6 mb-6">
-      <p className="t-small text-teal-100/75">{label}</p>
+    <div className="hero-light grain grain-light rounded-[24px] px-5 pt-5 pb-6 mb-6">
+      <p className="t-small text-muted">{label}</p>
       <motion.p key={value} initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }} className="num text-[3.75rem] leading-none font-semibold tracking-[-0.04em] mt-3">{value}</motion.p>
-      {sub && <p className="t-small text-teal-100/75 mt-3">{sub}</p>}
+      {sub && <p className="t-small text-muted mt-3">{sub}</p>}
     </div>
   )
 }

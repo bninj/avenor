@@ -9,7 +9,7 @@ const state = (extra = {}) => JSON.stringify({ state: { profile: { name: 'Gurpre
 const SCREENS = [
   '/welcome', '/start', '/home', '/journey', '/journey/budget', '/journey/mortgage', '/journey/completion',
   '/learn', '/money?tab=upfront', '/money?tab=stamp', '/money?tab=monthly', '/money?tab=deposit',
-  '/pros', '/pros?type=solicitor&id=okonjo', '/house', '/premium', '/ask', '/me', '/help', '/selling',
+  '/pros', '/pros?type=solicitor&id=okonjo', '/house', '/premium', '/premium?first=1', '/ask', '/me', '/help', '/selling', '/documents', '/compare', '/report', '/compare?preview=1',
 ];
 const DEVICES = [['iPhone SE', {}], ['iPhone 13', {}], ['Pixel 7', {}], ['iPhone 13', { largeText: true }]];
 
@@ -47,6 +47,8 @@ async function sweep(p) {
       if (ox > 4 && oy > 4) {
         // ignore one being inside a sheet and the other on the page behind it
         if (!!a.closest('[role="dialog"]') !== !!b.closest('[role="dialog"]')) continue;
+        // content scrolling under the sticky top bar is normal
+        if (!!a.closest('header') !== !!b.closest('header')) continue;
         issues.push(`text overlap: "${label(a)}" / "${label(b)}"`);
       }
     }

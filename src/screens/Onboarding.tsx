@@ -60,7 +60,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
     if (!plan) return
     if (demo) startDemo(plan)
     else setProfile(plan)
-    nav('/home', { replace: true })
+    nav(demo ? '/premium?first=1&demo=1' : '/premium?first=1', { replace: true }) // plans first, like most apps
   }
 
   // ── Self-playing demo ──
@@ -89,7 +89,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
       if (stop.current) return
       setAnswered(5); setPlan(demoProfile)
       await sleep(3600)
-      if (!stop.current) { startDemo(demoProfile); nav('/home', { replace: true }) }
+      if (!stop.current) { startDemo(demoProfile); nav('/premium?first=1&demo=1', { replace: true }) }
     }
     run()
     return () => { stop.current = true }
@@ -123,19 +123,19 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
         <button onClick={demo ? skipDemo : () => (step === 0 ? finish() : advance())} className="t-small font-semibold text-muted min-h-11 px-3">Skip</button>
       </div>
 
-      <motion.div layoutId="plan-shell" style={{ borderRadius: 24 }} className="mx-5 h-[176px] shrink-0 spruce grain overflow-hidden relative">
-        <Suspense fallback={null}><HouseCanvas parts={PARTS.slice(0, answered)} dark ghost interactive={false} zoom={0.92} className="absolute inset-0" /></Suspense>
+      <motion.div layoutId="plan-shell" style={{ borderRadius: 24 }} className="mx-5 h-[176px] shrink-0 hero-light grain grain-light overflow-hidden relative">
+        <Suspense fallback={null}><HouseCanvas parts={PARTS.slice(0, answered)} ghost interactive={false} zoom={0.92} className="absolute inset-0" /></Suspense>
         {/* Your answers collect here as you go */}
         <div className="absolute left-3 right-3 bottom-3 z-10 flex flex-wrap gap-1.5">
-          {answered === 0 && <span className="t-micro text-teal-100/70 px-1">Your answers build this home</span>}
+          {answered === 0 && <span className="t-micro text-muted px-1">Your answers build this home</span>}
           {chips.map((c) => (
             <motion.span key={c.key} layoutId={`ans-${c.key}`} initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-              className="prism-edge rounded-full bg-white/12 backdrop-blur-md text-teal-50 t-micro font-semibold px-2.5 py-1 whitespace-nowrap">
+              className="prism-edge rounded-full bg-teal-800/5 backdrop-blur-md text-teal-900 t-micro font-semibold px-2.5 py-1 whitespace-nowrap">
               {c.text}
             </motion.span>
           ))}
         </div>
-        {demo && <span className="absolute right-3 top-3 z-10 rounded-full bg-black/25 backdrop-blur t-micro text-teal-50 px-2.5 py-1 flex items-center gap-1.5"><span className="size-1.5 rounded-full bg-gold-300 animate-pulse" />Demo</span>}
+        {demo && <span className="absolute right-3 top-3 z-10 rounded-full bg-white/80 backdrop-blur t-micro text-teal-900 px-2.5 py-1 flex items-center gap-1.5"><span className="size-1.5 rounded-full bg-gold-300 animate-pulse" />Demo</span>}
       </motion.div>
 
       <AnimatePresence mode="popLayout" initial={false}>
@@ -169,7 +169,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
                   return (
                     <motion.button key={o.id} variants={rise} whileTap={{ scale: 0.97 }} onClick={() => { tick(); set({ firstTime: o.v }); advanceSoon() }}
                       className={`h-[150px] rounded-[20px] p-4 flex flex-col justify-between text-left transition-[background,opacity,color] duration-200 ${sel ? 'bg-teal-800 text-teal-50 lift' : 'bg-stone-100'} ${p.firstTime !== undefined && !sel ? 'opacity-40' : ''} ${hot(o.id)}`}>
-                      <span className={`size-11 rounded-full grid place-items-center ${sel ? 'bg-white/10' : 'bg-white'}`}><Icon name={o.icon} /></span>
+                      <span className={`size-11 rounded-full grid place-items-center ${sel ? 'bg-teal-800/5' : 'bg-white'}`}><Icon name={o.icon} /></span>
                       <motion.span layoutId={sel ? 'ans-first' : undefined} className="t-h3 self-start">{o.t}</motion.span>
                     </motion.button>
                   )
@@ -261,24 +261,24 @@ function PlanReveal({ plan, onGo, demo }: { plan: Profile; onGo: () => void; dem
     ['Your first step', 'Know your budget'],
   ]
   return (
-    <motion.main layoutId="plan-shell" style={{ borderRadius: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 32 }} className="absolute inset-0 spruce grain flex flex-col overflow-y-auto overflow-x-hidden no-scrollbar">
+    <motion.main layoutId="plan-shell" style={{ borderRadius: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 32 }} className="absolute inset-0 hero-light grain grain-light flex flex-col overflow-y-auto overflow-x-hidden no-scrollbar">
       <span className="prism-streak" aria-hidden="true" />
       <div className="relative h-[290px] shrink-0">
-        {ready && <Suspense fallback={null}><HouseCanvas parts={['foundation', 'walls', 'windows', 'door', 'roof', 'chimney', 'garden']} dark zoom={0.98} className="absolute inset-0" /></Suspense>}
+        {ready && <Suspense fallback={null}><HouseCanvas parts={['foundation', 'walls', 'windows', 'door', 'roof', 'chimney', 'garden']} zoom={0.98} className="absolute inset-0" /></Suspense>}
       </div>
       <div className="px-6 flex-1 flex flex-col">
         <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="t-display">{plan.name}, here’s your plan.</motion.h1>
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="t-body text-teal-100/75 mt-2">Seven stages. Each one adds a piece of this home.</motion.p>
-        <dl className="mt-6 border-t border-white/10">
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="t-body text-muted mt-2">Seven stages. Each one adds a piece of this home.</motion.p>
+        <dl className="mt-6 border-t border-stone-200">
           {rows.map(([k, v], i) => (
-            <motion.div key={k} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 + i * 0.1 }} className="flex justify-between items-baseline py-3.5 border-b border-white/10">
-              <dt className="t-small text-teal-100/70">{k}</dt>
+            <motion.div key={k} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 + i * 0.1 }} className="flex justify-between items-baseline py-3.5 border-b border-stone-200">
+              <dt className="t-small text-muted">{k}</dt>
               <dd className="t-h3 num">{v}</dd>
             </motion.div>
           ))}
         </dl>
         <div className="mt-auto pt-7 pb-6">
-          <Button variant="light" onClick={onGo}>{demo ? 'Opening your plan…' : 'Start step 1'}</Button>
+          <Button variant="primary" onClick={onGo}>{demo ? 'Opening your plan…' : 'Start step 1'}</Button>
         </div>
       </div>
     </motion.main>

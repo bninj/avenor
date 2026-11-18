@@ -51,11 +51,11 @@ export default function Learn() {
               <button
                 key={l.id}
                 onClick={() => (locked ? nav('/premium') : setOpen(l))}
-                className={`snap-start shrink-0 w-[200px] h-[236px] rounded-[22px] p-5 flex flex-col text-left ${i === 0 ? 'spruce grain' : 'bg-stone-100 grain grain-light'}`}
+                className={`snap-start shrink-0 w-[200px] h-[236px] rounded-[22px] p-5 flex flex-col text-left ${i === 0 ? 'hero-light grain grain-light' : 'bg-stone-100 grain grain-light'}`}
               >
-                <span className={`text-[3.25rem] leading-none font-semibold tracking-[-0.04em] num ${i === 0 ? 'text-gold-300' : 'text-stone-400/70'}`}>{String(i + 1).padStart(2, '0')}</span>
+                <span className={`text-[3.25rem] leading-none font-semibold tracking-[-0.04em] num ${i === 0 ? 'text-gold-600' : 'text-stone-400/70'}`}>{String(i + 1).padStart(2, '0')}</span>
                 <span className="t-h2 mt-auto">{l.title}</span>
-                <span className={`t-small mt-2 flex items-center gap-1.5 ${i === 0 ? 'text-teal-100/75' : 'text-muted'}`}>
+                <span className={`t-small mt-2 flex items-center gap-1.5 ${i === 0 ? 'text-muted' : 'text-muted'}`}>
                   {locked && <Icon name="lock" size={14} />}{l.mins} min{locked ? ', Premium' : ''}
                 </span>
               </button>

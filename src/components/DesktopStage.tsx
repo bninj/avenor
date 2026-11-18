@@ -35,11 +35,11 @@ function JourneyPanel() {
   return (
     <div className="glass grain prism-edge rounded-[28px] p-6 w-[340px]">
       <div className="flex items-end justify-between">
-        <p className="t-small text-teal-100/70">{profile ? `${profile.name}’s journey` : 'The journey'}</p>
-        <p className="num text-[2rem] leading-none font-semibold tracking-[-0.04em]">{pct}<span className="text-gold-300 text-[1.1rem] align-top ml-0.5">%</span></p>
+        <p className="t-small text-muted">{profile ? `${profile.name}’s journey` : 'The journey'}</p>
+        <p className="num text-[2rem] leading-none font-semibold tracking-[-0.04em]">{pct}<span className="text-gold-600 text-[1.1rem] align-top ml-0.5">%</span></p>
       </div>
-      <div className="mt-3 h-[3px] rounded-full bg-white/10 overflow-hidden">
-        <motion.div className="h-full bg-gold-300" initial={false} animate={{ width: `${pct}%` }} transition={{ type: 'spring', stiffness: 120, damping: 24 }} />
+      <div className="mt-3 h-[3px] rounded-full bg-teal-800/[0.06] overflow-hidden">
+        <motion.div className="h-full bg-gold-500" initial={false} animate={{ width: `${pct}%` }} transition={{ type: 'spring', stiffness: 120, damping: 24 }} />
       </div>
       <ol className="mt-4">
         {stages.map((s) => {
@@ -51,21 +51,21 @@ function JourneyPanel() {
               <button
                 onClick={() => profile && nav(`/journey/${s.id}`)}
                 disabled={!profile}
-                className={`group w-full flex items-center gap-3 rounded-[14px] px-3 py-[min(9px,1.1vh)] text-left transition-colors disabled:cursor-default ${isNow ? 'bg-white/10 ring-1 ring-white/15' : 'hover:bg-white/5'}`}
+                className={`group w-full flex items-center gap-3 rounded-[14px] px-3 py-[min(9px,1.1vh)] text-left transition-colors disabled:cursor-default ${isNow ? 'bg-teal-800/[0.06] ring-1 ring-teal-900/10' : 'hover:bg-teal-800/5'}`}
               >
-                <span className={`num w-4 t-small font-semibold ${p.complete ? 'text-gold-300' : isNow ? 'text-teal-50' : 'text-teal-100/35'}`}>{s.n}</span>
-                <span className={`desk-row flex-1 font-semibold tracking-[-0.015em] ${isNow ? 'text-teal-50' : p.complete ? 'text-teal-100/80' : 'text-teal-100/45 group-hover:text-teal-100/75'}`}>{s.title}</span>
-                {p.complete && <Icon name="check" size={15} stroke={2.4} className="text-gold-300" />}
-                {isNow && <span className="t-micro num text-teal-100/80">{p.n}/{p.total}</span>}
-                {here && !isNow && <span className="size-1.5 rounded-full bg-gold-300" />}
+                <span className={`num w-4 t-small font-semibold ${p.complete ? 'text-gold-600' : isNow ? 'text-teal-900' : 'text-muted'}`}>{s.n}</span>
+                <span className={`desk-row flex-1 font-semibold tracking-[-0.015em] ${isNow ? 'text-teal-900' : p.complete ? 'text-muted' : 'text-muted group-hover:text-muted'}`}>{s.title}</span>
+                {p.complete && <Icon name="check" size={15} stroke={2.4} className="text-gold-600" />}
+                {isNow && <span className="t-micro num text-muted">{p.n}/{p.total}</span>}
+                {here && !isNow && <span className="size-1.5 rounded-full bg-gold-500" />}
               </button>
             </li>
           )
         })}
       </ol>
-      <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
-        <p className="t-micro font-normal text-teal-100/60 max-w-[22ch]">{profile ? 'Updates live as you tick tasks on the phone.' : 'Press Get started on the phone.'}</p>
-        <button onClick={() => nav('/demo', { state: { restart: Date.now() } })} className="min-h-10 rounded-full px-3.5 inline-flex items-center gap-1.5 t-small font-semibold text-teal-50 bg-white/10 hover:bg-white/15 transition-colors">
+      <div className="mt-4 pt-4 border-t border-stone-200 flex items-center justify-between">
+        <p className="t-micro font-normal text-muted max-w-[22ch]">{profile ? 'Updates live as you tick tasks on the phone.' : 'Press Get started on the phone.'}</p>
+        <button onClick={() => nav('/demo', { state: { restart: Date.now() } })} className="min-h-10 rounded-full px-3.5 inline-flex items-center gap-1.5 t-small font-semibold text-teal-900 bg-teal-800/[0.06] hover:bg-teal-800/10 transition-colors">
           <Icon name="refresh" size={15} /> Restart
         </button>
       </div>
@@ -86,7 +86,7 @@ function ScanCard() {
       </div>
       <div>
         <p className="t-h3">Try it on your phone</p>
-        <p className="t-small text-teal-100/65 mt-1">Point your camera here.<br />It opens straight into the demo.</p>
+        <p className="t-small text-muted mt-1">Point your camera here.<br />It opens straight into the demo.</p>
       </div>
     </div>
   )
@@ -95,18 +95,18 @@ function ScanCard() {
 export function DesktopStage({ children, statusBar }: { children: React.ReactNode; statusBar: React.ReactNode }) {
   const scale = usePhoneScale()
   return (
-    <div onPointerMove={(e) => { const s = e.currentTarget.style; s.setProperty('--mx', e.clientX + 'px'); s.setProperty('--my', e.clientY + 'px') }} className="desk-stage grain relative min-h-full w-full overflow-hidden text-teal-50">
+    <div onPointerMove={(e) => { const s = e.currentTarget.style; s.setProperty('--mx', e.clientX + 'px'); s.setProperty('--my', e.clientY + 'px') }} className="desk-stage grain relative min-h-full w-full overflow-hidden text-teal-900">
       <div className="relative z-10 h-[100vh] px-[4vw] grid grid-cols-[minmax(300px,1fr)_auto] xl:grid-cols-[minmax(300px,0.9fr)_minmax(320px,1fr)_auto] items-center gap-[3vw]">
         {/* Left: the story */}
         <section className="flex flex-col gap-[min(2.25rem,4vh)] max-w-[440px]">
           <div className="flex items-center gap-2">
-            <Mark size={34} tone="light" />
+            <Mark size={34} />
             <span className="text-[1.375rem] font-semibold tracking-[-0.035em]">avenor</span>
           </div>
-          <h1 className="text-[clamp(2.75rem,min(4.6vw,8.4vh),4.75rem)] leading-[0.9] font-semibold tracking-[-0.045em]">
+          <h1 className="text-[clamp(2.75rem,min(4.6vw,8.4vh),4.75rem)] leading-[0.92] font-bold tracking-[-0.045em] text-teal-800">
             From deposit<br />to doorstep.
           </h1>
-          <p className="t-body text-teal-100/70 max-w-[32ch]">A first-time buyer’s guide to every step of buying a home, with checked local professionals.</p>
+          <p className="t-body text-muted max-w-[32ch]">A first-time buyer’s guide to every step of buying a home, with checked local professionals.</p>
           <ScanCard />
           
         </section>

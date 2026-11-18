@@ -72,6 +72,7 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     await p.getByRole('button', { name: 'Skip, fill it in for me' }).click();
     await see(p, 'here’s your plan'); log('Priya, 19', true, 'Skipping all questions still gives a plan');
     await p.getByRole('button', { name: 'Start step 1' }).click();
+    await p.getByRole('button', { name: 'Not now' }).click();
     await see(p, 'of your home built'); log('Priya, 19', true, 'Lands on Home with a random profile');
     await checks(p, 'Priya, 19', 'Home on a small phone');
     await p.getByRole('link', { name: 'Learn' }).click();
@@ -104,8 +105,10 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     await p.waitForTimeout(1800);
     const sd = await p.locator('dl').innerText();
     log('Jordan, 26', /Stamp Duty\s*£0/.test(sd), 'Plan shows £0 Stamp Duty for a £300k first home');
+    // after the plan, the subscription options appear first, like most apps
     await checks(p, 'Jordan, 26', 'Plan reveal');
     await p.getByRole('button', { name: 'Start step 1' }).click();
+    await p.getByRole('button', { name: 'Not now' }).click();
     for (const t of ['Add up your savings', 'Check your credit report for free', 'Work out your upfront cash', 'Set your price range']) await p.getByText(t).click();
     await see(p, 'Foundations laid', 4000); log('Jordan, 26', true, 'Finishing stage 1 shows the house celebration');
     await p.getByRole('button', { name: 'Start stage 2' }).click();
@@ -153,6 +156,7 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     const sd = await p.locator('dl').innerText();
     log('Dave, 47', /Stamp Duty\s*£1,500/.test(sd), `Plan uses normal Stamp Duty for £200k (expect £1,500): ${sd.split('\n').slice(2, 4).join(' ')}`);
     await p.getByRole('button', { name: 'Start step 1' }).click();
+    await p.getByRole('button', { name: 'Not now' }).click();
     await go(p, '/money?tab=stamp');
     const sw = await p.getByRole('radio', { name: 'Owned before' }).getAttribute('aria-checked');
     log('Dave, 47', sw === 'true', 'Stamp Duty calculator knows he has owned before');
@@ -231,6 +235,28 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     await p2.getByRole('button', { name: 'Close' }).click(); await p2.waitForTimeout(600);
     log('Lee, 35', p2.url().includes('#/home'), 'Closing Premium opened from a link stays inside the app');
     await p2.close();
+  });
+
+  // 10. Maya, 23, checks the subscription and its features
+  await person(b, 'Maya, 23', 'iPhone 13', async (p) => {
+    await go(p, '/start');
+    await p.getByRole('button', { name: 'Skip, fill it in for me' }).click();
+    await p.getByRole('button', { name: 'Start step 1' }).click();
+    await see(p, 'Buy with confidence'); log('Maya, 23', p.url().includes('/premium'), 'Plans appear straight after sign up');
+    await checks(p, 'Maya, 23', 'Plans');
+    await p.getByRole('button', { name: /Compare homes side by side/ }).click();
+    await see(p, 'Your shortlist'); log('Maya, 23', true, 'Preview shows the compare homes feature');
+    await checks(p, 'Maya, 23', 'Compare homes');
+    await go(p, '/documents');
+    await see(p, 'Keep every document in one place'); log('Maya, 23', true, 'Documents are locked on Free with a clear way to upgrade');
+    await go(p, '/premium');
+    await p.getByRole('radio', { name: /Concierge/ }).click();
+    await p.getByRole('button', { name: 'Start 14-day free trial' }).click(); await p.waitForTimeout(700);
+    await go(p, '/report');
+    await see(p, 'Valentine Road'); log('Maya, 23', (await p.getByText('See plans').count()) === 0, 'Concierge unlocks the structure report');
+    await checks(p, 'Maya, 23', 'Structure report');
+    await go(p, '/documents');
+    await see(p, 'Your documents'); log('Maya, 23', true, 'Concierge unlocks the document folder');
   });
 
   // 7. A judge on a 1366x768 laptop, keyboard only

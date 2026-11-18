@@ -25,19 +25,19 @@ export default function Journey() {
           if (isCurrent) {
             return (
               <li key={s.id} className="my-2">
-                <motion.button whileTap={{ scale: 0.99 }} onClick={() => nav(`/journey/${s.id}`)} className="w-full text-left spruce grain rounded-[24px] p-5">
+                <motion.button whileTap={{ scale: 0.99 }} onClick={() => nav(`/journey/${s.id}`)} className="w-full text-left hero-light grain grain-light rounded-[24px] p-5">
                   <div className="flex items-start gap-4">
-                    <span className="text-[3.5rem] leading-[0.8] font-semibold tracking-[-0.04em] text-gold-300 num w-11">{s.n}</span>
+                    <span className="text-[3.5rem] leading-[0.8] font-semibold tracking-[-0.04em] text-gold-600 num w-11">{s.n}</span>
                     <span className="flex-1">
-                      <span className="t-small text-teal-100/70">Now</span>
+                      <span className="t-small text-muted">Now</span>
                       <span className="block t-h2 mt-0.5">{s.title}</span>
                     </span>
                   </div>
                   <div className="mt-5 flex items-center gap-3">
-                    <div className="h-[5px] flex-1 rounded-full bg-white/15 overflow-hidden">
+                    <div className="h-[5px] flex-1 rounded-full bg-teal-800/10 overflow-hidden">
                       <motion.div className="h-full bg-gold-500 rounded-full" initial={{ width: 0 }} animate={{ width: `${(p.n / p.total) * 100}%` }} transition={{ duration: 0.8 }} />
                     </div>
-                    <span className="t-small num text-teal-100/80">{p.n}/{p.total}</span>
+                    <span className="t-small num text-muted">{p.n}/{p.total}</span>
                     <span className="size-10 rounded-full bg-teal-50 text-teal-900 grid place-items-center"><Icon name="right" size={18} /></span>
                   </div>
                 </motion.button>

@@ -19,19 +19,19 @@ export default function StageScreen() {
 
   return (
     <Screen tabbed={false} className="!pb-0">
-      <header className="spruce grain px-5 pt-3 pb-9">
+      <header className="hero-light grain grain-light px-5 pt-3 pb-9">
         <div className="flex items-center justify-between">
-          <IconButton name="left" label="Back to journey" tone="dark" onClick={() => nav('/journey')} />
-          <span className="t-small text-teal-100/70 num">{s.n} of 7</span>
+          <IconButton name="left" label="Back to journey" tone="light" onClick={() => nav('/journey')} />
+          <span className="t-small text-muted num">{s.n} of 7</span>
         </div>
         <div className="mt-6 flex items-end gap-4">
-          <span className="text-[6.5rem] leading-[0.78] font-semibold tracking-[-0.04em] text-gold-300 num">{s.n}</span>
+          <span className="text-[6.5rem] leading-[0.78] font-semibold tracking-[-0.04em] text-gold-600 num">{s.n}</span>
           <h1 className="t-display pb-1 flex-1">{s.title}</h1>
         </div>
-        <p className="t-body text-teal-100/80 mt-5">{s.short}</p>
+        <p className="t-body text-muted mt-5">{s.short}</p>
         <div className="mt-5 flex gap-6 t-small">
-          <span className="whitespace-nowrap"><span className="text-teal-100/60">Takes </span>{s.weeks}</span>
-          <span className="whitespace-nowrap"><span className="text-teal-100/60">Costs </span>{s.cost}</span>
+          <span className="whitespace-nowrap"><span className="text-muted">Takes </span>{s.weeks}</span>
+          <span className="whitespace-nowrap"><span className="text-muted">Costs </span>{s.cost}</span>
         </div>
       </header>
 
@@ -94,9 +94,9 @@ export default function StageScreen() {
         </section>
 
         <section className="px-6 mt-8">
-          <button onClick={() => nav('/premium')} className="w-full text-left rounded-[20px] spruce grain p-5 flex items-center gap-4">
+          <button onClick={() => nav('/premium')} className="w-full text-left rounded-[20px] hero-light grain grain-light p-5 flex items-center gap-4">
             <span className="flex-1">
-              <span className="t-small text-gold-300 block">{plan === 'free' ? 'With Premium' : 'In your plan'}</span>
+              <span className="t-small text-gold-600 block">{plan === 'free' ? 'With Premium' : 'In your plan'}</span>
               <span className="block t-h3 mt-0.5">{s.premiumTip}</span>
             </span>
             <Icon name={plan === 'free' ? 'lock' : 'right'} size={20} />

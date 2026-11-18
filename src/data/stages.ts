@@ -91,7 +91,7 @@ export const stages: Stage[] = [
       { id: 's1', label: 'Pick two or three areas to focus on', action: { label: 'Explore areas', to: '/pros' } },
       { id: 's2', label: 'Check sold prices on the street', action: { label: 'Sold prices', href: 'https://www.gov.uk/search-house-prices' } },
       { id: 's3', label: 'Book viewings', action: { label: 'Find an agent', to: '/pros?type=agent' } },
-      { id: 's4', label: 'Shortlist your favourite' },
+      { id: 's4', label: 'Shortlist your favourite', action: { label: 'Compare', to: '/compare' } },
     ],
     terms: ['epc', 'freehold', 'leasehold', 'chain', 'service-charge'],
     links: [

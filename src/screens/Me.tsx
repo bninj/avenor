@@ -77,6 +77,9 @@ export default function Me() {
 
       <section className="mx-6 mt-7 rounded-[20px] ring-1 ring-stone-200 divide-y divide-stone-200 overflow-hidden">
         <MenuRow icon="spark" label="Avenor Premium" onClick={() => nav('/premium')} />
+        <MenuRow icon="folder" label="Documents" onClick={() => nav('/documents')} />
+        <MenuRow icon="compare" label="Compare homes" onClick={() => nav('/compare')} />
+        <MenuRow icon="report" label="Structure report" onClick={() => nav('/report')} />
         <MenuRow icon="tag" label="Selling a home" onClick={() => nav('/selling')} />
         {!standalone && <MenuRow icon="home" label="Add Avenor to your Home Screen" onClick={install} />}
         <MenuRow icon="message" label="Send feedback on the beta" onClick={() => toast('Thanks! Feedback goes to the Avenor team')} />
@@ -90,7 +93,7 @@ export default function Me() {
   )
 }
 
-function MenuRow({ icon, label, onClick }: { icon: 'spark' | 'tag' | 'message' | 'refresh' | 'home' | 'learn'; label: string; onClick: () => void }) {
+function MenuRow({ icon, label, onClick }: { icon: 'spark' | 'tag' | 'message' | 'refresh' | 'home' | 'learn' | 'folder' | 'compare' | 'report'; label: string; onClick: () => void }) {
   return (
     <button onClick={onClick} className="w-full flex items-center gap-3 px-4 min-h-14 active:bg-stone-50">
       <Icon name={icon} size={20} className="text-teal-700" />

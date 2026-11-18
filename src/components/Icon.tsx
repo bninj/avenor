@@ -31,6 +31,10 @@ const paths: Record<string, React.ReactNode> = {
   tag: <><path d="M4.5 12.3V5.5a1 1 0 0 1 1-1h6.8l7.2 7.2a1 1 0 0 1 0 1.4l-5.8 5.8a1 1 0 0 1-1.4 0z" /><circle cx="8.5" cy="8.5" r="1.2" /></>,
   calc: <><rect x="5.5" y="3.5" width="13" height="17" rx="2" /><path d="M8.5 7h7M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M15.5 14.5V17M8.5 17h3.5" /></>,
   rotate: <><path d="M4.5 12a7.5 7.5 0 0 1 13-5.1" /><path d="M19.5 12a7.5 7.5 0 0 1-13 5.1" /><path d="M17.5 3.5v3.4h-3.4M6.5 20.5v-3.4h3.4" /></>,
+  folder: <><path d="M3.5 7.5a1.5 1.5 0 0 1 1.5-1.5h4.2l2 2.2H19a1.5 1.5 0 0 1 1.5 1.5v8.3a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z" /></>,
+  report: <><rect x="5.5" y="4" width="13" height="16.5" rx="2" /><path d="M9 4V3h6v1M8.5 10.5l1.5 1.5 2.5-3M8.5 16h7M14 11h1.5" /></>,
+  compare: <><rect x="3.5" y="5" width="7" height="14" rx="1.5" /><rect x="13.5" y="5" width="7" height="14" rx="1.5" /><path d="M6 9h2M6 12h2M16 9h2M16 12h2" /></>,
+  gift: <><rect x="4" y="9" width="16" height="11" rx="1.5" /><path d="M3 9h18M12 9v11M12 9c-1.5-3-5-3.5-5-1.2C7 9 12 9 12 9zM12 9c1.5-3 5-3.5 5-1.2C17 9 12 9 12 9z" /></>,
   door: <><path d="M6 20.5V5.5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v15M4 20.5h16" /><path d="M14.5 12.5h.01" /></>,
 }
 

@@ -69,10 +69,10 @@
 
 @layer components {
 /* ── Type scale: one family, extreme contrast ── */
-.t-hero { font-size: 5.5rem; line-height: 0.86; font-weight: 600; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
-.t-display { font-size: 2.5rem; line-height: 1; font-weight: 600; letter-spacing: -0.035em; }
-.t-h1 { font-size: 1.875rem; line-height: 1.06; font-weight: 600; letter-spacing: -0.03em; }
-.t-h2 { font-size: 1.3125rem; line-height: 1.18; font-weight: 600; letter-spacing: -0.02em; }
+.t-hero { font-size: 5.5rem; line-height: 0.86; font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.t-display { font-size: 2.375rem; line-height: 1.02; font-weight: 700; letter-spacing: -0.035em; color: var(--color-teal-800); }
+.t-h1 { font-size: 1.75rem; line-height: 1.08; font-weight: 700; letter-spacing: -0.03em; color: var(--color-teal-800); }
+.t-h2 { font-size: 1.25rem; line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; color: var(--color-teal-800); }
 .t-h3 { font-size: 1.0625rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; }
 .t-body { font-size: 1rem; line-height: 1.5; }
 .t-small { font-size: 0.875rem; line-height: 1.45; }
@@ -97,6 +97,10 @@
 .grain-light::after { opacity: 0.22; mix-blend-mode: multiply; }
 .grain > * { position: relative; z-index: 2; }
 
+/* Light hero: white with a faint mint wash, green type. Calm and professional. */
+.hero-light { background: radial-gradient(120% 85% at 88% 0%, #E2EFE9 0%, #EEF6F2 42%, #FFFFFF 100%); color: var(--color-teal-900); }
+.hero-light .prism-streak { mix-blend-mode: multiply; opacity: 0.14; }
+
 /* Spruce block: soft light falling from the top right */
 .spruce { background: radial-gradient(130% 90% at 80% 0%, #1F5E56 0%, #123F3B 55%, #0F3633 100%); color: #EEF4F1; }
 .brass { background: radial-gradient(120% 100% at 80% 0%, #D6AE66 0%, #C79B4E 60%, #B88B40 100%); color: #0C2A27; }
@@ -118,27 +122,24 @@ input[type="range"].range::-moz-range-thumb { width: 18px; height: 18px; border-
 /* ── Desktop presentation ── */
 .desk-stage {
   background:
-    radial-gradient(60% 50% at 78% 92%, rgba(199, 155, 78, 0.16) 0%, transparent 70%),
-    radial-gradient(70% 60% at 12% 0%, rgba(46, 116, 104, 0.55) 0%, transparent 65%),
-    linear-gradient(160deg, #123F3B 0%, #0E3330 55%, #0A2725 100%);
+    radial-gradient(55% 45% at 80% 95%, rgba(199, 155, 78, 0.10) 0%, transparent 70%),
+    radial-gradient(70% 60% at 10% 0%, rgba(46, 116, 104, 0.10) 0%, transparent 65%),
+    linear-gradient(160deg, #F6FAF8 0%, #EEF5F1 55%, #E6EFEA 100%);
 }
-.desk-stage.grain::after { opacity: 0.6; }
 /* Frosted glass panels: blur what is behind, catch light on the top edge,
    and pick up a soft lamp that follows the mouse (--mx/--my set on the stage) */
 .glass {
   background:
-    radial-gradient(420px circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, 0.13), transparent 60%) fixed,
-    linear-gradient(155deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 42%, rgba(255, 255, 255, 0.06) 100%),
-    rgba(10, 35, 33, 0.42); /* smoked tint keeps white text readable over anything */
+    radial-gradient(420px circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, 0.55), transparent 60%) fixed,
+    linear-gradient(155deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0.7) 100%);
   -webkit-backdrop-filter: blur(26px) saturate(150%);
           backdrop-filter: blur(26px) saturate(150%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.28),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.10),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.12),
-    0 30px 60px -30px rgba(0, 0, 0, 0.55);
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 0 1px rgba(18, 63, 59, 0.08),
+    0 30px 60px -30px rgba(12, 42, 39, 0.28);
 }
-.glass.grain::after { opacity: 0.35; }
+.glass.grain::after { opacity: 0.18; mix-blend-mode: multiply; }
 
 /* Prism rim: a thin spectrum edge, like light on cut glass */
 .prism-edge { position: relative; }
