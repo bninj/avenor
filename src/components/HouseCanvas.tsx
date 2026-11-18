@@ -197,15 +197,16 @@ export default function HouseCanvas({ parts, className = '', interactive = true,
   const last = useRef(0)
   return (
     <div
-      className={`touch-pan-y ${className}`}
-      onPointerDown={(e) => { if (!interactive) return; spin.current.dragging = true; last.current = e.clientX; (e.target as HTMLElement).setPointerCapture?.(e.pointerId) }}
+      className={`touch-pan-y ${interactive ? '' : 'pointer-events-none'} ${className}`}
+      onPointerDown={(e) => { if (!interactive) return; spin.current.dragging = true; last.current = e.clientX; }}
       onPointerMove={(e) => { if (!spin.current.dragging) return; spin.current.target += (e.clientX - last.current) * 0.012; last.current = e.clientX }}
+      onPointerLeave={() => (spin.current.dragging = false)}
       onPointerUp={() => (spin.current.dragging = false)}
       onPointerCancel={() => (spin.current.dragging = false)}
       aria-label={`3D model of your home: ${parts.length} of 7 parts built`}
       role="img"
     >
-      <Canvas flat shadows="percentage" dpr={[1, 2]} camera={{ position: [7.0, 5.4, 8.0], fov: 30 }} gl={{ antialias: true, alpha: true }}>
+      <Canvas flat shadows="percentage" dpr={[1, 2]} camera={{ position: [7.0, 5.4, 8.0], fov: 30 }} gl={{ antialias: true, alpha: true, powerPreference: 'low-power' }} style={{ touchAction: 'pan-y', pointerEvents: interactive ? 'auto' : 'none' }}>
         <hemisphereLight args={['#FFFDF6', dark ? '#9FC0B6' : '#D9E2DC', 1.8]} />
         <directionalLight position={[4, 7, 5]} intensity={1.5} castShadow shadow-mapSize={[1024, 1024]} shadow-camera-left={-4} shadow-camera-right={4} shadow-camera-top={4} shadow-camera-bottom={-4} shadow-bias={-0.0005} />
         <Rig zoom={zoom} />

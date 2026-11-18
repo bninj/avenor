@@ -36,7 +36,7 @@ export function Celebration() {
     <Sheet open={!!s} onClose={close} label="Stage complete" tall dark>
       {s && (
         <div className="pb-8">
-          <div className="spruce grain -mt-[22px] h-[300px] relative overflow-hidden">
+          <div className="spruce grain h-[300px] relative overflow-hidden">
             <Suspense fallback={null}><HouseCanvas parts={parts} dark ghost zoom={1.0} className="absolute inset-0" /></Suspense>
           </div>
           <div className="px-6 pt-6">

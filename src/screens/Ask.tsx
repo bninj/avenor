@@ -45,7 +45,7 @@ export default function Ask() {
   const suggestions = answers.filter((a) => !asked.has(a.q)).slice(0, 4)
 
   return (
-    <div className="screen-enter absolute inset-0 flex flex-col bg-white">
+    <div className="screen-push absolute inset-0 flex flex-col bg-white">
       <TopBar back title="Ask Avenor" />
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-4">
         {msgs.length === 0 && (

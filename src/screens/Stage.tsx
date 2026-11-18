@@ -4,7 +4,7 @@ import { stageById, stages } from '../data/stages'
 import { proTypeLabel } from '../data/pros'
 import { stageProgress, useApp } from '../store'
 import { Icon } from '../components/Icon'
-import { Disclaimer, IconButton, Screen } from '../components/ui'
+import { Disclaimer, IconButton, Screen, tick } from '../components/ui'
 import { TermChip, TermText } from '../components/Terms'
 
 export default function StageScreen() {
@@ -61,7 +61,7 @@ export default function StageScreen() {
               const on = !!done[t.id]
               return (
                 <li key={t.id} className="border-b border-stone-200">
-                  <button onClick={() => toggleTask(t.id)} aria-pressed={on} className="w-full text-left flex items-center gap-4 py-4 min-h-[60px]">
+                  <button onClick={() => { if (!on) tick(); toggleTask(t.id) }} aria-pressed={on} className="w-full text-left flex items-center gap-4 py-4 min-h-[60px]">
                     <span className={`size-7 shrink-0 rounded-full grid place-items-center transition-colors ${on ? 'bg-teal-800 text-white' : 'ring-[1.5px] ring-stone-400/60'}`}>
                       <AnimatePresence>{on && <motion.span initial={{ scale: 0.3 }} animate={{ scale: 1 }} exit={{ scale: 0 }}><Icon name="check" size={16} stroke={2.6} /></motion.span>}</AnimatePresence>
                     </span>

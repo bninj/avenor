@@ -25,6 +25,21 @@ The `#/demo` link is the one for the QR code (`brand/qr-demo.png` and `.svg`, re
 
 On a laptop the app shows inside a phone frame, with a QR code and "things to try" beside it.
 
+## Testing on real phones (no local server needed)
+
+Everything below uses the public link, so it works the same in a pitch room as at home.
+
+| Way to test | How | Cost |
+|---|---|---|
+| **Any phone, in the browser** | Scan the QR or open the link in Safari (iPhone) or Chrome (Android) | Free |
+| **As an installed app** | iPhone: Safari, Share, *Add to Home Screen*. Android: Chrome menu, *Install app* (or *Add Avenor to your Home Screen* inside the app's profile screen). Opens full-screen with its own icon | Free |
+| **Offline** | Open the link once on Wi-Fi. After that the app, fonts and 3D house work with no connection (map tiles only show areas already viewed) | Free |
+| **Real iPhones and Androids in the cloud** | BrowserStack Live or LambdaTest Real Device: paste the live link and pick a device (free trial minutes) | Free trial |
+| **Android app file for beta testers** | pwabuilder.com: paste the live link, download the Android package (APK) and share it | Free |
+| **App Store / TestFlight** | PWABuilder can also make an iOS project, but TestFlight needs an Apple Developer account | £79/year |
+
+Pitch-day checklist: open the demo link once on the presenting phone before you go on (this saves it for offline), keep `backup/avenor-key-screens.pdf` on the laptop, and have the QR on a slide.
+
 ## Run it yourself
 
 ```bash

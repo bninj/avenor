@@ -9,6 +9,13 @@ export default function Me() {
   const nav = useNavigate()
   const { profile, plan, saved, done, reset } = useApp()
   if (!profile) return null
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || (navigator as unknown as { standalone?: boolean }).standalone === true
+  const install = async () => {
+    const prompt = (window as unknown as { __installPrompt?: { prompt: () => Promise<void> } }).__installPrompt
+    if (prompt) await prompt.prompt()
+    else if (/iphone|ipad/i.test(navigator.userAgent)) toast('Tap Share, then “Add to Home Screen”')
+    else toast('Open your browser menu, then “Install app”')
+  }
   const savedPros = pros.filter((p) => saved[p.id])
   const rows: [string, string][] = [
     ['Looking in', `${profile.area}, ${profile.postcode}`],
@@ -56,6 +63,7 @@ export default function Me() {
       <section className="px-6 mt-7 space-y-2">
         <MenuRow icon="spark" label="Avenor Premium" onClick={() => nav('/premium')} />
         <MenuRow icon="tag" label="Selling a home" onClick={() => nav('/selling')} />
+        {!standalone && <MenuRow icon="home" label="Add Avenor to your Home Screen" onClick={install} />}
         <MenuRow icon="message" label="Send feedback on the beta" onClick={() => toast('Thanks! Feedback goes to the Avenor team')} />
         <MenuRow icon="refresh" label="Reset demo and start again" onClick={() => { reset(); nav('/welcome', { replace: true }) }} />
       </section>
@@ -66,7 +74,7 @@ export default function Me() {
   )
 }
 
-function MenuRow({ icon, label, onClick }: { icon: 'spark' | 'tag' | 'message' | 'refresh'; label: string; onClick: () => void }) {
+function MenuRow({ icon, label, onClick }: { icon: 'spark' | 'tag' | 'message' | 'refresh' | 'home'; label: string; onClick: () => void }) {
   return (
     <button onClick={onClick} className="w-full flex items-center gap-3 rounded-2xl px-4 min-h-14 ring-1 ring-stone-200 active:bg-stone-50">
       <Icon name={icon} size={20} className="text-teal-700" />

@@ -1,4 +1,5 @@
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion, useDragControls, useMotionValue, useSpring, useTransform } from 'motion/react'
+import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { create } from 'zustand'
@@ -42,7 +43,7 @@ export function IconButton({ name, onClick, label, className = '' }: { name: Ico
 // ── Screen scaffolding ───────────────────────
 export function Screen({ children, className = '', tabbed = true }: { children: React.ReactNode; className?: string; tabbed?: boolean }) {
   return (
-    <main className={`screen-enter absolute inset-0 overflow-y-auto no-scrollbar ${tabbed ? 'pb-28' : 'pb-10'} ${className}`}>{children}</main>
+    <main className={`${tabbed ? 'screen-tab pb-28' : 'screen-push pb-10'} absolute inset-0 overflow-y-auto overscroll-contain no-scrollbar ${className}`}>{children}</main>
   )
 }
 
@@ -75,29 +76,35 @@ export function SectionTitle({ children, action, onAction }: { children: React.R
 export function Sheet({ open, onClose, children, label, tall, dark }: { open: boolean; onClose: () => void; children: React.ReactNode; label: string; tall?: boolean; dark?: boolean }) {
   // Portal to the app frame so sheets sit over the visible screen, whatever the scroll position
   const root = typeof document !== 'undefined' ? document.getElementById('app-root') : null
+  const controls = useDragControls()
   const node = (
     <AnimatePresence>
       {open && (
         <div className="absolute inset-0 z-[1000]" role="dialog" aria-modal="true" aria-label={label}>
           <motion.div className="absolute inset-0 bg-teal-950/45 backdrop-blur-[2px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
           <motion.div
-            className={`absolute inset-x-0 bottom-0 rounded-t-[30px] bg-white shadow-sheet overflow-y-auto no-scrollbar ${tall ? 'max-h-[92%]' : 'max-h-[85%]'}`}
+            className={`absolute inset-x-0 bottom-0 rounded-t-[30px] bg-white shadow-sheet overflow-hidden flex flex-col ${tall ? 'max-h-[92%]' : 'max-h-[85%]'}`}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 32, stiffness: 340 }}
+            transition={{ type: 'spring', damping: 34, stiffness: 360 }}
             drag="y"
+            dragListener={false}
+            dragControls={controls}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.6 }}
             onDragEnd={(_, i) => { if (i.offset.y > 110 || i.velocity.y > 600) onClose() }}
           >
-            <div className={`sticky top-0 pt-2.5 pb-1 z-10 flex justify-center ${dark ? 'bg-transparent' : 'bg-white'}`}>
+            {/* Only the handle drags the sheet, so the content scrolls normally */}
+            <div onPointerDown={(e) => controls.start(e)} className="absolute inset-x-0 top-0 h-7 z-20 flex justify-center pt-2.5 touch-none cursor-grab" aria-hidden="true">
               <div className={`h-1.5 w-10 rounded-full ${dark ? 'bg-white/30' : 'bg-stone-200'}`} />
             </div>
-            <button aria-label="Close" onClick={onClose} className={`absolute right-3 top-3 z-20 size-10 grid place-items-center rounded-full ${dark ? 'text-teal-50/80 active:bg-white/10' : 'text-muted active:bg-stone-100'}`}>
+            <button aria-label="Close" onClick={onClose} className={`absolute right-3 top-3 z-30 size-10 grid place-items-center rounded-full ${dark ? 'text-teal-50/80 active:bg-white/10' : 'text-muted active:bg-stone-100'}`}>
               <Icon name="close" size={20} />
             </button>
-            {children}
+            <div className={`overflow-y-auto overscroll-contain no-scrollbar ${dark ? '' : 'pt-6'}`}>
+              {children}
+            </div>
           </motion.div>
         </div>
       )}
@@ -168,3 +175,15 @@ export function Avatar({ name, tone = '#E9D9B4', size = 48 }: { name: string; to
     </div>
   )
 }
+
+// ── Rolling number: figures count to their new value instead of jumping ──
+export function RollingNumber({ value, format = (n: number) => Math.round(n).toLocaleString('en-GB'), from }: { value: number; format?: (n: number) => string; from?: number }) {
+  const mv = useMotionValue(from ?? value)
+  const spring = useSpring(mv, { stiffness: 140, damping: 24, mass: 0.6 })
+  const text = useTransform(spring, (v) => format(v))
+  useEffect(() => { mv.set(value) }, [value, mv])
+  return <motion.span className="num">{text}</motion.span>
+}
+
+/** A tiny haptic tick on supporting phones (Android). iOS ignores it. */
+export const tick = (ms = 8) => { if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(ms) }

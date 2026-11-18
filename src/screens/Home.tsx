@@ -5,7 +5,7 @@ import { builtParts, currentStage, overallPercent, stageProgress, useApp } from 
 import { stages } from '../data/stages'
 import { Icon } from '../components/Icon'
 import { Mark } from '../components/Logo'
-import { Avatar, Disclaimer, Screen } from '../components/ui'
+import { Avatar, Disclaimer, Screen, tick } from '../components/ui'
 import { openTerm } from '../components/Terms'
 import { glossary } from '../data/glossary'
 import { areas } from '../data/areas'
@@ -69,7 +69,7 @@ export default function Home() {
               const on = !!done[t.id]
               return (
                 <li key={t.id} className="border-b border-stone-200">
-                  <button onClick={() => toggleTask(t.id)} aria-pressed={on} className="w-full flex items-center gap-3.5 py-3.5 text-left min-h-14">
+                  <button onClick={() => { if (!on) tick(); toggleTask(t.id) }} aria-pressed={on} className="w-full flex items-center gap-3.5 py-3.5 text-left min-h-14">
                     <span className={`size-6 shrink-0 rounded-full grid place-items-center transition-colors ${on ? 'bg-teal-800 text-white' : 'ring-[1.5px] ring-stone-400/60'}`}>
                       {on && <motion.span initial={{ scale: 0.4 }} animate={{ scale: 1 }}><Icon name="check" size={14} stroke={2.8} /></motion.span>}
                     </span>
