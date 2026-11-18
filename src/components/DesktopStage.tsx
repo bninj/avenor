@@ -33,7 +33,7 @@ function JourneyPanel() {
   const current = currentStage(done)
   const pct = overallPercent(done)
   return (
-    <div className="glass grain rounded-[28px] p-6 w-[340px]">
+    <div className="glass grain prism-edge rounded-[28px] p-6 w-[340px]">
       <div className="flex items-end justify-between">
         <p className="t-small text-teal-100/70">{profile ? `${profile.name}’s journey` : 'The journey'}</p>
         <p className="num text-[2rem] leading-none font-semibold tracking-[-0.04em]">{pct}<span className="text-gold-300 text-[1.1rem] align-top ml-0.5">%</span></p>
@@ -80,7 +80,7 @@ function ScanCard() {
     QRCode.toString(demoUrl, { type: 'svg', margin: 0, color: { dark: '#0C2A27', light: '#00000000' }, errorCorrectionLevel: 'M' }).then(setQr)
   }, [demoUrl])
   return (
-    <div className="glass grain rounded-[26px] p-3 pr-6 inline-flex self-start items-center gap-5">
+    <div className="glass grain prism-edge rounded-[26px] p-3 pr-6 inline-flex self-start items-center gap-5">
       <div className="rounded-[18px] bg-white p-3 shadow-[inset_0_0_0_1px_rgba(12,42,39,.06)]">
         <div className="desk-qr" dangerouslySetInnerHTML={{ __html: qr }} />
       </div>
@@ -95,7 +95,7 @@ function ScanCard() {
 export function DesktopStage({ children, statusBar }: { children: React.ReactNode; statusBar: React.ReactNode }) {
   const scale = usePhoneScale()
   return (
-    <div className="desk-stage grain relative min-h-full w-full overflow-hidden text-teal-50">
+    <div onPointerMove={(e) => { const s = e.currentTarget.style; s.setProperty('--mx', e.clientX + 'px'); s.setProperty('--my', e.clientY + 'px') }} className="desk-stage grain relative min-h-full w-full overflow-hidden text-teal-50">
       <div className="relative z-10 h-[100vh] px-[4vw] grid grid-cols-[minmax(300px,0.9fr)_minmax(320px,1fr)_auto] items-center gap-[3vw]">
         {/* Left: the story */}
         <section className="flex flex-col gap-[min(2.25rem,4vh)] max-w-[440px]">

@@ -19,6 +19,7 @@ export default function Welcome() {
 
   return (
     <main className="screen-enter absolute inset-0 spruce grain flex flex-col overflow-hidden">
+      <span className="prism-streak" aria-hidden="true" />
       <div className="px-6 pt-5 flex items-center justify-between">
         <Logo size={26} tone="light" />
         <button onClick={() => nav('/demo')} className="t-small font-medium text-teal-100/80 min-h-11 px-2">Watch demo</button>

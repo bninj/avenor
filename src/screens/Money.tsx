@@ -48,22 +48,22 @@ export default function Money() {
         </div>
         <input aria-label="Home price" type="range" min={80_000} max={600_000} step={5_000} value={price} onChange={(e) => setPrice(+e.target.value)} className="range mt-1" style={{ ['--fill' as string]: `${((price - 80_000) / 520_000) * 100}%` }} />
         {tab !== 'stamp' && (
-          <div className="mt-2 flex items-center justify-between gap-3">
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
             <span className="t-small text-muted">Deposit</span>
-            <div className="flex gap-1.5 rounded-full bg-stone-100 p-1">
+            <div className="flex-1 min-w-[220px] max-w-[260px] grid grid-cols-4 gap-1 rounded-full bg-stone-100 p-1" role="radiogroup" aria-label="Deposit size">
               {[5, 10, 15, 20].map((d) => (
-                <button key={d} onClick={() => setDepPct(d)} className={`min-h-10 px-4 rounded-full t-small font-semibold num transition ${depPct === d ? 'bg-white shadow-pill text-teal-900' : 'text-muted'}`}>{d}%</button>
+                <button key={d} role="radio" aria-checked={depPct === d} onClick={() => setDepPct(d)} className={`min-h-10 rounded-full t-small font-semibold num transition ${depPct === d ? 'bg-white shadow-pill text-teal-900' : 'text-muted'}`}>{d}%</button>
               ))}
             </div>
           </div>
         )}
         {tab === 'stamp' && (
-          <label className="mt-2 flex items-center justify-between gap-3 min-h-11">
-            <span className="t-small text-muted">I’m a first-time buyer</span>
-            <button role="switch" aria-checked={firstTime} onClick={() => setFirstTime(!firstTime)} className={`relative h-8 w-[52px] rounded-full transition-colors ${firstTime ? 'bg-teal-800' : 'bg-stone-200'}`}>
+          <div className="mt-2 flex items-center justify-between gap-3 min-h-11">
+            <span className="t-small text-muted" id="ftb-label">I’m a first-time buyer</span>
+            <button role="switch" aria-labelledby="ftb-label" aria-checked={firstTime} onClick={() => setFirstTime(!firstTime)} className={`relative h-8 w-[52px] rounded-full transition-colors ${firstTime ? 'bg-teal-800' : 'bg-stone-200'}`}>
               <motion.span layout className={`absolute top-1 size-6 rounded-full bg-white shadow ${firstTime ? 'right-1' : 'left-1'}`} />
             </button>
-          </label>
+          </div>
         )}
       </div>
 
@@ -120,7 +120,7 @@ function Upfront({ price, depPct, firstTime }: { price: number; depPct: number; 
       <Hero label="Cash you need on the day" value={gbp(total)} sub={<>{gbp(fees)} on top of your deposit.</>} />
       {/* Two-part bar: what stays yours vs what is spent */}
       <div className="relative">
-        <div className="flex h-4 gap-[2px]" role="img" aria-label={`Deposit ${gbp(deposit)}, fees and tax ${gbp(fees)}`}>
+        <div className="flex h-4 gap-[2px]" role="group" aria-label={`Deposit ${gbp(deposit)}, fees and tax ${gbp(fees)}`}>
           <button onMouseEnter={() => setHover('equity')} onMouseLeave={() => setHover(null)} onClick={() => setHover(hover === 'equity' ? null : 'equity')} className="h-full rounded-l-[4px]" style={{ width: `${(deposit / total) * 100}%`, background: CHART.equity }} aria-label="Deposit" />
           <button onMouseEnter={() => setHover('cost')} onMouseLeave={() => setHover(null)} onClick={() => setHover(hover === 'cost' ? null : 'cost')} className="h-full rounded-r-[4px]" style={{ width: `${(fees / total) * 100}%`, background: CHART.cost }} aria-label="Fees and tax" />
         </div>

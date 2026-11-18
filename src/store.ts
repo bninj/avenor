@@ -67,6 +67,7 @@ export const useApp = create<State>()(
           demo: true,
           done: { b1: true, b2: true, b3: true, b4: true, m1: true, m2: true },
           celebrated: { budget: true },
+          saved: { lantern: true },
         }),
       reset: () => set({ ...initial }),
     }),

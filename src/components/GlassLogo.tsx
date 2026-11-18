@@ -146,7 +146,7 @@ function GlassPin() {
 export default function GlassLogo({ className = '' }: { className?: string }) {
   return (
     <div className={`pointer-events-none ${className}`} aria-hidden="true">
-      <Canvas dpr={[1, 1.75]} camera={{ position: [0, -0.15, 8.6], fov: 30 }} gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.92 }}>
+      <Canvas dpr={[1, 1.25]} camera={{ position: [0, -0.15, 8.6], fov: 30 }} gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.92 }}>
         <Studio />
         <directionalLight position={[3, 4, 5]} intensity={2.2} />
         <directionalLight position={[-4, -2, 3]} intensity={0.8} color="#BFEBDD" />

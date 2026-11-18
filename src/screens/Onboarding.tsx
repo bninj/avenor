@@ -99,7 +99,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
       {/* Header: progress + the preview house that grows with each answer */}
       <div className="px-4 pt-2 flex items-center gap-2 h-14 shrink-0">
         <button aria-label="Back" onClick={() => (step ? setStep(step - 1) : nav('/welcome'))} className="size-11 grid place-items-center rounded-full active:bg-stone-100"><Icon name="left" /></button>
-        <div className="flex-1 flex gap-1" aria-label={`Question ${step + 1} of ${STEPS}`}>
+        <div className="flex-1 flex gap-1" role="progressbar" aria-valuemin={1} aria-valuemax={STEPS} aria-valuenow={step + 1} aria-label={`Question ${step + 1} of ${STEPS}`}>
           {Array.from({ length: STEPS }).map((_, i) => (
             <div key={i} className="h-[5px] flex-1 rounded-full bg-stone-200 overflow-hidden">
               <motion.div className="h-full bg-teal-800" initial={false} animate={{ width: i < answered || i === step ? '100%' : '0%' }} transition={{ duration: 0.45 }} />
@@ -116,7 +116,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
           {answered === 0 && <span className="t-micro text-teal-100/70 px-1">Your answers build this home</span>}
           {chips.map((c) => (
             <motion.span key={c.key} layoutId={`ans-${c.key}`} initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-              className="rounded-full bg-white/12 backdrop-blur-md ring-1 ring-white/15 text-teal-50 t-micro font-semibold px-2.5 py-1 whitespace-nowrap">
+              className="prism-edge rounded-full bg-white/12 backdrop-blur-md text-teal-50 t-micro font-semibold px-2.5 py-1 whitespace-nowrap">
               {c.text}
             </motion.span>
           ))}
@@ -136,7 +136,7 @@ export default function Onboarding({ demo = false }: { demo?: boolean }) {
               <motion.p variants={rise} className="t-small text-muted mt-3">No password. It stays on this phone.</motion.p>
               <motion.div variants={rise} className="mt-auto pb-6 pt-6 space-y-2.5">
                 <div className={`rounded-full transition ${hot('continue')}`}><Button onClick={advance} disabled={!p.name && !demo}>Continue</Button></div>
-                <Button variant="ghost" onClick={() => toast('Google sign-in comes with the full app')}>
+                <Button variant="ghost" onClick={() => toast('Google sign-in is coming soon. Your name is enough for now')}>
                   <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z" /><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" /><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z" /><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z" /></svg>
                   Continue with Google
                 </Button>
@@ -246,7 +246,8 @@ function PlanReveal({ plan, onGo, demo }: { plan: Profile; onGo: () => void; dem
     ['Looking in', `${plan.area}, ${plan.postcode}`],
   ]
   return (
-    <motion.main layoutId="plan-shell" style={{ borderRadius: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 32 }} className="absolute inset-0 spruce grain flex flex-col overflow-y-auto no-scrollbar">
+    <motion.main layoutId="plan-shell" style={{ borderRadius: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 32 }} className="absolute inset-0 spruce grain flex flex-col overflow-y-auto overflow-x-hidden no-scrollbar">
+      <span className="prism-streak" aria-hidden="true" />
       <div className="relative h-[290px] shrink-0">
         {ready && <Suspense fallback={null}><HouseCanvas parts={['foundation', 'walls', 'windows', 'door', 'roof', 'chimney', 'garden']} dark zoom={0.98} className="absolute inset-0" /></Suspense>}
       </div>

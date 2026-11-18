@@ -22,4 +22,4 @@ export const answers: Answer[] = [
 ]
 
 export const fallback =
-  'Good question. The full app answers anything, using GOV.UK and MoneyHelper. For now, try a suggestion below.'
+  'Good question. I can’t answer that one yet. Try one of the questions below, or tap Pros to ask a checked professional.'

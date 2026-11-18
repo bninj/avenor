@@ -31,10 +31,11 @@ export default function Home() {
   return (
     <Screen className="!pb-0">
       {/* Hero: the house is the brand */}
-      <section className="spruce grain relative h-[452px]">
+      <section className="spruce grain relative h-[452px] overflow-hidden">
+        <span className="prism-streak" aria-hidden="true" />
         <div className="px-5 pt-4 flex items-center justify-between">
           <span className="t-small text-teal-100/75">{greeting()}, {profile?.name}</span>
-          <button onClick={() => nav('/me')} aria-label="Your profile" className="rounded-full ring-1 ring-white/20">
+          <button onClick={() => nav('/me')} aria-label="Your profile" className="size-11 grid place-items-center rounded-full">
             <Avatar name={profile?.name ?? 'A'} size={38} tone="#E2C48A" />
           </button>
         </div>
@@ -42,7 +43,7 @@ export default function Home() {
           <p className="t-hero flex items-start"><RollingNumber value={pct} from={0} /><span className="text-[2.25rem] leading-none font-semibold tracking-[-0.02em] mt-2 ml-0.5 text-gold-300">%</span></p>
           <p className="t-h3 font-medium text-teal-100/80 mt-2">of your home built</p>
         </div>
-        <button onClick={() => nav('/house')} aria-label="Open your 3D home" className="absolute right-[-28px] bottom-[34px] w-[300px] h-[300px]">
+        <button onClick={() => nav('/house')} aria-label="Open your 3D home" className="absolute right-0 bottom-[34px] w-[min(300px,78%)] h-[300px]">
           <Suspense fallback={null}><HouseCanvas parts={parts} dark ghost interactive={false} zoom={1.05} className="h-full w-full" /></Suspense>
         </button>
         <div className="absolute left-5 bottom-[52px] flex flex-col gap-2">
@@ -99,7 +100,7 @@ export default function Home() {
             <h2 className="t-h2">Explore Birmingham</h2>
             <button onClick={() => nav('/pros')} className="t-small font-semibold text-teal-700 min-h-11">Map</button>
           </div>
-          <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 snap-x snap-mandatory">
+          <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 snap-x snap-mandatory" tabIndex={0} role="region" aria-label="Birmingham areas">
             {areas.map((a) => (
               <div key={a.id} className="snap-start shrink-0 w-[220px]">
                 <div className="relative h-[260px] rounded-[20px] overflow-hidden bg-stone-100">

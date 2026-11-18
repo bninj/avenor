@@ -15,14 +15,14 @@
   --color-teal-200: #C9DDD6;
   --color-teal-100: #DFEBE6;
   --color-teal-50: #EEF4F1;
-  --color-gold-600: #A47B33; /* brass, text on light */
+  --color-gold-600: #8A6526; /* brass text on light, 5.3:1 */
   --color-gold-500: #C79B4E; /* brass */
   --color-gold-300: #E2C48A;
   --color-gold-100: #F5EBD8;
   --color-stone-50: #F6F8F6;
   --color-stone-100: #F0F3F1; /* mist */
   --color-stone-200: #E3E8E5; /* line */
-  --color-stone-400: #9AA5A1;
+  --color-stone-400: #6B7773; /* 4.6:1 on white */
   --color-muted: #64716D;
   --color-brick: #B4634A;
   --color-danger: #B4442F;
@@ -123,9 +123,11 @@ input[type="range"].range::-moz-range-thumb { width: 18px; height: 18px; border-
     linear-gradient(160deg, #123F3B 0%, #0E3330 55%, #0A2725 100%);
 }
 .desk-stage.grain::after { opacity: 0.6; }
-/* Frosted glass panels: blur what is behind, catch light on the top edge */
+/* Frosted glass panels: blur what is behind, catch light on the top edge,
+   and pick up a soft lamp that follows the mouse (--mx/--my set on the stage) */
 .glass {
   background:
+    radial-gradient(420px circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, 0.13), transparent 60%) fixed,
     linear-gradient(155deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 42%, rgba(255, 255, 255, 0.06) 100%),
     rgba(10, 35, 33, 0.42); /* smoked tint keeps white text readable over anything */
   -webkit-backdrop-filter: blur(26px) saturate(150%);
@@ -137,6 +139,25 @@ input[type="range"].range::-moz-range-thumb { width: 18px; height: 18px; border-
     0 30px 60px -30px rgba(0, 0, 0, 0.55);
 }
 .glass.grain::after { opacity: 0.35; }
+
+/* Prism rim: a thin spectrum edge, like light on cut glass */
+.prism-edge { position: relative; }
+.prism-edge::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none; z-index: 3;
+  background: conic-gradient(from 210deg, rgba(255,255,255,.35), rgba(255,170,140,.55), rgba(255,226,140,.55), rgba(150,235,190,.55), rgba(130,200,255,.55), rgba(200,170,255,.45), rgba(255,255,255,.35));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: .7;
+}
+
+/* Prism streak: a soft band of refracted light drifting across a colour block */
+.prism-streak {
+  position: absolute; inset: -20% -40%; pointer-events: none; z-index: 1;
+  background: linear-gradient(104deg, transparent 38%, rgba(255,140,120,.55) 44%, rgba(255,222,140,.6) 47.5%, rgba(140,232,180,.55) 51%, rgba(120,190,255,.55) 54.5%, rgba(190,160,255,.45) 58%, transparent 64%);
+  filter: blur(14px); mix-blend-mode: soft-light; opacity: .55;
+  animation: prism-drift 11s ease-in-out infinite alternate;
+}
+@keyframes prism-drift { from { transform: translateX(-12%) rotate(-2deg); } to { transform: translateX(14%) rotate(3deg); } }
 
 /* Desktop type and density, compact on short screens (projectors) */
 .desk-row { font-size: 1.0625rem; }

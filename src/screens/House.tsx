@@ -52,7 +52,7 @@ export default function House() {
         <h2 className="t-h2 mb-2">A model of your home, for your shelf</h2>
         <p className="t-small text-muted mb-5">Get your keys and we 3D print this house, posted to your new address.</p>
         {finished ? (
-          <Button variant="gold" onClick={() => toast('Shelf model ordering arrives in the full app')}>Order my shelf model</Button>
+          <Button variant="gold" onClick={() => toast('Ordered. We’ll post it to your new address')}>Order my shelf model</Button>
         ) : (
           <Button onClick={() => nav(`/journey/${next.id}`)}>Continue stage {next.n}</Button>
         )}
