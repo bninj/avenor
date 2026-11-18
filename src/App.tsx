@@ -18,11 +18,12 @@ import Premium from './screens/Premium'
 import Ask from './screens/Ask'
 import Selling from './screens/Selling'
 import Me from './screens/Me'
+import Help from './screens/Help'
 
 const Pros = lazy(() => import('./screens/Pros'))
 const House = lazy(() => import('./screens/House'))
 
-const OPEN_ROUTES = ['/welcome', '/start', '/demo', '/selling']
+const OPEN_ROUTES = ['/welcome', '/start', '/demo', '/selling', '/help']
 
 function Guard({ children }: { children: React.ReactNode }) {
   const profile = useApp((s) => s.profile)
@@ -55,6 +56,7 @@ function AppRoutes() {
           <Route path="/ask" element={<Ask />} />
           <Route path="/selling" element={<Selling />} />
           <Route path="/me" element={<Me />} />
+          <Route path="/help" element={<Help />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </Suspense>

@@ -65,6 +65,7 @@ export default function Me() {
         <MenuRow icon="tag" label="Selling a home" onClick={() => nav('/selling')} />
         {!standalone && <MenuRow icon="home" label="Add Avenor to your Home Screen" onClick={install} />}
         <MenuRow icon="message" label="Send feedback on the beta" onClick={() => toast('Thanks! Feedback goes to the Avenor team')} />
+        <MenuRow icon="learn" label="Help, FAQ and privacy" onClick={() => nav('/help')} />
         <MenuRow icon="refresh" label="Reset demo and start again" onClick={() => { reset(); nav('/welcome', { replace: true }) }} />
       </section>
 
@@ -74,7 +75,7 @@ export default function Me() {
   )
 }
 
-function MenuRow({ icon, label, onClick }: { icon: 'spark' | 'tag' | 'message' | 'refresh' | 'home'; label: string; onClick: () => void }) {
+function MenuRow({ icon, label, onClick }: { icon: 'spark' | 'tag' | 'message' | 'refresh' | 'home' | 'learn'; label: string; onClick: () => void }) {
   return (
     <button onClick={onClick} className="w-full flex items-center gap-3 rounded-2xl px-4 min-h-14 ring-1 ring-stone-200 active:bg-stone-50">
       <Icon name={icon} size={20} className="text-teal-700" />
