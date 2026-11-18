@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { Component, lazy, Suspense, useEffect, useState } from 'react'
 import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useApp } from './store'
 import { DesktopStage } from './components/DesktopStage'
@@ -32,6 +32,29 @@ function Guard({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
 
+// Remount the demo each time it is opened, so Restart always plays it from the start
+function DemoRoute() {
+  const loc = useLocation()
+  return <Onboarding demo key={loc.key} />
+}
+
+/** If anything ever crashes, show a calm way home instead of a blank screen */
+class SafeArea extends Component<{ children: React.ReactNode }, { failed: boolean }> {
+  state = { failed: false }
+  static getDerivedStateFromError() { return { failed: true } }
+  render() {
+    if (!this.state.failed) return this.props.children
+    return (
+      <div className="absolute inset-0 spruce grain flex flex-col items-center justify-center text-center px-8 gap-4">
+        <Mark size={44} tone="light" />
+        <h1 className="t-h1">Something went wrong.</h1>
+        <p className="t-body text-teal-100/75">It’s not you. Your progress is safe.</p>
+        <button onClick={() => { this.setState({ failed: false }); location.hash = '#/home' }} className="mt-2 min-h-[52px] rounded-full bg-teal-50 text-teal-900 font-semibold px-7">Back to home</button>
+      </div>
+    )
+  }
+}
+
 function Loading() {
   return <div className="absolute inset-0 grid place-items-center" role="status" aria-label="Loading"><span className="animate-pulse"><Mark size={34} /></span></div>
 }
@@ -39,12 +62,13 @@ function Loading() {
 function AppRoutes() {
   return (
     <Guard>
+      <SafeArea>
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/welcome" element={<Welcome />} />
           <Route path="/start" element={<Onboarding />} />
-          <Route path="/demo" element={<Onboarding demo />} />
+          <Route path="/demo" element={<DemoRoute />} />
           <Route path="/home" element={<Home />} />
           <Route path="/journey" element={<Journey />} />
           <Route path="/journey/:id" element={<StageScreen />} />
@@ -60,6 +84,7 @@ function AppRoutes() {
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </Suspense>
+      </SafeArea>
       <TabBar />
       <TermSheet />
       <Celebration />

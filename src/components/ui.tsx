@@ -5,6 +5,16 @@ import { useNavigate } from 'react-router-dom'
 import { create } from 'zustand'
 import { Icon, type IconName } from './Icon'
 
+/** Go back inside the app; if the page was opened straight from a link, go to a sensible parent. */
+export function useBack(fallback = '/home') {
+  const nav = useNavigate()
+  return () => {
+    const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0
+    if (idx > 0) nav(-1)
+    else nav(fallback, { replace: true })
+  }
+}
+
 // ── Buttons ───────────────────────────────────
 type Variant = 'primary' | 'gold' | 'ghost' | 'quiet' | 'light'
 const variants: Record<Variant, string> = {
@@ -52,9 +62,10 @@ export function Screen({ children, className = '', tabbed = true }: { children: 
 
 export function TopBar({ title, back = true, right, transparent }: { title?: string; back?: boolean | string; right?: React.ReactNode; transparent?: boolean }) {
   const nav = useNavigate()
+  const goBack = useBack()
   return (
     <header className={`sticky top-0 z-20 flex items-center gap-2 px-4 h-16 ${transparent ? '' : 'bg-white/90 backdrop-blur-md'}`}>
-      {back && <IconButton name="left" label="Back" onClick={() => (typeof back === 'string' ? nav(back) : nav(-1))} />}
+      {back && <IconButton name="left" label="Back" onClick={() => (typeof back === 'string' ? nav(back) : goBack())} />}
       {title && <h1 className="t-h3 flex-1 text-center pr-11 truncate">{title}</h1>}
       {!title && <div className="flex-1" />}
       {right}

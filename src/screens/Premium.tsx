@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
-import { useNavigate } from 'react-router-dom'
 import { useApp } from '../store'
 import { Icon } from '../components/Icon'
 import { Mark } from '../components/Logo'
-import { Button, IconButton, Screen, toast } from '../components/ui'
+import { Button, IconButton, Screen, toast, useBack } from '../components/ui'
 
 type Plan = 'free' | 'premium' | 'concierge'
 const plans: { id: Plan; name: string; price: string; per: string; blurb: string; features: string[]; tag?: string }[] = [
@@ -14,7 +13,7 @@ const plans: { id: Plan; name: string; price: string; per: string; blurb: string
 ]
 
 export default function Premium() {
-  const nav = useNavigate()
+  const goBack = useBack()
   const { plan, setPlan } = useApp()
   const [pick, setPick] = useState<Plan>(plan === 'free' ? 'premium' : plan)
   const chosen = plans.find((p) => p.id === pick)!
@@ -22,7 +21,7 @@ export default function Premium() {
   return (
     <Screen tabbed={false}>
       <div className="relative spruce grain px-6 pt-4 pb-12 overflow-hidden">
-        <IconButton name="close" label="Close" tone="dark" onClick={() => nav(-1)} />
+        <IconButton name="close" label="Close" tone="dark" onClick={goBack} />
         <div className="mt-6 flex items-center gap-3"><Mark size={40} tone="light" /><span className="t-h3">Avenor Premium</span></div>
         <h1 className="text-[2.75rem] leading-[0.98] font-semibold tracking-[-0.04em] mt-6">Buy with someone in your corner.</h1>
         <div className="mt-4">
@@ -56,7 +55,7 @@ export default function Premium() {
         <Button variant={pick === 'free' ? 'ghost' : 'gold'} onClick={() => {
           setPlan(pick)
           toast(pick === 'free' ? 'You’re on the free plan' : `${chosen.name} unlocked. No payment taken in the demo`)
-          nav(-1)
+          goBack()
         }}>
           {pick === 'free' ? 'Stay on Free' : plan === pick ? `You’re on ${chosen.name}` : `Try ${chosen.name} free for 14 days`}
         </Button>

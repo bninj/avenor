@@ -46,7 +46,8 @@ export default function Pros() {
   const [params, setParams] = useSearchParams()
   const nav = useNavigate()
   const { profile, saved, toggleSaved } = useApp()
-  const type = (params.get('type') as ProType | null) ?? 'all'
+  const rawType = params.get('type')
+  const type: ProType | 'all' = rawType && rawType in proTypeLabel ? (rawType as ProType) : 'all'
   const openId = params.get('id')
   const [focus, setFocus] = useState<string | null>(openId)
   const list = useMemo(() => (type === 'all' ? pros : pros.filter((p) => p.type === type)), [type])

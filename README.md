@@ -42,7 +42,7 @@ Pitch-day checklist: open the demo link once on the presenting phone before you 
 
 ## Beta test (simulated people)
 
-`tests/beta.cjs` plays eight people of different ages through real tasks on different phones and checks for errors, text running off screen, small tap targets and accessibility (axe). Run it against the live site:
+`tests/beta.cjs` plays nine people of different ages through real tasks on different phones and checks for errors, text running off screen, small tap targets and accessibility (axe). Run it against the live site:
 
 ```bash
 node tests/beta.cjs https://bninj.github.io/avenor/
@@ -57,7 +57,16 @@ node tests/beta.cjs https://bninj.github.io/avenor/
 | Joan, 64 | iPhone 13, large text | Reads stages, money and Premium with big text |
 | Ken, 58 | iPhone 13 | Wants to sell, joins the waitlist |
 | Sam, 29 | iPhone 13 | Follows task buttons out to the map, calculator and Ask, then back to the stage |
+| Lee, 35 | iPhone 13 | Opens broken links, uses Back from pages opened straight from a link |
 | A judge | 1366 by 768 laptop | Watches the demo, uses the keyboard, clicks stages on the side panel |
+
+## Overlap sweep
+
+`tests/overlap.cjs` checks every screen on four phone setups and three laptop sizes for covered buttons, overlapping text, content hidden behind the tab bar and anything running off the screen.
+
+```bash
+node tests/overlap.cjs https://bninj.github.io/avenor/
+```
 
 ## Run it yourself
 

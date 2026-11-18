@@ -41,7 +41,9 @@ export function TaskRow({ t, size = 'md', stageId }: { t: Task; size?: 'md' | 's
 /** Shown on a tool screen opened from a task, so the person can step straight back. */
 export function ReturnPill({ className = '' }: { className?: string }) {
   const nav = useNavigate()
-  const from = new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('from')
+  const hash = window.location.hash
+  const qi = hash.indexOf('?') // everything after the first ? (values can contain ? themselves)
+  const from = qi >= 0 ? new URLSearchParams(hash.slice(qi + 1)).get('from') : null
   const st = from ? stages.find((x) => x.id === from) : null
   if (!st) return null
   return (

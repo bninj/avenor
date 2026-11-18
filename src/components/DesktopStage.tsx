@@ -29,7 +29,7 @@ function usePhoneScale() {
 function JourneyPanel() {
   const nav = useNavigate()
   const { pathname } = useLocation()
-  const { done, profile, reset } = useApp()
+  const { done, profile } = useApp()
   const current = currentStage(done)
   const pct = overallPercent(done)
   return (
@@ -65,7 +65,7 @@ function JourneyPanel() {
       </ol>
       <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
         <p className="t-micro font-normal text-teal-100/60 max-w-[22ch]">{profile ? 'Updates live as you tick tasks on the phone.' : 'Press Get started on the phone.'}</p>
-        <button onClick={() => { reset(); location.hash = '#/demo' }} className="min-h-10 rounded-full px-3.5 inline-flex items-center gap-1.5 t-small font-semibold text-teal-50 bg-white/10 hover:bg-white/15 transition-colors">
+        <button onClick={() => nav('/demo', { state: { restart: Date.now() } })} className="min-h-10 rounded-full px-3.5 inline-flex items-center gap-1.5 t-small font-semibold text-teal-50 bg-white/10 hover:bg-white/15 transition-colors">
           <Icon name="refresh" size={15} /> Restart
         </button>
       </div>
@@ -96,7 +96,7 @@ export function DesktopStage({ children, statusBar }: { children: React.ReactNod
   const scale = usePhoneScale()
   return (
     <div onPointerMove={(e) => { const s = e.currentTarget.style; s.setProperty('--mx', e.clientX + 'px'); s.setProperty('--my', e.clientY + 'px') }} className="desk-stage grain relative min-h-full w-full overflow-hidden text-teal-50">
-      <div className="relative z-10 h-[100vh] px-[4vw] grid grid-cols-[minmax(300px,0.9fr)_minmax(320px,1fr)_auto] items-center gap-[3vw]">
+      <div className="relative z-10 h-[100vh] px-[4vw] grid grid-cols-[minmax(300px,1fr)_auto] xl:grid-cols-[minmax(300px,0.9fr)_minmax(320px,1fr)_auto] items-center gap-[3vw]">
         {/* Left: the story */}
         <section className="flex flex-col gap-[min(2.25rem,4vh)] max-w-[440px]">
           <div className="flex items-center gap-2">
@@ -108,10 +108,11 @@ export function DesktopStage({ children, statusBar }: { children: React.ReactNod
           </h1>
           <p className="t-body text-teal-100/70 max-w-[32ch]">A first-time buyer’s guide to every step of buying a home, with checked local professionals.</p>
           <ScanCard />
+          
         </section>
 
         {/* Centre: the glass logo, with the live journey frosted over its base */}
-        <section className="relative h-full flex flex-col items-center justify-end pb-[6vh]">
+        <section className="relative h-full hidden xl:flex flex-col items-center justify-end pb-[6vh]">
           <Suspense fallback={null}>
             <GlassLogo className="absolute left-1/2 top-[2vh] -translate-x-1/2 w-[150%] h-[78vh]" />
           </Suspense>

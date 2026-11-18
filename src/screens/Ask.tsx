@@ -6,6 +6,7 @@ import { useApp } from '../store'
 import { Icon } from '../components/Icon'
 import { Mark } from '../components/Logo'
 import { TopBar } from '../components/ui'
+import { ReturnPill } from '../components/TaskRow'
 
 interface Msg { from: 'me' | 'avenor'; text: string; next?: Answer['next']; typing?: boolean }
 
@@ -56,6 +57,7 @@ export default function Ask() {
     <div className="screen-push absolute inset-0 flex flex-col bg-white">
       <TopBar back title="Ask Avenor" />
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-4">
+        <ReturnPill className="mt-3" />
         {msgs.length === 0 && (
           <div className="pt-6 pb-4">
             <Mark size={44} />

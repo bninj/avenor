@@ -20,7 +20,8 @@ const CHART = { equity: '#11917F', cost: '#B3862A' }
 
 export default function Money() {
   const [params, setParams] = useSearchParams()
-  const tab = (params.get('tab') as Tab) || 'upfront'
+  const raw = params.get('tab')
+  const tab: Tab = TABS.some((t) => t.id === raw) ? (raw as Tab) : 'upfront'
   const profile = useApp((s) => s.profile)
   const [price, setPrice] = useState(profile?.budget ?? 225_000)
   const [depPct, setDepPct] = useState(10)

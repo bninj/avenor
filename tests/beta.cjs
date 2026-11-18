@@ -133,7 +133,7 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     await p.getByText('Sandhu Whitlock Solicitors').click();
     await see(p, 'Checked on the SRA register'); log('Amira, 33', true, 'Opens a solicitor profile with register check');
     await checks(p, 'Amira, 33', 'Solicitor profile');
-    await p.getByRole('button', { name: 'Request a free intro' }).click();
+    await p.getByRole('button', { name: 'Request your free intro' }).click();
     await see(p, 'Intro sent'); log('Amira, 33', true, 'Requests an intro');
     await p.getByRole('button', { name: 'Save', exact: true }).click();
     await go(p, '/me');
@@ -154,8 +154,8 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     log('Dave, 47', /Stamp Duty\s*£1,500/.test(sd), `Plan uses normal Stamp Duty for £200k (expect £1,500): ${sd.split('\n').slice(2, 4).join(' ')}`);
     await p.getByRole('button', { name: 'Start step 1' }).click();
     await go(p, '/money?tab=stamp');
-    const sw = await p.getByRole('switch').getAttribute('aria-checked');
-    log('Dave, 47', sw === 'false', 'Stamp Duty calculator knows he has owned before');
+    const sw = await p.getByRole('radio', { name: 'Owned before' }).getAttribute('aria-checked');
+    log('Dave, 47', sw === 'true', 'Stamp Duty calculator knows he has owned before');
   });
 
   // 5. Joan, 64, helping her son, large text setting
@@ -209,6 +209,30 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     log('Sam, 29', p.url().includes('/premium'), 'A Premium lesson on the free plan shows Premium, not a dead end');
   });
 
+  // 9. Lee, 35, opens odd links and uses Back a lot
+  await person(b, 'Lee, 35', 'iPhone 13', async (p) => {
+    await go(p, '/demo'); await p.getByRole('button', { name: 'Skip' }).click();
+    await see(p, 'of your home built');
+    await go(p, '/pros?type=xyz');
+    const txt = await p.locator('#app-root').innerText();
+    log('Lee, 35', txt.includes('professionals'), 'A broken map link still shows all professionals, no blank screen');
+    await go(p, '/money?tab=bad');
+    log('Lee, 35', (await p.getByRole('tab', { selected: true }).count()) === 1, 'A broken calculator link still opens a calculator');
+    await go(p, '/journey/survey');
+    await p.getByRole('button', { name: 'Which level' }).click();
+    await p.getByRole('button', { name: 'Back to stage 6' }).click();
+    log('Lee, 35', p.url().includes('/journey/survey'), 'Ask Avenor opened from a task has Back to stage 6');
+    // Fresh tab straight onto a page, then the in-app back button
+    const p2 = await p.context().newPage();
+    await p2.goto(BASE + '#/me'); await p2.waitForTimeout(1200);
+    await p2.locator('header').getByRole('button', { name: 'Back', exact: true }).first().click(); await p2.waitForTimeout(600);
+    log('Lee, 35', p2.url().includes('#/home'), 'Back on a page opened from a link stays inside the app');
+    await p2.goto(BASE + '#/premium'); await p2.waitForTimeout(1200);
+    await p2.getByRole('button', { name: 'Close' }).click(); await p2.waitForTimeout(600);
+    log('Lee, 35', p2.url().includes('#/home'), 'Closing Premium opened from a link stays inside the app');
+    await p2.close();
+  });
+
   // 7. A judge on a 1366x768 laptop, keyboard only
   {
     const who = 'Judge, laptop';
@@ -224,6 +248,10 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     log(who, focus !== 'none', 'Keyboard focus is visible');
     await p.getByRole('button', { name: /Make an offer/ }).click(); await p.waitForTimeout(800);
     log(who, p.url().includes('/journey/offer'), 'Clicking a stage on the side panel opens it on the phone');
+    await p.getByRole('button', { name: 'Restart' }).click(); await p.waitForTimeout(1500);
+    log(who, p.url().includes('/demo'), 'Restart on the side panel plays the demo again');
+    await p.waitForFunction(() => location.hash.includes('home'), null, { timeout: 30000 }).catch(() => {});
+    log(who, p.url().includes('/home'), 'The restarted demo finishes on Home');
     log(who, errors.length === 0, `No errors${errors.length ? ' -> ' + errors[0] : ''}`);
     await p.screenshot({ path: `${OUT}/judge.png` });
     await ctx.close();
