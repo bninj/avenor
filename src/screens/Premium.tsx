@@ -57,7 +57,7 @@ export default function Premium() {
           <IconButton name="close" label={first ? 'Continue with Free' : 'Close'} onClick={leave} />
           {first && <button onClick={leave} className="t-small font-semibold text-teal-700 min-h-11 px-2">Not now</button>}
         </div>
-        <div className="mt-6 flex items-center gap-2.5"><Mark size={34} /><span className="t-h3 text-teal-800">Avenor Premium</span></div>
+        <div className="mt-6 flex items-center gap-2.5"><Mark size={34} /><span className="t-h3 text-teal-800">Sovarna Premium</span></div>
         <h1 className="t-display mt-4">{first ? 'Buy with confidence, from day one.' : 'Buy with someone in your corner.'}</h1>
         <p className="t-body text-muted mt-3">Compare homes, keep your documents together, and get expert help when it matters.</p>
       </div>

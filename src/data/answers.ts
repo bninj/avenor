@@ -1,4 +1,4 @@
-// Scripted answers for the demo version of Ask Avenor.
+// Scripted answers for the demo version of Ask Sovarna.
 export interface Answer { q: string; keys: string[]; a: string; next?: { label: string; to: string } }
 
 export const answers: Answer[] = [

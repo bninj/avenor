@@ -1,4 +1,4 @@
-// Avenor beta test: simulated people of different ages doing real tasks on different phones.
+// Sovarna beta test: simulated people of different ages doing real tasks on different phones.
 // Reports task success, crashes, layout overflow, small tap targets and accessibility issues.
 const { chromium, devices } = require('playwright');
 const path = require('path');
@@ -128,8 +128,8 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     await go(p, '/ask');
     await p.getByLabel('Your question').fill('how much deposit do I need');
     await p.getByRole('button', { name: 'Send' }).click();
-    await see(p, 'at least 5%', 8000); log('Amira, 33', true, 'Ask Avenor answers a typed question');
-    await checks(p, 'Amira, 33', 'Ask Avenor');
+    await see(p, 'at least 5%', 8000); log('Amira, 33', true, 'Ask Sovarna answers a typed question');
+    await checks(p, 'Amira, 33', 'Ask Sovarna');
     await go(p, '/pros');
     await p.getByRole('button', { name: 'Solicitors', exact: true }).first().click();
     await p.getByRole('button', { name: 'Show the full list' }).click();
@@ -200,7 +200,7 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     await see(p, 'The short version'); log('Sam, 29', p.url().includes('/journey/survey'), 'Back to stage 6 returns to the right stage');
     await checks(p, 'Sam, 29', 'Stage with task buttons');
     await p.getByRole('button', { name: 'Which level' }).click();
-    await see(p, 'Level 2 suits most homes', 8000); log('Sam, 29', true, 'Task button asks Avenor the right question automatically');
+    await see(p, 'Level 2 suits most homes', 8000); log('Sam, 29', true, 'Task button asks Sovarna the right question automatically');
     await go(p, '/journey/budget');
     await p.getByText('Work out your upfront cash').click(); // untick it, the action reappears
     await p.getByRole('button', { name: 'Calculator' }).click();
@@ -225,7 +225,7 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     await go(p, '/journey/survey');
     await p.getByRole('button', { name: 'Which level' }).click();
     await p.getByRole('button', { name: 'Back to stage 6' }).click();
-    log('Lee, 35', p.url().includes('/journey/survey'), 'Ask Avenor opened from a task has Back to stage 6');
+    log('Lee, 35', p.url().includes('/journey/survey'), 'Ask Sovarna opened from a task has Back to stage 6');
     // Fresh tab straight onto a page, then the in-app back button
     const p2 = await p.context().newPage();
     await p2.goto(BASE + '#/me'); await p2.waitForTimeout(1200);

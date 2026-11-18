@@ -174,7 +174,7 @@ export function Ring({ value, size = 56, stroke = 5, children }: { value: number
 export function Disclaimer({ className = '' }: { className?: string }) {
   return (
     <p className={`t-micro font-normal text-muted ${className}`}>
-      Avenor gives guidance, not financial advice. For free, impartial help visit{' '}
+      Sovarna gives guidance, not financial advice. For free, impartial help visit{' '}
       <a className="underline underline-offset-2" href="https://www.moneyhelper.org.uk" target="_blank" rel="noreferrer">MoneyHelper</a> or{' '}
       <a className="underline underline-offset-2" href="https://www.gov.uk/buy-sell-your-home" target="_blank" rel="noreferrer">GOV.UK</a>.
     </p>

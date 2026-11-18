@@ -1,6 +1,6 @@
 // Help and FAQ, in plain English.
 export const faq: { q: string; a: string }[] = [
-  { q: 'Is Avenor financial advice?', a: 'No. We explain each step in plain English and link to official guidance. For advice about your own situation, speak to a regulated professional, like a mortgage adviser.' },
+  { q: 'Is Sovarna financial advice?', a: 'No. We explain each step in plain English and link to official guidance. For advice about your own situation, speak to a regulated professional, like a mortgage adviser.' },
   { q: 'Is it free?', a: 'Yes. The seven stage guides, checklists, glossary and calculators are free. Premium adds every lesson, document explainers and direct contact details for professionals.' },
   { q: 'How do you check the professionals?', a: 'We check the official register when they join. FCA for mortgage advisers, SRA or CLC for solicitors and conveyancers, RICS for surveyors and Propertymark for estate agents. The profiles in this demo are made up.' },
   { q: 'Do professionals pay to be listed?', a: 'They pay a small fee when you ask for an introduction. Nobody can pay to appear higher up.' },
@@ -9,7 +9,7 @@ export const faq: { q: string; a: string }[] = [
   { q: 'Does it work outside England?', a: 'The Stamp Duty figures are for England and Northern Ireland. Wales and Scotland have their own taxes. Most of the guidance also applies in Wales.' },
   { q: 'I have owned a home before. Can I still use it?', a: 'Yes. Tell us in the questions and the calculators use normal Stamp Duty rates. The steps are the same.' },
   { q: 'What does the 3D house mean?', a: 'It is your progress. Each stage you finish adds a piece. Finish all seven and your house is complete.' },
-  { q: 'Can I add Avenor to my home screen?', a: 'Yes. On iPhone, open it in Safari, tap Share, then Add to Home Screen. On Android, open the Chrome menu and tap Install app.' },
+  { q: 'Can I add Sovarna to my home screen?', a: 'Yes. On iPhone, open it in Safari, tap Share, then Add to Home Screen. On Android, open the Chrome menu and tap Install app.' },
 ]
 
 export const privacy: string[] = [

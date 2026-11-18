@@ -1,4 +1,4 @@
-# Avenor
+# Sovarna
 
 **Your first home, step by step.** A mobile web app that guides UK first-time buyers through every stage of buying a home, and introduces checked local professionals at each step. Built as a demo for The Linda Plant enterprise competition.
 
@@ -21,7 +21,7 @@ The `#/demo` link is the one for the QR code (`brand/qr-demo.png` and `.svg`, re
 | Pros | Map of Birmingham with checked solicitors, mortgage advisers, surveyors and agents. Contact details locked behind Premium |
 | Your home | A 3D house that gains a piece for each finished stage |
 | Premium | Free, Premium £7.49 and Concierge £18.99 (concept pricing, no payment taken) |
-| Ask Avenor | Scripted AI helper with suggested questions |
+| Ask Sovarna | Scripted AI helper with suggested questions |
 
 On a laptop the app shows inside a phone frame, with a QR code and "things to try" beside it.
 
@@ -32,7 +32,7 @@ Everything below uses the public link, so it works the same in a pitch room as a
 | Way to test | How | Cost |
 |---|---|---|
 | **Any phone, in the browser** | Scan the QR or open the link in Safari (iPhone) or Chrome (Android) | Free |
-| **As an installed app** | iPhone: Safari, Share, *Add to Home Screen*. Android: Chrome menu, *Install app* (or *Add Avenor to your Home Screen* inside the app's profile screen). Opens full-screen with its own icon | Free |
+| **As an installed app** | iPhone: Safari, Share, *Add to Home Screen*. Android: Chrome menu, *Install app* (or *Add Sovarna to your Home Screen* inside the app's profile screen). Opens full-screen with its own icon | Free |
 | **Offline** | Open the link once on Wi-Fi. After that the app, fonts and 3D house work with no connection (map tiles only show areas already viewed) | Free |
 | **Real iPhones and Androids in the cloud** | BrowserStack Live or LambdaTest Real Device: paste the live link and pick a device (free trial minutes) | Free trial |
 | **Android app file for beta testers** | pwabuilder.com: paste the live link, download the Android package (APK) and share it | Free |
@@ -90,7 +90,7 @@ Every push to `main` builds the app and publishes it to GitHub Pages using `.git
 | Glossary words | `src/data/glossary.ts` |
 | Professionals on the map | `src/data/pros.ts` |
 | Stamp Duty rates and typical fees | `src/data/rates.ts` (re-check GOV.UK before each pitch) |
-| Ask Avenor answers | `src/data/answers.ts` |
+| Ask Sovarna answers | `src/data/answers.ts` |
 | Colours, type, grain texture | `src/index.css` (design tokens at the top) |
 | Logo | `src/components/Logo.tsx`, `public/favicon.svg` |
 
@@ -98,7 +98,7 @@ Every push to `main` builds the app and publishes it to GitHub Pages using `.git
 
 - **GitHub Pages, not Vercel**, as requested. Hash links (`/#/journey`) keep every page working on Pages.
 - **No real accounts yet.** Profiles and progress are saved on the phone. Google sign-in is shown but not connected.
-- **Ask Avenor is scripted** so it is free and can't fail during the pitch.
+- **Ask Sovarna is scripted** so it is free and can't fail during the pitch.
 - **Professionals are invented** and labelled as demo profiles, so no real firm appears endorsed.
 - **Guidance, not advice.** Every money screen links to MoneyHelper and GOV.UK.
 - **Logo** merges Gurpreet's pin-and-house idea into one shape with a brass door. Earlier directions are in `brand/`.

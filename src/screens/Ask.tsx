@@ -8,7 +8,7 @@ import { Mark } from '../components/Logo'
 import { TopBar } from '../components/ui'
 import { ReturnPill } from '../components/TaskRow'
 
-interface Msg { from: 'me' | 'avenor'; text: string; next?: Answer['next']; typing?: boolean }
+interface Msg { from: 'me' | 'bot'; text: string; next?: Answer['next']; typing?: boolean }
 
 function match(q: string): Answer | null {
   const k = q.toLowerCase()
@@ -33,13 +33,13 @@ export default function Ask() {
     setText('')
     const a = match(q)
     const full = a?.a ?? fallback
-    setMsgs((m) => [...m, { from: 'me', text: q }, { from: 'avenor', text: '', typing: true }])
+    setMsgs((m) => [...m, { from: 'me', text: q }, { from: 'bot', text: '', typing: true }])
     await new Promise((r) => setTimeout(r, 650))
     // stream the answer word by word
     const words = full.split(' ')
     for (let i = 1; i <= words.length; i++) {
       await new Promise((r) => setTimeout(r, 28))
-      setMsgs((m) => [...m.slice(0, -1), { from: 'avenor', text: words.slice(0, i).join(' '), typing: i < words.length, next: i === words.length ? a?.next : undefined }])
+      setMsgs((m) => [...m.slice(0, -1), { from: 'bot', text: words.slice(0, i).join(' '), typing: i < words.length, next: i === words.length ? a?.next : undefined }])
     }
     setBusy(false)
   }
@@ -55,7 +55,7 @@ export default function Ask() {
 
   return (
     <div className="screen-push absolute inset-0 flex flex-col bg-white">
-      <TopBar back title="Ask Avenor" />
+      <TopBar back title="Ask Sovarna" />
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-4">
         <ReturnPill className="mt-3" />
         {msgs.length === 0 && (
@@ -68,9 +68,9 @@ export default function Ask() {
         <div className="space-y-3 pt-2">
           {msgs.map((m, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={m.from === 'me' ? 'flex justify-end' : 'flex gap-2.5 items-start'}>
-              {m.from === 'avenor' && <span className="mt-1"><Mark size={26} /></span>}
+              {m.from === 'bot' && <span className="mt-1"><Mark size={26} /></span>}
               <div className={m.from === 'me' ? 'max-w-[80%] rounded-[20px] rounded-br-md bg-teal-800 text-white px-4 py-3' : 'max-w-[86%]'}>
-                {m.from === 'avenor' && !m.text ? (
+                {m.from === 'bot' && !m.text ? (
                   <span className="inline-flex gap-1 py-3">{[0, 1, 2].map((d) => <motion.span key={d} className="size-1.5 rounded-full bg-stone-400" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: d * 0.15 }} />)}</span>
                 ) : (
                   <p className="t-body">{m.text}</p>

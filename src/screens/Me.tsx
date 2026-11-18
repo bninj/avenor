@@ -76,13 +76,13 @@ export default function Me() {
       )}
 
       <section className="mx-6 mt-7 rounded-[20px] ring-1 ring-stone-200 divide-y divide-stone-200 overflow-hidden">
-        <MenuRow icon="spark" label="Avenor Premium" onClick={() => nav('/premium')} />
+        <MenuRow icon="spark" label="Sovarna Premium" onClick={() => nav('/premium')} />
         <MenuRow icon="folder" label="Documents" onClick={() => nav('/documents')} />
         <MenuRow icon="compare" label="Compare homes" onClick={() => nav('/compare')} />
         <MenuRow icon="report" label="Structure report" onClick={() => nav('/report')} />
         <MenuRow icon="tag" label="Selling a home" onClick={() => nav('/selling')} />
-        {!standalone && <MenuRow icon="home" label="Add Avenor to your Home Screen" onClick={install} />}
-        <MenuRow icon="message" label="Send feedback on the beta" onClick={() => toast('Thanks! Feedback goes to the Avenor team')} />
+        {!standalone && <MenuRow icon="home" label="Add Sovarna to your Home Screen" onClick={install} />}
+        <MenuRow icon="message" label="Send feedback on the beta" onClick={() => toast('Thanks! Feedback goes to the Sovarna team')} />
         <MenuRow icon="learn" label="Help, FAQ and privacy" onClick={() => nav('/help')} />
         <MenuRow icon="refresh" label="Reset demo and start again" onClick={() => { reset(); nav('/welcome', { replace: true }) }} />
       </section>

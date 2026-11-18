@@ -62,13 +62,13 @@ export default function Help() {
       <section className="mx-6 mt-10 rounded-[24px] hero-light grain grain-light p-6 overflow-hidden">
         <span className="prism-streak" aria-hidden="true" />
         <Mark size={36} />
-        <h2 className="t-h2 mt-3">About Avenor</h2>
+        <h2 className="t-h2 mt-3">About Sovarna</h2>
         <p className="t-body text-muted mt-2">A plain-English guide to buying your first home, step by step, with checked local professionals when you need one. Made in Birmingham.</p>
         <p className="t-small text-muted mt-4">Stamp Duty rates from <a className="underline underline-offset-2" href={rates.source} target="_blank" rel="noreferrer">GOV.UK</a>, checked {rates.checked}. Photos from Wikimedia Commons.</p>
       </section>
 
       <div className="px-6 mt-6 space-y-2">
-        <Button variant="quiet" icon="message" onClick={() => nav('/ask')}>Still stuck? Ask Avenor</Button>
+        <Button variant="quiet" icon="message" onClick={() => nav('/ask')}>Still stuck? Ask Sovarna</Button>
       </div>
       <Disclaimer className="px-6 mt-6" />
 

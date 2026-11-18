@@ -101,7 +101,7 @@ export function DesktopStage({ children, statusBar }: { children: React.ReactNod
         <section className="flex flex-col gap-[min(2.25rem,4vh)] max-w-[440px]">
           <div className="flex items-center gap-2">
             <Mark size={34} />
-            <span className="text-[1.375rem] font-semibold tracking-[-0.035em]">avenor</span>
+            <span className="text-[1.375rem] font-semibold tracking-[-0.035em]">sovarna</span>
           </div>
           <h1 className="text-[clamp(2.75rem,min(4.6vw,8.4vh),4.75rem)] leading-[0.92] font-bold tracking-[-0.045em] text-teal-800">
             From deposit<br />to doorstep.

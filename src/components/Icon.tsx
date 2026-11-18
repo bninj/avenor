@@ -1,4 +1,4 @@
-// Avenor line icons, drawn on a 24px grid with 1.7 strokes and round ends.
+// Sovarna line icons, drawn on a 24px grid with 1.7 strokes and round ends.
 const paths: Record<string, React.ReactNode> = {
   home: <><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z" /></>,
   journey: <><path d="M3.5 20.5h5v-5h5v-5h5v-5" /><path d="M18.5 5.5V2.5l3.5 1.5-3.5 1.5" /></>,

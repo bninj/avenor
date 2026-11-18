@@ -169,7 +169,7 @@ export default function Home() {
         <section className="px-5 mt-4">
           <button onClick={() => nav('/premium')} className="w-full text-left rounded-[20px] bg-teal-800 text-teal-50 p-5 flex items-center gap-4 lift">
             <span className="flex-1">
-              <span className="block t-h3 text-teal-50">Avenor Premium</span>
+              <span className="block t-h3 text-teal-50">Sovarna Premium</span>
               <span className="t-small text-teal-50/75">Compare homes, keep your documents in one place.</span>
             </span>
             <span className="rounded-full bg-white text-teal-900 t-small font-semibold px-4 py-2.5">Try free</span>
