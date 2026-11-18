@@ -1,12 +1,14 @@
-// Avenor mark: a location pin and a house drawn as one shape, with a brass door.
-const PIN = 'M32 59 15.5 41.6A4 4 0 0 1 14.4 38.8V27.4a4 4 0 0 1 1.5-3.1L29.5 13.2a4 4 0 0 1 5 0l13.6 11.1a4 4 0 0 1 1.5 3.1v11.4a4 4 0 0 1-1.1 2.8z'
-const DOOR = 'M28.5 41V33.5a3.5 3.5 0 0 1 7 0V41z'
+// Avenor mark: Gurpreet's design. A teal map pin with a gold house inside.
+export const PIN_PATH = 'M32 54.2c-1 0-1.8-.5-2.4-1.3L17.7 36.4a17 17 0 1 1 28.6 0L34.4 52.9c-.6.8-1.4 1.3-2.4 1.3z'
+export const HOUSE_PATH = 'M32 13.6l-10.6 9.2c-.8.7-.3 2 .8 2h1.8v8.5c0 .7.6 1.2 1.2 1.2h3.9v-6.2h5.8v6.2h3.9c.7 0 1.2-.5 1.2-1.2v-8.5h1.8c1.1 0 1.6-1.3.8-2z'
 
 export function Mark({ size = 28, tone = 'brand' }: { size?: number; tone?: 'brand' | 'light' }) {
+  const light = tone === 'light'
   return (
     <svg width={size} height={size} viewBox="12 10 40 50" aria-hidden="true">
-      <path d={PIN} fill={tone === 'light' ? '#EEF4F1' : '#123F3B'} />
-      <path d={DOOR} fill={tone === 'light' ? '#E2C48A' : '#C79B4E'} />
+      <ellipse cx="32" cy="57.5" rx="8" ry="1.8" fill={light ? 'rgba(255,255,255,.22)' : '#A9D3CF'} opacity=".85" />
+      <path d={PIN_PATH} fill={light ? '#EEF4F1' : '#123F3B'} />
+      <path d={HOUSE_PATH} fill={light ? '#C79B4E' : '#E6C976'} />
     </svg>
   )
 }

@@ -4,7 +4,7 @@
   "description": "Your first home, step by step.",
   "start_url": "./#/demo",
   "display": "standalone",
-  "background_color": "#123F3B",
+  "background_color": "#F5F1E8",
   "theme_color": "#123F3B",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },

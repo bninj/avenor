@@ -46,7 +46,7 @@ export default function Learn() {
               <button
                 key={l.id}
                 onClick={() => (locked ? nav('/premium') : toast('Lessons play in the full app'))}
-                className={`snap-start shrink-0 w-[200px] h-[236px] rounded-[22px] p-5 flex flex-col text-left ${i === 0 ? 'spruce grain' : 'bg-stone-100'}`}
+                className={`snap-start shrink-0 w-[200px] h-[236px] rounded-[22px] p-5 flex flex-col text-left ${i === 0 ? 'spruce grain' : 'bg-stone-100 grain grain-light'}`}
               >
                 <span className={`text-[3.25rem] leading-none font-semibold tracking-[-0.04em] num ${i === 0 ? 'text-gold-300' : 'text-stone-400/70'}`}>{String(i + 1).padStart(2, '0')}</span>
                 <span className="t-h2 mt-auto">{l.title}</span>

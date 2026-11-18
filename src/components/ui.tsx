@@ -130,7 +130,7 @@ export function Toaster() {
     <div className="pointer-events-none absolute inset-x-0 bottom-24 z-[1100] flex justify-center px-6" aria-live="polite">
       <AnimatePresence>
         {msg && (
-          <motion.div initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 8, opacity: 0 }} className="rounded-full bg-teal-900 text-white t-small font-medium px-5 py-3 shadow-float">
+          <motion.div initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 8, opacity: 0 }} className="rounded-full bg-teal-800 text-teal-50 t-small font-medium pl-4 pr-5 py-3 shadow-float lift flex items-center gap-2.5"><span className="size-1.5 rounded-full bg-gold-300 shrink-0" />
             {msg}
           </motion.div>
         )}

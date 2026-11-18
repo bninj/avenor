@@ -115,6 +115,46 @@ input[type="range"].range::-moz-range-thumb { width: 18px; height: 18px; border-
 
 }
 
+/* ── Desktop presentation ── */
+.desk-stage {
+  background:
+    radial-gradient(60% 50% at 78% 92%, rgba(199, 155, 78, 0.16) 0%, transparent 70%),
+    radial-gradient(70% 60% at 12% 0%, rgba(46, 116, 104, 0.55) 0%, transparent 65%),
+    linear-gradient(160deg, #123F3B 0%, #0E3330 55%, #0A2725 100%);
+}
+.desk-stage.grain::after { opacity: 0.6; }
+/* Frosted glass panels: blur what is behind, catch light on the top edge */
+.glass {
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 42%, rgba(255, 255, 255, 0.06) 100%),
+    rgba(10, 35, 33, 0.42); /* smoked tint keeps white text readable over anything */
+  -webkit-backdrop-filter: blur(26px) saturate(150%);
+          backdrop-filter: blur(26px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+    0 30px 60px -30px rgba(0, 0, 0, 0.55);
+}
+.glass.grain::after { opacity: 0.35; }
+
+/* Desktop type and density, compact on short screens (projectors) */
+.desk-row { font-size: 1.0625rem; }
+.desk-now { font-size: 1.5rem; line-height: 1.15; }
+.desk-qr { width: 96px; height: 96px; }
+@media (max-height: 820px) {
+  .desk-hint { display: none; }
+  .desk-row { font-size: 0.9375rem; }
+  .desk-now { font-size: 1.25rem; }
+  .desk-qr { width: 78px; height: 78px; }
+}
+
+/* Phone: brushed titanium rim with a thin highlight */
+.phone-shell {
+  background: linear-gradient(145deg, #4a524f 0%, #23292a 30%, #171b1b 60%, #3a413f 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.08), inset 0 0 0 9px #0d1010, 0 60px 120px -40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 0, 0, 0.6);
+}
+
 /* Leaflet: calm OSM to sit with the brand */
 .leaflet-container { font-family: var(--font-sans); background: #E8EEEB; }
 .leaflet-tile-pane { filter: grayscale(.65) sepia(.18) hue-rotate(115deg) saturate(.8) brightness(1.04) contrast(.9); }

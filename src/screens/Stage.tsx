@@ -79,7 +79,7 @@ export default function StageScreen() {
 
         {s.pro && (
           <section className="px-6 mt-10">
-            <button onClick={() => nav(`/pros?type=${s.pro!.type}`)} className="w-full text-left rounded-[20px] bg-stone-100 p-5 flex items-center gap-4">
+            <button onClick={() => nav(`/pros?type=${s.pro!.type}`)} className="w-full text-left rounded-[20px] bg-stone-100 grain grain-light p-5 flex items-center gap-4">
               <span className="flex-1">
                 <span className="block t-h3">{s.pro.cta}</span>
                 <span className="t-small text-muted">{proTypeLabel[s.pro.type].register} checked, near {profile?.postcode ?? 'you'}</span>

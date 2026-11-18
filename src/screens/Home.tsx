@@ -5,7 +5,7 @@ import { builtParts, currentStage, overallPercent, stageProgress, useApp } from 
 import { stages } from '../data/stages'
 import { Icon } from '../components/Icon'
 import { Mark } from '../components/Logo'
-import { Avatar, Disclaimer, Screen, tick } from '../components/ui'
+import { Avatar, Disclaimer, RollingNumber, Screen, tick } from '../components/ui'
 import { openTerm } from '../components/Terms'
 import { glossary } from '../data/glossary'
 import { areas } from '../data/areas'
@@ -39,7 +39,7 @@ export default function Home() {
           </button>
         </div>
         <div className="px-5 mt-4">
-          <p className="t-hero">{pct}<span className="text-[2.5rem] tracking-[-0.02em] align-top ml-1 text-teal-100/70">%</span></p>
+          <p className="t-hero flex items-start"><RollingNumber value={pct} from={0} /><span className="text-[2.25rem] leading-none font-semibold tracking-[-0.02em] mt-2 ml-0.5 text-gold-300">%</span></p>
           <p className="t-h3 font-medium text-teal-100/80 mt-2">of your home built</p>
         </div>
         <button onClick={() => nav('/house')} aria-label="Open your 3D home" className="absolute right-[-28px] bottom-[34px] w-[300px] h-[300px]">
@@ -86,7 +86,7 @@ export default function Home() {
 
         {/* Ask */}
         <div className="px-5 mt-7">
-          <button onClick={() => nav('/ask')} className="w-full min-h-14 rounded-full bg-stone-100 flex items-center gap-3 px-5 text-left">
+          <button onClick={() => nav('/ask')} className="w-full min-h-14 rounded-full bg-stone-100 grain grain-light flex items-center gap-3 px-5 text-left">
             <Mark size={22} />
             <span className="flex-1 font-medium text-teal-900/80">Ask anything about buying</span>
             <Icon name="send" size={18} className="text-muted rotate-90" />
@@ -142,7 +142,7 @@ export default function Home() {
 
         {/* Word of the day */}
         <div className="px-5 mt-10">
-          <button onClick={() => openTerm(term.id)} className="w-full text-left rounded-[20px] bg-stone-100 p-5">
+          <button onClick={() => openTerm(term.id)} className="w-full text-left rounded-[20px] bg-stone-100 grain grain-light p-5">
             <span className="t-small text-muted">Word of the day</span>
             <span className="block t-h1 mt-1.5">{term.word}</span>
             <span className="block t-body text-teal-900/75 mt-2">{term.plain}</span>

@@ -47,7 +47,7 @@ export default function House() {
       </ul>
 
       {/* The shelf model: the physical reward */}
-      <div className="mx-6 mt-6 rounded-[24px] bg-stone-100 p-6">
+      <div className="mx-6 mt-6 rounded-[24px] bg-stone-100 grain grain-light p-6">
         <p className="t-small text-gold-600 font-semibold mb-1">The finishing touch</p>
         <h2 className="t-h2 mb-2">A model of your home, for your shelf</h2>
         <p className="t-small text-muted mb-5">Get your keys and we 3D print this house, posted to your new address.</p>

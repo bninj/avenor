@@ -18,14 +18,20 @@ const FILTERS: { id: ProType | 'all'; label: string }[] = [
   { id: 'agent', label: 'Agents' },
 ]
 const TOP = 132
-const glyph: Record<ProType, string> = { adviser: '£', solicitor: '§', surveyor: '⌂', agent: '◆' }
+// Small drawn icons per profession (stroke follows the pin's colour)
+const glyph: Record<ProType, string> = {
+  adviser: '<path d="M15 8.5A3 3 0 0 0 9.6 10v6.5H15M8 13h5" />',
+  solicitor: '<path d="M12 5v14M7 19h10M6 8h12M6 8l-2.5 5h5zM18 8l-2.5 5h5z" />',
+  surveyor: '<path d="M5 19h14M7 19v-6l5-4 5 4v6" /><path d="M10 19v-3h4v3" />',
+  agent: '<path d="M6 20V5M6 6h11l-2.5 3L17 12H6" />',
+}
 
 function pinIcon(p: Pro, active: boolean) {
   return L.divIcon({
     className: '',
     iconSize: [0, 0],
     html: `<div style="transform:translate(-50%,-100%);display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:6px 10px 6px 7px;border-radius:999px;font:600 13px 'Albert Sans Variable',sans-serif;box-shadow:0 2px 10px rgba(11,43,42,.22);${active ? 'background:#123F3B;color:#fff;transform:translate(-50%,-100%) scale(1.08)' : 'background:#fff;color:#0C2A27'}">
-      <span style="display:grid;place-items:center;width:20px;height:20px;border-radius:999px;font-size:12px;${active ? 'background:#C79B4E;color:#0C2A27' : 'background:#F5EBD8;color:#A47B33'}">${glyph[p.type]}</span>${p.rating.toFixed(1)}</div>`,
+      <span style="display:grid;place-items:center;width:20px;height:20px;border-radius:999px;${active ? 'background:#C79B4E;color:#0C2A27' : 'background:#F5EBD8;color:#A47B33'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${glyph[p.type]}</svg></span>${p.rating.toFixed(1)}</div>`,
   })
 }
 
