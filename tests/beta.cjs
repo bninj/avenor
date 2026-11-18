@@ -10,6 +10,7 @@ const results = [];
 const log = (who, ok, what) => { results.push({ who, ok, what }); console.log(`${ok ? 'PASS' : 'FAIL'}  [${who}] ${what}`); };
 
 async function checks(p, who, label) {
+  await p.waitForTimeout(700); // let entrance animations finish
   // Horizontal overflow (text or elements spilling off screen)
   const over = await p.evaluate(() => {
     const w = document.documentElement.clientWidth;
@@ -70,7 +71,7 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     await p.getByRole('button', { name: 'Get started' }).click();
     await p.getByRole('button', { name: 'Skip, fill it in for me' }).click();
     await see(p, 'here’s your plan'); log('Priya, 19', true, 'Skipping all questions still gives a plan');
-    await p.getByRole('button', { name: 'Start building' }).click();
+    await p.getByRole('button', { name: 'Start step 1' }).click();
     await see(p, 'of your home built'); log('Priya, 19', true, 'Lands on Home with a random profile');
     await checks(p, 'Priya, 19', 'Home on a small phone');
     await p.getByRole('link', { name: 'Learn' }).click();
@@ -104,7 +105,7 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     const sd = await p.locator('dl').innerText();
     log('Jordan, 26', /Stamp Duty\s*£0/.test(sd), 'Plan shows £0 Stamp Duty for a £300k first home');
     await checks(p, 'Jordan, 26', 'Plan reveal');
-    await p.getByRole('button', { name: 'Start building' }).click();
+    await p.getByRole('button', { name: 'Start step 1' }).click();
     for (const t of ['Add up your savings', 'Check your credit report for free', 'Work out your upfront cash', 'Set your price range']) await p.getByText(t).click();
     await see(p, 'Foundations laid', 4000); log('Jordan, 26', true, 'Finishing stage 1 shows the house celebration');
     await p.getByRole('button', { name: 'Start stage 2' }).click();
@@ -151,7 +152,7 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     await see(p, 'Dave, here’s your plan'); await p.waitForTimeout(1800);
     const sd = await p.locator('dl').innerText();
     log('Dave, 47', /Stamp Duty\s*£1,500/.test(sd), `Plan uses normal Stamp Duty for £200k (expect £1,500): ${sd.split('\n').slice(2, 4).join(' ')}`);
-    await p.getByRole('button', { name: 'Start building' }).click();
+    await p.getByRole('button', { name: 'Start step 1' }).click();
     await go(p, '/money?tab=stamp');
     const sw = await p.getByRole('switch').getAttribute('aria-checked');
     log('Dave, 47', sw === 'false', 'Stamp Duty calculator knows he has owned before');
@@ -179,6 +180,33 @@ const see = async (p, text, t = 6000) => p.getByText(text, { exact: false }).fir
     await p.getByRole('button', { name: 'Tell me when it’s ready' }).click();
     await see(p, 'You’re on the list'); log('Ken, 58', true, 'Joins the seller waitlist');
     await checks(p, 'Ken, 58', 'Selling');
+  });
+
+  // 8. Sam, 29, follows the journey: every task should lead somewhere useful and back
+  await person(b, 'Sam, 29', 'iPhone 13', async (p) => {
+    await go(p, '/demo'); await p.getByRole('button', { name: 'Skip' }).click();
+    await see(p, 'of your home built');
+    const line = await p.locator('main').innerText();
+    log('Sam, 29', /2 steps left\. Finish them to add the walls\./.test(line), 'Home says how many steps are left and what they unlock');
+    await go(p, '/journey/survey');
+    await p.getByRole('button', { name: 'Find a surveyor' }).click();
+    await see(p, 'Surveyors');
+    log('Sam, 29', p.url().includes('type=surveyor'), 'Task button opens the map filtered to surveyors');
+    await p.getByRole('button', { name: 'Back to stage 6' }).click();
+    await see(p, 'The short version'); log('Sam, 29', p.url().includes('/journey/survey'), 'Back to stage 6 returns to the right stage');
+    await checks(p, 'Sam, 29', 'Stage with task buttons');
+    await p.getByRole('button', { name: 'Which level' }).click();
+    await see(p, 'Level 2 suits most homes', 8000); log('Sam, 29', true, 'Task button asks Avenor the right question automatically');
+    await go(p, '/journey/budget');
+    await p.getByText('Work out your upfront cash').click(); // untick it, the action reappears
+    await p.getByRole('button', { name: 'Calculator' }).click();
+    await see(p, 'Cash you need on the day'); log('Sam, 29', true, 'Task button opens the upfront cash calculator');
+    await p.getByRole('tab', { name: 'Stamp Duty' }).click();
+    await p.getByRole('button', { name: 'Back to stage 1' }).click();
+    await see(p, 'Know your budget'); log('Sam, 29', p.url().includes('/journey/budget'), 'Return link survives switching calculator tabs');
+    await go(p, '/journey/offer');
+    await p.getByRole('button', { name: 'Lesson' }).click(); await p.waitForTimeout(800);
+    log('Sam, 29', p.url().includes('/premium'), 'A Premium lesson on the free plan shows Premium, not a dead end');
   });
 
   // 7. A judge on a 1366x768 laptop, keyboard only

@@ -6,6 +6,7 @@ import { useApp } from '../store'
 import { Icon } from '../components/Icon'
 import { Disclaimer, Screen } from '../components/ui'
 import { openTerm } from '../components/Terms'
+import { ReturnPill } from '../components/TaskRow'
 
 type Tab = 'upfront' | 'stamp' | 'monthly' | 'deposit'
 const TABS: { id: Tab; label: string }[] = [
@@ -28,13 +29,14 @@ export default function Money() {
   return (
     <Screen>
       <div className="px-5 pt-6">
+        <ReturnPill className="mb-4" />
         <h1 className="t-display">Money</h1>
         <p className="t-body text-muted mt-2">Real numbers, before anyone sells you anything.</p>
       </div>
 
       <div className="flex gap-2 overflow-x-auto no-scrollbar px-5 pt-5 pb-6" role="tablist">
         {TABS.map((t) => (
-          <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setParams({ tab: t.id }, { replace: true })} className={`shrink-0 min-h-11 rounded-full px-4 t-small font-semibold transition-colors ${tab === t.id ? 'bg-teal-800 text-teal-50' : 'bg-stone-100 text-teal-900/75'}`}>
+          <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setParams((prev) => { const n = new URLSearchParams(prev); n.set('tab', t.id); return n }, { replace: true })} className={`shrink-0 min-h-11 rounded-full px-4 t-small font-semibold transition-colors ${tab === t.id ? 'bg-teal-800 text-teal-50' : 'bg-stone-100 text-teal-900/75'}`}>
             {t.label}
           </button>
         ))}

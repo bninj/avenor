@@ -42,7 +42,7 @@ Pitch-day checklist: open the demo link once on the presenting phone before you 
 
 ## Beta test (simulated people)
 
-`tests/beta.cjs` plays seven people of different ages through real tasks on different phones and checks for errors, text running off screen, small tap targets and accessibility (axe). Run it against the live site:
+`tests/beta.cjs` plays eight people of different ages through real tasks on different phones and checks for errors, text running off screen, small tap targets and accessibility (axe). Run it against the live site:
 
 ```bash
 node tests/beta.cjs https://bninj.github.io/avenor/
@@ -56,6 +56,7 @@ node tests/beta.cjs https://bninj.github.io/avenor/
 | Dave, 47 | Pixel 7 | Has owned before, so normal Stamp Duty must apply |
 | Joan, 64 | iPhone 13, large text | Reads stages, money and Premium with big text |
 | Ken, 58 | iPhone 13 | Wants to sell, joins the waitlist |
+| Sam, 29 | iPhone 13 | Follows task buttons out to the map, calculator and Ask, then back to the stage |
 | A judge | 1366 by 768 laptop | Watches the demo, uses the keyboard, clicks stages on the side panel |
 
 ## Run it yourself

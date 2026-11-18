@@ -4,7 +4,9 @@
 export type ProType = 'adviser' | 'solicitor' | 'surveyor' | 'agent'
 export type HousePart = 'foundation' | 'walls' | 'windows' | 'door' | 'roof' | 'chimney' | 'garden'
 
-export interface Task { id: string; label: string; hint?: string }
+// Each task can carry one action: a screen in the app, an official site, or a word to explain
+export type TaskAction = { label: string; to?: string; href?: string; term?: string }
+export interface Task { id: string; label: string; hint?: string; action?: TaskAction }
 export interface Link { label: string; site: string; url: string }
 
 export interface Stage {
@@ -22,6 +24,7 @@ export interface Stage {
   pro?: { type: ProType; cta: string }
   part: HousePart
   partLabel: string
+  reward: string
   premiumTip: string
 }
 
@@ -36,10 +39,10 @@ export const stages: Stage[] = [
     points: ['Lenders usually lend about 4.5 times your yearly income.', 'Your [[deposit|deposit]] is at least 5% of the price.', 'Budget for [[sdlt|Stamp Duty]], solicitor and survey too.'],
     watch: 'Keep three months of tidy bank statements.',
     tasks: [
-      { id: 'b1', label: 'Add up your savings', hint: 'Include ISAs and gifts' },
-      { id: 'b2', label: 'Check your credit report for free', hint: 'Join the electoral roll' },
-      { id: 'b3', label: 'Work out your upfront cash', hint: 'The real total, not just the deposit' },
-      { id: 'b4', label: 'Set your price range' },
+      { id: 'b1', label: 'Add up your savings', hint: 'Include ISAs and gifts', action: { label: 'Saving plan', to: '/money?tab=deposit' } },
+      { id: 'b2', label: 'Check your credit report for free', hint: 'Join the electoral roll', action: { label: 'How to check', href: 'https://www.moneyhelper.org.uk/en/everyday-money/credit/how-to-check-your-credit-report' } },
+      { id: 'b3', label: 'Work out your upfront cash', hint: 'The real total, not just the deposit', action: { label: 'Calculator', to: '/money?tab=upfront' } },
+      { id: 'b4', label: 'Set your price range', action: { label: 'Monthly cost', to: '/money?tab=monthly' } },
     ],
     terms: ['deposit', 'ltv', 'credit-score', 'lisa', 'sdlt'],
     links: [
@@ -47,7 +50,7 @@ export const stages: Stage[] = [
       { label: 'Lifetime ISA rules', site: 'GOV.UK', url: 'https://www.gov.uk/lifetime-isa' },
     ],
     part: 'foundation',
-    partLabel: 'Foundations laid',
+    partLabel: 'Foundations laid', reward: 'the foundations',
     premiumTip: 'A savings plan that names your ready-to-buy month.',
   },
   {
@@ -60,9 +63,9 @@ export const stages: Stage[] = [
     points: ['An [[aip|agreement in principle]] is a lender’s early yes.', 'It takes minutes, and agents ask for it.', 'A [[broker|broker]] compares lenders for you.'],
     watch: 'Ask for a “soft search”. Other lenders won’t see it.',
     tasks: [
-      { id: 'm1', label: 'Gather payslips and ID' },
-      { id: 'm2', label: 'Speak to a mortgage broker', hint: 'Many are free to you' },
-      { id: 'm3', label: 'Get your agreement in principle' },
+      { id: 'm1', label: 'Gather payslips and ID', action: { label: 'What they ask', to: '/ask?q=What is an agreement in principle?' } },
+      { id: 'm2', label: 'Speak to a mortgage broker', hint: 'Many are free to you', action: { label: 'Find a broker', to: '/pros?type=adviser' } },
+      { id: 'm3', label: 'Get your agreement in principle', action: { label: 'What is it', term: 'aip' } },
       { id: 'm4', label: 'Save the certificate in your documents' },
     ],
     terms: ['aip', 'broker', 'fixed', 'tracker', 'ltv', 'arrangement-fee'],
@@ -72,7 +75,7 @@ export const stages: Stage[] = [
     ],
     pro: { type: 'adviser', cta: 'Find a mortgage adviser' },
     part: 'walls',
-    partLabel: 'Walls up',
+    partLabel: 'Walls up', reward: 'the walls',
     premiumTip: 'Compare three brokers side by side.',
   },
   {
@@ -85,9 +88,9 @@ export const stages: Stage[] = [
     points: ['Check the [[epc|EPC rating]] for heating costs.', 'Know if it’s [[freehold|freehold]] or [[leasehold|leasehold]].', 'Ask if the seller is in a [[chain|chain]].'],
     watch: 'Visit at night and at rush hour.',
     tasks: [
-      { id: 's1', label: 'Pick two or three areas to focus on' },
-      { id: 's2', label: 'Check sold prices on the street' },
-      { id: 's3', label: 'Book viewings' },
+      { id: 's1', label: 'Pick two or three areas to focus on', action: { label: 'Explore areas', to: '/pros' } },
+      { id: 's2', label: 'Check sold prices on the street', action: { label: 'Sold prices', href: 'https://www.gov.uk/search-house-prices' } },
+      { id: 's3', label: 'Book viewings', action: { label: 'Find an agent', to: '/pros?type=agent' } },
       { id: 's4', label: 'Shortlist your favourite' },
     ],
     terms: ['epc', 'freehold', 'leasehold', 'chain', 'service-charge'],
@@ -97,7 +100,7 @@ export const stages: Stage[] = [
     ],
     pro: { type: 'agent', cta: 'Find a local estate agent' },
     part: 'windows',
-    partLabel: 'Windows in',
+    partLabel: 'Windows in', reward: 'the windows',
     premiumTip: 'Area reports: sold prices, schools, commute.',
   },
   {
@@ -110,16 +113,16 @@ export const stages: Stage[] = [
     points: ['Offer through the agent, often below asking.', 'Get a [[memorandum|memorandum of sale]] once accepted.', 'Nothing is binding until [[exchange|exchange]].'],
     watch: 'Ask for the home to come off the market.',
     tasks: [
-      { id: 'o1', label: 'Check what similar homes sold for' },
-      { id: 'o2', label: 'Decide your opening offer and your limit' },
+      { id: 'o1', label: 'Check what similar homes sold for', action: { label: 'Sold prices', href: 'https://www.gov.uk/search-house-prices' } },
+      { id: 'o2', label: 'Decide your opening offer and your limit', action: { label: 'Lesson', to: '/learn?lesson=l3' } },
       { id: 'o3', label: 'Make the offer in writing' },
-      { id: 'o4', label: 'Get the memorandum of sale' },
+      { id: 'o4', label: 'Get the memorandum of sale', action: { label: 'What is it', term: 'memorandum' } },
     ],
     terms: ['memorandum', 'gazumping', 'gazundering', 'exchange', 'chain-free'],
     links: [{ label: 'Making an offer', site: 'MoneyHelper', url: 'https://www.moneyhelper.org.uk/en/homes/buying-a-home' }],
     pro: { type: 'agent', cta: 'Talk to an estate agent' },
     part: 'door',
-    partLabel: 'Front door fitted',
+    partLabel: 'Front door fitted', reward: 'the front door',
     premiumTip: 'Offer scripts that sound like a pro.',
   },
   {
@@ -132,10 +135,10 @@ export const stages: Stage[] = [
     points: ['A solicitor handles the legal side: [[conveyancing|conveyancing]].', 'They run [[searches|searches]] and check the [[title|title deeds]].', 'Reply fast. This is often the slowest stage.'],
     watch: 'Pick one on your lender’s panel.',
     tasks: [
-      { id: 'l1', label: 'Get two fixed-fee quotes' },
+      { id: 'l1', label: 'Get two fixed-fee quotes', action: { label: 'Find a solicitor', to: '/pros?type=solicitor' } },
       { id: 'l2', label: 'Instruct your solicitor and send ID' },
-      { id: 'l3', label: 'Apply for your full mortgage offer' },
-      { id: 'l4', label: 'Read the searches summary' },
+      { id: 'l3', label: 'Apply for your full mortgage offer', action: { label: 'What is it', term: 'mortgage-offer' } },
+      { id: 'l4', label: 'Read the searches summary', action: { label: 'What are searches', term: 'searches' } },
     ],
     terms: ['conveyancing', 'conveyancer', 'searches', 'title', 'mortgage-offer'],
     links: [
@@ -144,7 +147,7 @@ export const stages: Stage[] = [
     ],
     pro: { type: 'solicitor', cta: 'Find a conveyancing solicitor' },
     part: 'roof',
-    partLabel: 'Roof on',
+    partLabel: 'Roof on', reward: 'the roof',
     premiumTip: 'Upload legal letters, get the key points.',
   },
   {
@@ -157,9 +160,9 @@ export const stages: Stage[] = [
     points: ['The lender’s [[valuation|valuation]] protects the lender, not you.', 'A [[survey|RICS survey]] checks the home itself.', 'Found a problem? Renegotiate the price.'],
     watch: 'Victorian terrace? Choose a Level 3.',
     tasks: [
-      { id: 'v1', label: 'Choose a survey level' },
-      { id: 'v2', label: 'Book a RICS surveyor' },
-      { id: 'v3', label: 'Read the report' },
+      { id: 'v1', label: 'Choose a survey level', action: { label: 'Which level', to: '/ask?q=Level 2 or Level 3 survey?' } },
+      { id: 'v2', label: 'Book a RICS surveyor', action: { label: 'Find a surveyor', to: '/pros?type=surveyor' } },
+      { id: 'v3', label: 'Read the report', action: { label: 'Lesson', to: '/learn?lesson=l4' } },
       { id: 'v4', label: 'Renegotiate or move forward' },
     ],
     terms: ['survey', 'valuation', 'gazundering', 'buildings-insurance'],
@@ -169,7 +172,7 @@ export const stages: Stage[] = [
     ],
     pro: { type: 'surveyor', cta: 'Find a RICS surveyor' },
     part: 'chimney',
-    partLabel: 'Checked and sound',
+    partLabel: 'Checked and sound', reward: 'the chimney',
     premiumTip: 'A traffic-light summary of your survey.',
   },
   {
@@ -182,8 +185,8 @@ export const stages: Stage[] = [
     points: ['At [[exchange|exchange]], the deal becomes binding.', 'You need [[buildings-insurance|buildings insurance]] from that day.', 'On [[completion|completion]], you collect your keys.'],
     watch: 'Photograph the meters on moving day.',
     tasks: [
-      { id: 'c1', label: 'Arrange buildings insurance' },
-      { id: 'c2', label: 'Sign your contract and transfer the deposit' },
+      { id: 'c1', label: 'Arrange buildings insurance', action: { label: 'What is it', term: 'buildings-insurance' } },
+      { id: 'c2', label: 'Sign your contract and transfer the deposit', action: { label: 'Exchange explained', term: 'exchange' } },
       { id: 'c3', label: 'Book removals for completion day' },
       { id: 'c4', label: 'Collect your keys' },
     ],
@@ -191,7 +194,7 @@ export const stages: Stage[] = [
     links: [{ label: 'Stamp Duty: pay and file', site: 'GOV.UK', url: 'https://www.gov.uk/stamp-duty-land-tax' }],
     pro: { type: 'solicitor', cta: 'Ask a solicitor' },
     part: 'garden',
-    partLabel: 'Home, finished',
+    partLabel: 'Home, finished', reward: 'the garden and keys',
     premiumTip: 'A moving-day checklist, timed to your date.',
   },
 ]

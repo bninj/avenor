@@ -1,12 +1,12 @@
 import { lazy, Suspense } from 'react'
-import { motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 import { builtParts, currentStage, overallPercent, stageProgress, useApp } from '../store'
 import { stages } from '../data/stages'
 import { Icon } from '../components/Icon'
 import { Mark } from '../components/Logo'
-import { Avatar, Disclaimer, RollingNumber, Screen, tick } from '../components/ui'
+import { Avatar, Disclaimer, RollingNumber, Screen } from '../components/ui'
 import { openTerm } from '../components/Terms'
+import { TaskRow } from '../components/TaskRow'
 import { glossary } from '../data/glossary'
 import { areas } from '../data/areas'
 import { pros, proTypeLabel } from '../data/pros'
@@ -20,7 +20,7 @@ function greeting() {
 
 export default function Home() {
   const nav = useNavigate()
-  const { profile, done, toggleTask, plan } = useApp()
+  const { profile, done, plan } = useApp()
   const stage = currentStage(done)
   const prog = stageProgress(done, stage.id)
   const parts = builtParts(done)
@@ -59,26 +59,14 @@ export default function Home() {
       {/* Sheet */}
       <section className="relative -mt-7 rounded-t-[30px] bg-white pt-6 pb-28 z-10">
         <div className="px-5">
-          <p className="t-small text-muted">Up next</p>
+          <p className="t-small text-muted">{prog.complete ? 'Stage done' : `${prog.total - prog.n} ${prog.total - prog.n === 1 ? 'step' : 'steps'} left. Finish them to add ${stage.reward}.`}</p>
           <button onClick={() => nav(`/journey/${stage.id}`)} className="w-full flex items-center gap-4 text-left mt-1">
             <h2 className="t-h1 flex-1">{stage.title}</h2>
             <span className="size-[52px] shrink-0 rounded-full bg-teal-800 text-teal-50 grid place-items-center lift"><Icon name="right" /></span>
           </button>
 
           <ul className="mt-4 border-t border-stone-200">
-            {stage.tasks.map((t) => {
-              const on = !!done[t.id]
-              return (
-                <li key={t.id} className="border-b border-stone-200">
-                  <button onClick={() => { if (!on) tick(); toggleTask(t.id) }} aria-pressed={on} className="w-full flex items-center gap-3.5 py-3.5 text-left min-h-14">
-                    <span className={`size-6 shrink-0 rounded-full grid place-items-center transition-colors ${on ? 'bg-teal-800 text-white' : 'ring-[1.5px] ring-stone-400/60'}`}>
-                      {on && <motion.span initial={{ scale: 0.4 }} animate={{ scale: 1 }}><Icon name="check" size={14} stroke={2.8} /></motion.span>}
-                    </span>
-                    <span className={`flex-1 font-medium ${on ? 'text-stone-400 line-through' : ''}`}>{t.label}</span>
-                  </button>
-                </li>
-              )
-            })}
+            {stage.tasks.map((t) => <TaskRow key={t.id} t={t} size="sm" stageId={stage.id} />)}
           </ul>
           {prog.complete && (
             <button onClick={() => nav(`/journey/${stage.id}`)} className="mt-3 t-small font-semibold text-teal-700">Stage done. See what you’ve built</button>

@@ -244,6 +244,7 @@ function PlanReveal({ plan, onGo, demo }: { plan: Profile; onGo: () => void; dem
     ['Stamp Duty', <RollingNumber key="s" value={sd} from={0} format={gbp} />],
     ['Cash on the day', <RollingNumber key="u" value={upfront} from={0} format={gbp} />],
     ['Looking in', `${plan.area}, ${plan.postcode}`],
+    ['Your first step', 'Know your budget'],
   ]
   return (
     <motion.main layoutId="plan-shell" style={{ borderRadius: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 32 }} className="absolute inset-0 spruce grain flex flex-col overflow-y-auto overflow-x-hidden no-scrollbar">
@@ -263,7 +264,7 @@ function PlanReveal({ plan, onGo, demo }: { plan: Profile; onGo: () => void; dem
           ))}
         </dl>
         <div className="mt-auto pt-7 pb-6">
-          <Button variant="light" onClick={onGo}>{demo ? 'Opening your plan…' : 'Start building'}</Button>
+          <Button variant="light" onClick={onGo}>{demo ? 'Opening your plan…' : 'Start step 1'}</Button>
         </div>
       </div>
     </motion.main>

@@ -1,16 +1,16 @@
-import { motion, AnimatePresence } from 'motion/react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { stageById, stages } from '../data/stages'
 import { proTypeLabel } from '../data/pros'
 import { stageProgress, useApp } from '../store'
 import { Icon } from '../components/Icon'
-import { Disclaimer, IconButton, Screen, tick } from '../components/ui'
+import { Disclaimer, IconButton, Screen } from '../components/ui'
 import { TermChip, TermText } from '../components/Terms'
+import { TaskRow } from '../components/TaskRow'
 
 export default function StageScreen() {
   const { id = '' } = useParams()
   const nav = useNavigate()
-  const { done, toggleTask, profile, plan } = useApp()
+  const { done, profile, plan } = useApp()
   const s = stageById[id]
   if (!s) return <Navigate to="/journey" replace />
   const prog = stageProgress(done, s.id)
@@ -57,24 +57,9 @@ export default function StageScreen() {
             <span className="t-small text-muted num">{prog.n} of {prog.total}</span>
           </div>
           <ul className="mt-2 border-t border-stone-200">
-            {s.tasks.map((t) => {
-              const on = !!done[t.id]
-              return (
-                <li key={t.id} className="border-b border-stone-200">
-                  <button onClick={() => { if (!on) tick(); toggleTask(t.id) }} aria-pressed={on} className="w-full text-left flex items-center gap-4 py-4 min-h-[60px]">
-                    <span className={`size-7 shrink-0 rounded-full grid place-items-center transition-colors ${on ? 'bg-teal-800 text-white' : 'ring-[1.5px] ring-stone-400/60'}`}>
-                      <AnimatePresence>{on && <motion.span initial={{ scale: 0.3 }} animate={{ scale: 1 }} exit={{ scale: 0 }}><Icon name="check" size={16} stroke={2.6} /></motion.span>}</AnimatePresence>
-                    </span>
-                    <span className="flex-1">
-                      <span className={`block font-medium ${on ? 'text-stone-400 line-through' : ''}`}>{t.label}</span>
-                      {t.hint && !on && <span className="t-small text-muted">{t.hint}</span>}
-                    </span>
-                  </button>
-                </li>
-              )
-            })}
+            {s.tasks.map((t) => <TaskRow key={t.id} t={t} stageId={s.id} />)}
           </ul>
-          <p className="mt-3 t-small text-muted">Finish to add <b className="font-semibold text-teal-900">{s.partLabel.toLowerCase()}</b> to your home.</p>
+          <p className="mt-3 t-small text-muted">{prog.complete ? <>Done. You added <b className="font-semibold text-teal-900">{s.partLabel.toLowerCase()}</b>.</> : <>Tick each step when it’s done. Finish all {prog.total} to add <b className="font-semibold text-teal-900">{s.reward}</b> to your home.</>}</p>
         </section>
 
         {s.pro && (

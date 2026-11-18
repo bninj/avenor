@@ -9,6 +9,7 @@ import { areas } from '../data/areas'
 import { useApp } from '../store'
 import { Icon } from '../components/Icon'
 import { Avatar, Button, Sheet, toast } from '../components/ui'
+import { ReturnPill } from '../components/TaskRow'
 
 const FILTERS: { id: ProType | 'all'; label: string }[] = [
   { id: 'all', label: 'All' },
@@ -89,6 +90,7 @@ export default function Pros() {
             <p className="t-micro font-normal text-muted">{profile?.area ?? 'Birmingham'} and nearby</p>
           </div>
         </div>
+        <div className="pointer-events-auto"><ReturnPill /></div>
         <div className="pointer-events-auto flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4">
           {FILTERS.map((f) => (
             <button key={f.id} onClick={() => setType(f.id)} className={`shrink-0 min-h-10 rounded-full px-4 t-small font-semibold shadow-pill transition-colors ${type === f.id ? 'bg-teal-800 text-teal-50' : 'bg-white'}`}>{f.label}</button>

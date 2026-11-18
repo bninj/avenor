@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { glossary } from '../data/glossary'
 import { stages } from '../data/stages'
 import { useApp } from '../store'
@@ -15,7 +15,16 @@ export default function Learn() {
   const nav = useNavigate()
   const plan = useApp((s) => s.plan)
   const [q, setQ] = useState('')
-  const [open, setOpen] = useState<Lesson | null>(null)
+  const [params] = useSearchParams()
+  const [open, setOpen] = useState<Lesson | null>(() => {
+    const l = lessons.find((x) => x.id === params.get('lesson'))
+    return l && (l.free || plan !== 'free') ? l : null
+  })
+  // A locked lesson asked for by a task: show what Premium unlocks instead of a dead end
+  useEffect(() => {
+    const l = lessons.find((x) => x.id === params.get('lesson'))
+    if (l && !l.free && plan === 'free') nav('/premium', { replace: true })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const [filter, setFilter] = useState<string>('all')
 
   const list = useMemo(() => {

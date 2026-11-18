@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { answers, fallback, type Answer } from '../data/answers'
 import { useApp } from '../store'
 import { Icon } from '../components/Icon'
@@ -21,6 +21,8 @@ export default function Ask() {
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
   const end = useRef<HTMLDivElement>(null)
+  const [params] = useSearchParams()
+  const asked0 = useRef(false)
 
   useEffect(() => { end.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }) }, [msgs])
 
@@ -40,6 +42,12 @@ export default function Ask() {
     }
     setBusy(false)
   }
+
+  // Opened from a task with a question already chosen: ask it straight away
+  useEffect(() => {
+    const q = params.get('q')
+    if (q && !asked0.current) { asked0.current = true; ask(q) }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const asked = new Set(msgs.filter((m) => m.from === 'me').map((m) => m.text))
   const suggestions = answers.filter((a) => !asked.has(a.q)).slice(0, 4)
